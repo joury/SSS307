@@ -9,14 +9,14 @@
         <meta name="title" content="Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers">
         <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title>
         <link rel="shortcut icon" href="http://l.yimg.com/a/i/us/sch/gr/answers_favicon.ico">
-        <link rel="stylesheet" type="text/css" media="screen" href="./index_files/answers-fe-us.css">
-        <link rel="stylesheet" type="text/css" media="print" href="./index_files/print.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="./images/answers-fe-us.css">
+        <link rel="stylesheet" type="text/css" media="print" href="./images/print.css">
     </head>
     <body class="c-std wide question-index new-header js">
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
     <div id="yan">
         <div id="hd">
-            <link type="text/css" rel="stylesheet" href="./index_files/uh_rsa-1.css">
+            <link type="text/css" rel="stylesheet" href="./images/uh_rsa-1.css">
             <style type="text/css">
                 #ygma{
                     position:relative;
@@ -60,14 +60,14 @@
                                 <ul id="mepanel-nav">
                                     <li class="me1">
                                         <em>
-                                            <a class="ygmasignup" href="http://global.ard.yahoo.com/SIG=15ph2dj4l/M=650008.12773057.13811805.8356343/D=know/S=2114700723:HEAD/Y=YAHOO/EXP=1299074554/L=S8ZYU0WTZOOEVnOkTSwo.gPAVlDl601uMdoACqH_/B=QvEVKmKImoM-/J=1299067354817928/K=6LqDBbWU.n3OajqwUQsHeA/A=5856910/R=2/SIG=14kkqcaqb/*https://edit.yahoo.com/config/eval_register?.done=http://answers.yahoo.com%2fquestion%2findex%3fqid%3d20110301153400AA8GaqD&.src=knowsrch&.intl=us">Register</a>
+                                            <a class="ygmasignup" href="">Register</a> <!-- ToDo : Link invoegen -->
                                         </em>
                                     </li>
                                     <li class="me2">
-                                        <a href="http://global.ard.yahoo.com/SIG=15ph2dj4l/M=650008.12773057.13811805.8356343/D=know/S=2114700723:HEAD/Y=YAHOO/EXP=1299074554/L=S8ZYU0WTZOOEVnOkTSwo.gPAVlDl601uMdoACqH_/B=QvEVKmKImoM-/J=1299067354817928/K=6LqDBbWU.n3OajqwUQsHeA/A=5856910/R=3/SIG=14dkemjs5/*https://login.yahoo.com/config/login?.done=http://answers.yahoo.com%2fquestion%2findex%3fqid%3d20110301153400AA8GaqD&.src=knowsrch&.intl=us"><em>Sign In</em></a>
+                                        <a href=""><em>Sign In</em></a> <!-- ToDo : Link invoegen -->
                                     </li>
                                     <li class="me3">
-                                        <a href="http://global.ard.yahoo.com/SIG=15ph2dj4l/M=650008.12773057.13811805.8356343/D=know/S=2114700723:HEAD/Y=YAHOO/EXP=1299074554/L=S8ZYU0WTZOOEVnOkTSwo.gPAVlDl601uMdoACqH_/B=QvEVKmKImoM-/J=1299067354817928/K=6LqDBbWU.n3OajqwUQsHeA/A=5856910/R=4/SIG=11blhtm8v/*http://help.yahoo.com/l/us/yahoo/answers/" target="_top">Help</a>
+                                        <a href="" target="_top">Help</a> <!-- ToDo : Link invoegen -->
                                     </li>
                                 </ul>
                             </div>
@@ -75,10 +75,10 @@
                                 <div id="pa-wrapper" style="width: 140px;">
                                     <ul id="pa2-nav" class="sp" style="width: 140px;">
                                         <li class="pa1 sp">
-                                            <a class="sp" href="http://global.ard.yahoo.com/SIG=15ph2dj4l/M=650008.12773057.13811805.8356343/D=know/S=2114700723:HEAD/Y=YAHOO/EXP=1299074554/L=S8ZYU0WTZOOEVnOkTSwo.gPAVlDl601uMdoACqH_/B=QvEVKmKImoM-/J=1299067354817928/K=6LqDBbWU.n3OajqwUQsHeA/A=5856910/R=5/SIG=10np9vmbm/*http://www.yahoo.com/" target="_top">Logout</a>
+                                            <a class="sp" href="" target="_top">Logout</a> <!-- ToDo : Link invoegen -->
                                         </li>
                                         <li class="pa2 sp">
-                                            <a class="sp" href="http://global.ard.yahoo.com/SIG=15ph2dj4l/M=650008.12773057.13811805.8356343/D=know/S=2114700723:HEAD/Y=YAHOO/EXP=1299074554/L=S8ZYU0WTZOOEVnOkTSwo.gPAVlDl601uMdoACqH_/B=QvEVKmKImoM-/J=1299067354817928/K=6LqDBbWU.n3OajqwUQsHeA/A=5856910/R=6/SIG=1107gluf6/*http://mail.yahoo.com?.intl=us" target="_top">Settings</a>
+                                            <a class="sp" href="" target="_top">Settings</a> <!-- ToDo : Link invoegen -->
                                         </li>
                                     </ul>
                                 </div>
@@ -86,25 +86,25 @@
                         </div>
                         <div id="yahoo" class="ygmaclr">
                             <div id="ygmabot">
-                                <a href="./index_files/index.htm" id="ygmalogo" target="_top"><img id="ygmalogoimg" src="./index_files/ans.gif" alt="Yahoo! Answers!!" height="26" width="257"></a>
+                                <a href="./images/index.htm" id="ygmalogo" target="_top"><img id="ygmalogoimg" src="./images/ans.gif" alt="Yahoo! Answers!!" height="26" width="257"></a> <!-- ToDo: Logo invoegen -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="tabbed-content">
+            <div class="tabbed-content"> <!-- ToDo : Dynamische tabs vanuit DB voor makkelijk aanpassen ? -->
                 <ul class="tabs" id="yan-nav">
                     <li class="menu" id="yan-nav-home">
-                        <a href="http://answers.yahoo.com/;_ylt=AueeFXeAlPw5SAf3G_Z.arWzxQt.;_ylv=3">Home</a>
+                        <a href="">Home</a> <!-- ToDo : Link invoegen -->
                     </li>
                     <li id="yan-nav-browse" class="current menu">
-                        <a href="http://answers.yahoo.com/dir/index;_ylt=AvuG45Wj6wgp56u72rFNhHCzxQt.;_ylv=3">Categories</a>
+                        <a href="">Categories</a> <!-- ToDo : Link invoegen -->
                     </li>
                     <li class="menu" id="yan-nav-my-activity">
-                        <a href="http://answers.yahoo.com/my/my;_ylt=AvEIPpzxhxrR1McDfVknTqKzxQt.;_ylv=3">My Activity</a>
+                        <a href="">My Activity</a> <!-- ToDo : Link invoegen of compleet verwijderen ? -->
                     </li>
                     <li class="menu" id="yan-nav-about">
-                        <a href="http://answers.yahoo.com/info/about;_ylt=AsrK4QLzuvXqoD41Vm9bU0azxQt.;_ylv=3">Profile</a>
+                        <a href="">Profile</a> <!-- ToDo : Link invoegen -->
                     </li>
                 </ul>
             </div>
@@ -118,12 +118,13 @@
                                 </h2>
                                 <div>
                                     <label class="offscreen" for="banner-ask">What would you like to ask?</label>
-                                    <input class="default" value="What would you like to ask?" maxlength="110" id="banner-ask" name="title" type="text">
-                                    <span class="cta"><button id="" value="Continue" name="submit-go" class="cta-button">
+                                    <input class="default" value="" maxlength="110" id="banner-ask" name="title" type="text">
+                                    <span class="cta">
+                                        <button id="" value="Continue" name="submit-go" class="cta-button">
                                             <span>
                                                 <span>
                                                     <span>
-                                                        <span>Continue</span>
+                                                        <span>Ask!</span>
                                                     </span>
                                                 </span>
                                             </span>
@@ -133,17 +134,17 @@
                             </div>
                         </form>
                     </li>
-                    <li id="yan-banner-answer">
+                    <li id="yan-banner-answer"> <!-- ToDo : Verwijderen ? -->
                         <div>
                             <h2>
-                                <a href="http://answers.yahoo.com/dir/index;_ylt=AvdbuWag4Yejjad21q8So6KzxQt.;_ylv=3?link=open">Answer</a>
+                                <a href="">Answer</a>
                             </h2>
                         </div>
                     </li>
-                    <li id="yan-banner-discover">
+                    <li id="yan-banner-discover"> <!-- ToDo : Verwijderen ? -->
                         <div>
                             <h2>
-                                <a href="http://answers.yahoo.com/dir/index;_ylt=AiwnQNVfgWzGHg_BYtk1cUazxQt.;_ylv=3?link=over">Discover</a>
+                                <a href="">Discover</a>
                             </h2>
                         </div>
                     </li>
@@ -153,18 +154,18 @@
             </div>
         </div>
         <div id="yan-wrap">
-            <ol id="yan-breadcrumbs">
+            <ol id="yan-breadcrumbs"> <!-- ToDo : Dynamisch browsen... -->
                 <li>
-                    <a href="http://answers.yahoo.com/;_ylt=AoT.Vud9RyTNCWwJARwdI0OzxQt.;_ylv=3?link=recent">Home</a> &gt;
+                    <a href="">Home</a> &gt;
                 </li>
                 <li>
-                    <a href="http://answers.yahoo.com/dir/index;_ylt=Aol3.y.x9PeUqlTRU8EuyqqzxQt.;_ylv=3">All Categories</a> &gt;
+                    <a href="">All Categories</a> &gt;
                 </li>
                 <li>
-                    <a href="http://answers.yahoo.com/dir/index;_ylt=AlVBNtkzbOgf33sNFmvjDSuzxQt.;_ylv=3?sid=396545014&link=list">Consumer Electronics</a> &gt;
+                    <a href="">Consumer Electronics</a> &gt;
                 </li>
                 <li>
-                    <a href="http://answers.yahoo.com/dir/index;_ylt=AuWZxVuzMl8khsNsL7lirNmzxQt.;_ylv=3?sid=396545326&link=list">Other - Electronics</a> &gt;
+                    <a href="">Other - Electronics</a> &gt;
                 </li>
                 <li class="selected">
                     Open Question
@@ -173,10 +174,14 @@
             <div id="yan-content">
                 <div id="yan-main">
                     <div id="yan-question">
-                        <div id="profile-1uxMmtIfaa" class="profile vcard">
-                            <a href="http://answers.yahoo.com/my/profile;_ylt=AtnLA5JVOgEuOLfV.aq0106zxQt.;_ylv=3?show=1uxMmtIfaa" class="avatar"><img class="photo" alt="Super Soldier" src="./index_files/tn48.jpeg" width="48"></a>
+                        <div id="profile-1uxMmtIfaa" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->
+                            <a href="http://answers.yahoo.com/my/profile;_ylt=AtnLA5JVOgEuOLfV.aq0106zxQt.;_ylv=3?show=1uxMmtIfaa" class="avatar">
+                                <img class="photo" alt="Super Soldier" src="./images/tn48.jpeg" width="48">
+                            </a>
                             <span class="user">
-                                <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AmmsfLbonmLPldqQYdFjLnKzxQt.;_ylv=3?show=1uxMmtIfaa"><span class="fn" title="Super Soldier">Super Soldier</span></a>
+                                <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AmmsfLbonmLPldqQYdFjLnKzxQt.;_ylv=3?show=1uxMmtIfaa">
+                                <span class="fn" title="Super Soldier">Super Soldier</span>
+                            </a>
                             </span>
                             <dl class="stats">
                                 <dt class="member">Member since:</dt>
@@ -193,7 +198,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="qa-container">
+                        <div class="qa-container"> <!-- ToDo : Dynamische vraag via database -->
                             <div class="hd">
                                 <h2>Open Question</h2>
                             </div>
@@ -216,43 +221,22 @@
                 </div>
                 <ul id="yan-question-tools">
                     <li class="label">Action Bar:</li>
-                    <li id="yan-starthis" class="first-child">
-                        <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="show-status" title="2 people think this question is interesting. Click on the star if you agree and want to share this question with others."><span class="star-count has-stars">2</span> <span class="star">stars - mark this as</span><span> Interesting!</span></a>
-                        <div style="visibility: hidden; z-index: 2;" class="yui-module yui-overlay yui-overlay-hidden" id="yan-interesting-menu"><div class="bd">
-                                <h2>Who found this interesting?</h2>
-                                <ol class="bd">
-                                    <li class="vcard alt show">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=AlrpCgi5PnbwycMZPG3kMqqzxQt.;_ylv=3?show=t2HBDKBBaa" class="fn nick"><img alt="" src="./index_files/tn48_002.jpeg" id="yav-0" height="16" width="16"> iPfc</a>
-                                    </li>
-                                    <li class="vcard show">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=AlrpCgi5PnbwycMZPG3kMqqzxQt.;_ylv=3?show=rOtzes0eaa" class="fn nick"><img alt="" src="./index_files/1ayXyQ9jHAAED-IGUYFA.jpg" id="yav-1" height="16" width="16"> Detromental</a>
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </li>
                     <li class="mail-friend">
                         <a href="http://answers.yahoo.com/question/index;_ylt=AtK152lINGPYWjWthJ_MFPqzxQt.;_ylv=3?qid=20110301153400AA8GaqD&link=mailto" title="Email this question to a friend">Email</a>
                     </li>
                     <li class="menu" id="yan-save-question">
                         <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fmy%2Fmy_add_trace_q%3Fqid%3D20110301153400AA8GaqD%26expires%3D1299368040%26.crumb%3DV.FB6ljOdrL&.src=knowsrch&.intl=us" title=""><span>Save</span></a>
                         <div style="visibility: hidden; z-index: 2;" class="yui-module yui-overlay yui-overlay-hidden" id="yan-save-question-menu">
-                            <div class="bd">
+                            <div class="bd"> <!-- ToDo : Aanpassen..duh.. hier komt "Save code to..." etc. -->
                                 <ul>
                                     <li class="first-child">
-                                        <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fmy%2Fmy_add_trace_q%3Fqid%3D20110301153400AA8GaqD%26expires%3D1299368040%26.crumb%3DV.FB6ljOdrL&.src=knowsrch&.intl=us" title="Add to private Watchlist">Add to private Watchlist</a>
+                                        <a href="" title="Add to private Watchlist">Add to private Watchlist</a>
                                     </li>
                                     <li>
-                                        <a href="http://us.lrd.yahoo.com/_ylt=Aszx.ayZ.YMgLmRFRsdJcxizxQt.;_ylv=0/SIG=18nvajjia/EXP=1299153754/**http%3A//bookmarks.yahoo.com/toolbar/savebm%3Ft=Does%2Bleaving%2Ba%2Bcharger%2Bcable%2Bin%2Ba%2Bplug%2Boutlet%2Bwaste%2Belectricity%253F%2B-%2BYahoo%2521%2BAnswers%26u=http%253A%252F%252Fanswers.yahoo.com%252Fquestion%252Findex%253Fqid%253D20110301153400AA8GaqD" rel="popup">Save to Yahoo! Bookmarks</a>
+                                        <a href="" rel="popup">Save to Yahoo! Bookmarks</a>
                                     </li>
                                     <li>
-                                        <a href="http://us.lrd.yahoo.com/_ylt=Ao57vT.f6nFW9VbKb7B1d36zxQt.;_ylv=0/SIG=150edbh3g/EXP=1299153754/**http%3A//add.my.yahoo.com/add/module%3Furl=http%253A%252F%252Fanswers.yahoo.com%252Frss%252Fquestion%253Fqid%253D20110301153400AA8GaqD%26lg=us" rel="popup">Add to My Yahoo!</a>
-                                    </li>
-                                    <li>
-                                        <a href="http://us.lrd.yahoo.com/_ylt=AgCcdJUmforRvgaZ2CQxXZSzxQt.;_ylv=0/SIG=1ak28shi3/EXP=1299153754/**http%3A//del.icio.us/post%3Fv=4%26partner=yanswers%26noui%26jump=close%26url=http%253A%252F%252Fanswers.yahoo.com%252Fquestion%252Findex%253Fqid%253D20110301153400AA8GaqD%3Fqid=20110301153400AA8GaqD%26title=Does%2Bleaving%2Ba%2Bcharger%2Bcable%2Bin%2Ba%2Bplug%2Boutlet%2Bwaste%2Belectricity%253F%2B-%2BYahoo%2521%2BAnswers" rel="popup">Add to Del.icio.us</a>
-                                    </li>
-                                    <li>
-                                        <a href="http://answers.yahoo.com/rss/question;_ylt=AhaFB1xE9v1n6nHCGoQCGJ6zxQt.;_ylv=3?qid=20110301153400AA8GaqD" class="rss-link">RSS</a>
+                                        <a href="" rel="popup">Add to My Yahoo!</a>
                                     </li>
                                 </ul>
                             </div>
@@ -262,7 +246,7 @@
                 <div id="yan-answers" class="mod">
                     <div class="hd">
                         <h3>
-                            <strong>Answers</strong> (4)
+                            <strong>Answers</strong> (4) <!-- Nummertje moet dynamisch -->
                         </h3>
                         <form action="file:///C:/question/index" method="get" id="yan-answer-sort">
                             <div>
@@ -279,10 +263,10 @@
                         </form>
                     </div>
                     <div class="bd">
-                        <ul class="shown">
+                        <ul class="shown"> <!-- Alles hieronder moet dynamisch... de mogelijke antwoorden -->
                             <li>  <div id="DcBIPVTIWDTHEy3pdZGD" class="answer">
                                     <div id="profile-y4VWVD94aa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=y4VWVD94aa" class="avatar"><img class="photo" alt="JULIE !" src="./index_files/tn48_003.jpeg" width="48"></a>
+                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=y4VWVD94aa" class="avatar"><img class="photo" alt="JULIE !" src="./images/tn48_003.jpeg" width="48"></a>
                                         <span class="user">
                                             <span class="by">by </span>
                                             <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=y4VWVD94aa"><span class="fn" title="JULIE !">JULIE !</span></a>
@@ -315,34 +299,20 @@
                                             <li>
                                                 <abbr title="2011-03-01 23:35:13 +0000">12 hours ago</abbr>
                                             </li>
-                                            <li class="report-abuse">
-                                                <a href="http://answers.yahoo.com/answer/report;_ylt=AsFA669FvrShnO7f4ofXRAyzxQt.;_ylv=3?qid=20110301153400AA8GaqD&kid=DcBIPVTIWDTHEy3pdZGD&.crumb=.V.FB6ljOdrL" title="Report this answer">Report Abuse</a>
-                                            </li>
                                         </ul>
-                                        <div class="utils-container">
-                                            <div id="answer-tools-y4VWVD94aa" class="answer-util dynamic">
-                                                <ul>
-                                                    <li class="rate-up">
-                                                        <span class="seo-rated">
-                                                            2 people rated this as <strong>good</strong>
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div id="M6NxPTPjVG_E3CzaeFQs" class="answer">
                                     <div id="profile-GWoW1o5oaa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=GWoW1o5oaa" class="avatar"><img class="photo" alt="SSP Bowl Dude" src="./index_files/1KRzpwzVPAAADV6Jg2A51ZvjmY7zdtw.png" width="48"></a>
+                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=GWoW1o5oaa" class="avatar"><img class="photo" alt="SSP Bowl Dude" src="./images/1KRzpwzVPAAADV6Jg2A51ZvjmY7zdtw.png" width="48"></a>
                                         <span class="user">
                                             <span class="by">by </span>
                                             <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=GWoW1o5oaa"><span class="fn" title="SSP Bowl Dude">SSP Bowl Dude</span></a>
                                         </span>
                                         <div class="user-badge top-contrib">
-                                            <img src="./index_files/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                                            <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
                                         </div>
                                         <dl class="stats">
                                             <dt class="member">Member since:</dt>
@@ -353,7 +323,7 @@
                                         <dl class="contributions">
                                             <dt>Badge Image:</dt>
                                             <dd>
-                                                <img src="./index_files/topcontrib_id.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                                                <img src="./images/topcontrib_id.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
                                             </dd>
                                             <dt>Contributing In:</dt>
                                             <dd>Other - Sports</dd>
@@ -373,26 +343,14 @@
                                             <li>
                                                 <abbr title="2011-03-01 23:35:19 +0000">12 hours ago</abbr>
                                             </li>
-                                            <li class="report-abuse">
-                                                <a href="http://answers.yahoo.com/answer/report;_ylt=AsFA669FvrShnO7f4ofXRAyzxQt.;_ylv=3?qid=20110301153400AA8GaqD&kid=M6NxPTPjVG_E3CzaeFQs&.crumb=.V.FB6ljOdrL" title="Report this answer">Report Abuse</a>
-                                            </li>
                                         </ul>
-                                        <div class="utils-container">
-                                            <div id="answer-tools-GWoW1o5oaa" class="answer-util dynamic">
-                                                <ul>
-                                                    <li class="rate-up">
-                                                        <span class="seo-rated">1 person rated this as <strong>good</strong></span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div id="AMZWKEbHI0LgwALHHYBe" class="answer">
                                     <div id="profile-t2HBDKBBaa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=t2HBDKBBaa" class="avatar"><img class="photo" alt="iPfc" src="./index_files/tn48_002.jpeg" width="48"></a>
+                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=t2HBDKBBaa" class="avatar"><img class="photo" alt="iPfc" src="./images/tn48_002.jpeg" width="48"></a>
                                         <span class="user">
                                             <span class="by">by </span>
                                             <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=t2HBDKBBaa"><span class="fn" title="iPfc">iPfc</span></a>
@@ -418,22 +376,19 @@
                                             <li>
                                                 <abbr title="2011-03-01 23:35:31 +0000">12 hours ago</abbr>
                                             </li>
-                                            <li class="report-abuse">
-                                                <a href="http://answers.yahoo.com/answer/report;_ylt=AsFA669FvrShnO7f4ofXRAyzxQt.;_ylv=3?qid=20110301153400AA8GaqD&kid=AMZWKEbHI0LgwALHHYBe&.crumb=.V.FB6ljOdrL" title="Report this answer">Report Abuse</a>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
                             </li>
                             <li>  <div id="GqUpLTPiI1ZxF8Y21lau" class="answer">
                                     <div id="profile-nQ7G1nBVaa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=nQ7G1nBVaa" class="avatar"><img class="photo" alt="classicsat" src="./index_files/nopic_48.gif" width="48"></a>
+                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=nQ7G1nBVaa" class="avatar"><img class="photo" alt="classicsat" src="./images/nopic_48.gif" width="48"></a>
                                         <span class="user">
                                             <span class="by">by </span>
                                             <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=nQ7G1nBVaa"><span class="fn" title="classicsat">classics...</span></a>
                                         </span>
                                         <div class="user-badge top-contrib">
-                                            <img src="./index_files/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                                            <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
                                         </div>
                                         <dl class="stats">
                                             <dt class="member">Member since:</dt>
@@ -444,7 +399,7 @@
                                         <dl class="contributions">
                                             <dt>Badge Image:</dt>
                                             <dd>
-                                                <img src="./index_files/topcontrib_id.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                                                <img src="./images/topcontrib_id.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
                                             </dd>
                                             <dt>Contributing In:</dt>
                                             <dd>Other - Electronics</dd>
@@ -466,9 +421,6 @@
                                             <li>
                                                 <abbr title="2011-03-01 23:54:01 +0000">12 hours ago</abbr>
                                             </li>
-                                            <li class="report-abuse">
-                                                <a href="http://answers.yahoo.com/answer/report;_ylt=AsFA669FvrShnO7f4ofXRAyzxQt.;_ylv=3?qid=20110301153400AA8GaqD&kid=GqUpLTPiI1ZxF8Y21lau&.crumb=.V.FB6ljOdrL" title="Report this answer">Report Abuse</a>
-                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -481,25 +433,27 @@
                 <div id="yan-question-advert" class="marketing-ad mod">
                     <div id="yan-categories" class="mod">
                         <h2 class="hd">Categories</h2>
-                        <ul class="bd">
+                        <ul class="bd"> <!-- Dynamisch via database -->
                             <li>
-                                <a id="view-all-cats" href="http://answers.yahoo.com/dir/index;_ylt=AhFwQ83c5ZqGLazI1jCqEIezxQt.;_ylv=3">All Categories</a>                                                              <ul>
+                                <a id="view-all-cats" href="">All Categories</a>
+                                <ul>
                                     <li class="expanded">
-                                        <a href="http://answers.yahoo.com/dir/index;_ylt=AggBlkPSRpChKgwHD8b3CpqzxQt.;_ylv=3?sid=396545014&link=list">Consumer Electronics</a>                                              <ul>
+                                        <a href="">Consumer Electronics</a>
+                                        <ul>
                                             <li>
-                                                <a class="" href="http://answers.yahoo.com/dir/index;_ylt=AvdM3GonGiIQUe6_86vXUqGzxQt.;_ylv=3?sid=396545631&link=list">Cameras</a>
+                                                <a class="" href="">Cameras</a>
                                             </li>
                                             <li>
-                                                <a class="" href="http://answers.yahoo.com/dir/index;_ylt=AryG3KJw.Fk5CPrVIhaERh6zxQt.;_ylv=3?sid=396545678&link=list">Home Theater</a>
+                                                <a class="" href="">Home Theater</a>
                                             </li>
                                             <li class="current">
-                                                <a class="current" href="http://answers.yahoo.com/dir/index;_ylt=Av4Pb7Rn37q.DMe5n7M8P0mzxQt.;_ylv=3?sid=396545326&link=list">Other - Electronics</a>
+                                                <a class="current" href="">Other - Electronics</a>
                                             </li>
                                             <li>
-                                                <a class="" href="http://answers.yahoo.com/dir/index;_ylt=AtKxfm74r8Kyroc5mcXqU4GzxQt.;_ylv=3?sid=396545657&link=list">PDAs &amp; Handhelds</a>
+                                                <a class="" href="">PDAs &amp; Handhelds</a>
                                             </li>
                                             <li>
-                                                <a class="" href="http://answers.yahoo.com/dir/index;_ylt=AjLKwXztpQXahZeDybO93A6zxQt.;_ylv=3?sid=396545648&link=list">TVs</a>
+                                                <a class="" href="">TVs</a>
                                             </li>
                                         </ul>
                                     </li>
