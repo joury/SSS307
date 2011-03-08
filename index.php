@@ -1,13 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<!-- saved from url=(0073)file:///C:/Documents%20and%20Settings/Z/Bureaublad/Nieuwe%20map/index.htm -->
 <html dir="ltr" lang="en-us">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Imagetoolbar" content="">
-        <meta name="description" content="If you leave for example: laptop chargers, PSP cha�">
-        <meta name="keywords" content="yahoo, answers,  questions, Other - Electronics">
-        <meta name="title" content="Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers">
-        <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title>
+        <meta name="description" content="If you leave for example: laptop chargers, PSP cha�"> <!-- ToDo : Vraag -->
+        <meta name="keywords" content="yahoo, answers,  questions, Other - Electronics"> <!-- ToDo : Tags -> sitenaam, answers, questions, code, categorienaam -->
+        <meta name="title" content=""> <!-- ToDo : Vraag -->
+        <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title> <!-- ToDo : Zelfde tekst als hierboven-->
         <link rel="shortcut icon" href="http://l.yimg.com/a/i/us/sch/gr/answers_favicon.ico">
         <link rel="stylesheet" type="text/css" media="screen" href="./images/answers-fe-us.css">
         <link rel="stylesheet" type="text/css" media="print" href="./images/print.css">
