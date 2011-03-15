@@ -9,7 +9,6 @@
         <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title> <!-- ToDo : Zelfde tekst als hierboven-->
         <link rel="shortcut icon" href="http://l.yimg.com/a/i/us/sch/gr/answers_favicon.ico">
         <link rel="stylesheet" type="text/css" media="screen" href="./images/answers-fe-us.css">
-        <link rel="stylesheet" type="text/css" media="print" href="./images/print.css">
     </head>
     <body class="c-std wide question-index new-header js">
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
@@ -57,7 +56,7 @@
                         <div id="ymenu" class="ygmaclr">
                             <div id="mepanel">
                                 <ul id="mepanel-nav">
-                                    <form>
+                                    <form action=""  name="login" method="POST">
                                         <li class="me1">
                                             <input type="text" name="username" />
                                             <input type="password" name="password" />
