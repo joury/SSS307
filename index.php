@@ -8,13 +8,13 @@
         <meta name="title" content=""> <!-- ToDo : Vraag -->
         <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title> <!-- ToDo : Zelfde tekst als hierboven-->
         <link rel="shortcut icon" href="http://l.yimg.com/a/i/us/sch/gr/answers_favicon.ico">
-        <link rel="stylesheet" type="text/css" media="screen" href="./images/answers-fe-us.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="./css/answers-fe-us.css">
     </head>
     <body class="c-std wide question-index new-header js">
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
     <div id="yan">
         <div id="hd">
-            <link type="text/css" rel="stylesheet" href="./images/uh_rsa-1.css">
+            <link type="text/css" rel="stylesheet" href="./css/uh_rsa-1.css">
             <style type="text/css">
                 #ygma{
                     position:relative;
@@ -81,7 +81,7 @@
                         </div>
                         <div id="yahoo" class="ygmaclr">
                             <div id="ygmabot">
-                                <a href="./images/index.htm" id="ygmalogo" target="_top"><img id="ygmalogoimg" src="./images/ans.gif" alt="Yahoo! Answers!!" height="26" width="257"></a> <!-- ToDo: Logo invoegen -->
+                                <a href="" id="ygmalogo" target="_top"><img id="ygmalogoimg" src="./images/ans.gif" alt="Yahoo! Answers!!" height="26" width="257"></a> <!-- ToDo: Logo en link invoegen -->
                             </div>
                         </div>
                     </div>
@@ -248,7 +248,9 @@
                         <ul class="shown"> <!-- Alles hieronder moet dynamisch... de mogelijke antwoorden -->
                             <li>  <div id="GqUpLTPiI1ZxF8Y21lau" class="answer">
                                     <div id="profile-nQ7G1nBVaa" class="profile vcard">
-                                        <a href="" class="avatar"><img class="photo" alt="classicsat" src="./images/nopic_48.gif" width="48"></a>
+                                        <a href="" class="avatar">
+                                            <img class="photo" alt="classicsat" src="" width="48">
+                                        </a>
                                         <span class="user">
                                             <span class="by">by </span>
                                             <a class="url" href=""><span class="fn" title="classicsat">classics...</span></a>
