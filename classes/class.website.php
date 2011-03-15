@@ -467,7 +467,7 @@ Class website {
             die("Query error when loading languages");
         } else {
             while ($fields = mysql_fetch_assoc($result)) {
-                if ($fields['id'] == $_GET['id']) {
+                if ($_GET && $fields['id'] == $_GET['categoryid'] {
                     echo '<li class="current">';
                     echo '<a class="current" href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
                 } else {
