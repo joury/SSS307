@@ -58,9 +58,6 @@ $banner = '
                             <div id="pa-wrapper" style="width: 140px;">
                                 <ul id="pa2-nav" class="sp" style="width: 140px;">
                                     <li class="pa1 sp">
-                                        <a class="sp" href="" target="_top">Logout</a> <!-- ToDo : Link invoegen -->
-                                    </li>
-                                    <li class="pa2 sp">
                                         <a class="sp" href="" target="_top">Help</a> <!-- ToDo : Link invoegen -->
                                     </li>
                                 </ul>

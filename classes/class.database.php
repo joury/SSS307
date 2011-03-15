@@ -1,5 +1,5 @@
 <?php
-Class DB
+Class database
 {
     var $connection;
     var $selected_db;

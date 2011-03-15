@@ -13,10 +13,10 @@
     <body class="c-std wide question-index new-header js">
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
     <div id="yan">
-      <?php
-      require "banner.php";
-      echo $banner;
-      ?>
+        <?php
+        require "banner.php";
+        echo $banner;
+        ?>
         <div id="yan-wrap">
             <ol id="yan-breadcrumbs"> <!-- ToDo : Dynamisch browsen... -->
                 <li>
@@ -125,12 +125,6 @@
                                         <div class="user-badge top-contrib">
                                             <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
                                         </div>
-                                        <dl class="stats">
-                                            <dt class="member">Member since:</dt>
-                                            <dd class="member">September 29, 2008</dd>
-                                            <dt class="total">Total points:</dt>
-                                            <dd class="total">149,026 (Level 7)</dd>
-                                        </dl>
                                     </div>
                                     <div class="qa-container">
                                         <div class="content">Yes they do, but individually not much. Gobally, it adds up significantly.</div>
@@ -147,37 +141,24 @@
                 </div>
             </div>
             <div id="yan-related">
-                <div id="yan-question-advert" class="marketing-ad mod">
-                    <div id="yan-categories" class="mod">
-                        <h2 class="hd">Categories</h2>
-                        <ul class="bd"> <!-- Dynamisch via database -->
-                            <li>
-                                <a id="view-all-cats" href="">All Categories</a>
+                <div id="yan-categories" class="mod">
+                    <h2 class="hd">Categories</h2>
+                    <ul class="bd">
+                        <li>
+                            <a id="view-all-cats" href="">All Programming Languages</a>
+                            <li class="expanded">
                                 <ul>
-                                    <li class="expanded">
-                                        <a href="">Consumer Electronics</a>
-                                        <ul>
-                                            <li>
-                                                <a class="" href="">Cameras</a>
-                                            </li>
-                                            <li>
-                                                <a class="" href="">Home Theater</a>
-                                            </li>
-                                            <li class="current">
-                                                <a class="current" href="">Other - Electronics</a>
-                                            </li>
-                                            <li>
-                                                <a class="" href="">PDAs &amp; Handhelds</a>
-                                            </li>
-                                            <li>
-                                                <a class="" href="">TVs</a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    <?php
+                                    require "classes/class.website.php";
+                                    require "classes/class.database.php";
+                                    $database = new database();
+                                    $website = new website($database);
+                                    $website->showCategories($_GET);
+                                    ?>
                                 </ul>
                             </li>
-                        </ul>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
