@@ -174,46 +174,31 @@
                 <div id="yan-main">
                     <div id="yan-question">
                         <div id="profile-1uxMmtIfaa" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->
-                            <a href="http://answers.yahoo.com/my/profile;_ylt=AtnLA5JVOgEuOLfV.aq0106zxQt.;_ylv=3?show=1uxMmtIfaa" class="avatar">
-                                <img class="photo" alt="Super Soldier" src="./images/tn48.jpeg" width="48">
+                            <a href="" class="avatar">  <!-- ToDO : Link invoegen naar profiel -->
+                                <img class="photo" alt="" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
                             </a>
                             <span class="user">
                                 <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AmmsfLbonmLPldqQYdFjLnKzxQt.;_ylv=3?show=1uxMmtIfaa">
-                                    <span class="fn" title="Super Soldier">Super Soldier</span>
+                                    <span class="fn" title=""></span> <!-- ToDo : Username hier -->
                                 </a>
                             </span>
-                            <dl class="stats">
-                                <dt class="member">Member since:</dt>
-                                <dd class="member">January 21, 2011</dd>
-                                <dt class="total">Total points:</dt>
-                                <dd class="total">917 (Level 2)</dd>
-                            </dl>
-                            <ul class="network">
-                                <li>
-                                    <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="add-contact">Add Contact</a>
-                                </li>
-                                <li>
-                                    <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="block-user">Block</a>
-                                </li>
-                            </ul>
                         </div>
                         <div class="qa-container"> <!-- ToDo : Dynamische vraag via database -->
                             <div class="hd">
                                 <h2>Open Question</h2>
                             </div>
-                            <h1 class="subject">Does leaving a charger cable in a plug outlet waste electricity?</h1>
-                            <div class="content">
-                                If you leave for example: laptop
-                                chargers, PSP chargers in the outlet while the device isn't connected,
-                                does it use electricity. Thanks.
+                            <h1 class="subject"></h1>   <!-- ToDo : Invullen -->
+                            <div class="content">   <!-- ToDo : Invullen -->
                             </div>
                             <ul class="meta">
                                 <li>
-                                    <abbr title="2011-03-01 23:34:00 +0000">12 hours ago</abbr>
+                                    <abbr title=""></abbr> <!-- ToDo : Invullen -->
                                 </li>
                             </ul>
                             <p class="cta">
-                                <a href="http://answers.yahoo.com/question/;_ylt=Aq7Pf2.xhVeKfX4wT..m2uizxQt.;_ylv=3?link=answer&qid=20110301153400AA8GaqD"><span><span><span><span>Answer Question</span></span></span></span></a>
+                                <a href=""> <!-- ToDo : Link invullen -->
+                                    <span><span><span><span>Answer Question</span></span></span></span>
+                                </a>
                             </p>
                         </div>
                     </div>
@@ -263,128 +248,12 @@
                     </div>
                     <div class="bd">
                         <ul class="shown"> <!-- Alles hieronder moet dynamisch... de mogelijke antwoorden -->
-                            <li>  <div id="DcBIPVTIWDTHEy3pdZGD" class="answer">
-                                    <div id="profile-y4VWVD94aa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=y4VWVD94aa" class="avatar"><img class="photo" alt="JULIE !" src="./images/tn48_003.jpeg" width="48"></a>
-                                        <span class="user">
-                                            <span class="by">by </span>
-                                            <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=y4VWVD94aa"><span class="fn" title="JULIE !">JULIE !</span></a>
-                                        </span>
-                                        <dl class="stats">
-                                            <dt class="member">Member since:</dt>
-                                            <dd class="member">August 18, 2008</dd>
-                                            <dt class="total">Total points:</dt>
-                                            <dd class="total">3,835 (Level 4)</dd>
-                                        </dl>
-                                        <ul class="network">
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="add-contact">Add Contact</a>
-                                            </li>
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="block-user">Block</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="qa-container">
-                                        <div class="content">
-                                            I was just thinking about this too!
-                                            Hhaha. But yes it does. As long as something's plugged into the outlet,
-                                            it still "consumes" electricity. (Idk what other word to use.) Even if
-                                            your TV is plugged in &amp;you're not watching anything, it still
-                                            consumes like 20% of electricity or something. I forgot where I found
-                                            this information but yeah. UNPLUG!! :)
-                                        </div>
-                                        <ul class="meta">
-                                            <li>
-                                                <abbr title="2011-03-01 23:35:13 +0000">12 hours ago</abbr>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="M6NxPTPjVG_E3CzaeFQs" class="answer">
-                                    <div id="profile-GWoW1o5oaa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=GWoW1o5oaa" class="avatar"><img class="photo" alt="SSP Bowl Dude" src="./images/1KRzpwzVPAAADV6Jg2A51ZvjmY7zdtw.png" width="48"></a>
-                                        <span class="user">
-                                            <span class="by">by </span>
-                                            <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=GWoW1o5oaa"><span class="fn" title="SSP Bowl Dude">SSP Bowl Dude</span></a>
-                                        </span>
-                                        <div class="user-badge top-contrib">
-                                            <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
-                                        </div>
-                                        <dl class="stats">
-                                            <dt class="member">Member since:</dt>
-                                            <dd class="member">September 05, 2007</dd>
-                                            <dt class="total">Total points:</dt>
-                                            <dd class="total">103,057 (Level 7)</dd>
-                                        </dl>
-                                        <dl class="contributions">
-                                            <dt>Badge Image:</dt>
-                                            <dd>
-                                                <img src="./images/topcontrib_id.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
-                                            </dd>
-                                            <dt>Contributing In:</dt>
-                                            <dd>Other - Sports</dd>
-                                        </dl>
-                                        <ul class="network">
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="add-contact">Add Contact</a>
-                                            </li>
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="block-user">Block</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="qa-container">
-                                        <div class="content">Still uses power</div>
-                                        <ul class="meta">
-                                            <li>
-                                                <abbr title="2011-03-01 23:35:19 +0000">12 hours ago</abbr>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="AMZWKEbHI0LgwALHHYBe" class="answer">
-                                    <div id="profile-t2HBDKBBaa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=t2HBDKBBaa" class="avatar"><img class="photo" alt="iPfc" src="./images/tn48_002.jpeg" width="48"></a>
-                                        <span class="user">
-                                            <span class="by">by </span>
-                                            <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=t2HBDKBBaa"><span class="fn" title="iPfc">iPfc</span></a>
-                                        </span>
-                                        <dl class="stats">
-                                            <dt class="member">Member since:</dt>
-                                            <dd class="member">June 11, 2009</dd>
-                                            <dt class="total">Total points:</dt>
-                                            <dd class="total">3,844 (Level 4)</dd>
-                                        </dl>
-                                        <ul class="network">
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="add-contact">Add Contact</a>
-                                            </li>
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="block-user">Block</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="qa-container">
-                                        <div class="content">I think so because electricity is still being conducted. But I'm no electrician.</div>
-                                        <ul class="meta">
-                                            <li>
-                                                <abbr title="2011-03-01 23:35:31 +0000">12 hours ago</abbr>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
                             <li>  <div id="GqUpLTPiI1ZxF8Y21lau" class="answer">
                                     <div id="profile-nQ7G1nBVaa" class="profile vcard">
-                                        <a href="http://answers.yahoo.com/my/profile;_ylt=ArnSyW.V3s6n5GmOWa5VwiuzxQt.;_ylv=3?show=nQ7G1nBVaa" class="avatar"><img class="photo" alt="classicsat" src="./images/nopic_48.gif" width="48"></a>
+                                        <a href="" class="avatar"><img class="photo" alt="classicsat" src="./images/nopic_48.gif" width="48"></a>
                                         <span class="user">
                                             <span class="by">by </span>
-                                            <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AoJ2TAUqX6KpUtwc54.XyN2zxQt.;_ylv=3?show=nQ7G1nBVaa"><span class="fn" title="classicsat">classics...</span></a>
+                                            <a class="url" href=""><span class="fn" title="classicsat">classics...</span></a>
                                         </span>
                                         <div class="user-badge top-contrib">
                                             <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
@@ -395,24 +264,6 @@
                                             <dt class="total">Total points:</dt>
                                             <dd class="total">149,026 (Level 7)</dd>
                                         </dl>
-                                        <dl class="contributions">
-                                            <dt>Badge Image:</dt>
-                                            <dd>
-                                                <img src="./images/topcontrib_id.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
-                                            </dd>
-                                            <dt>Contributing In:</dt>
-                                            <dd>Other - Electronics</dd>
-                                            <dd>TiVO &amp; DVRs</dd>
-                                            <dd>TVs</dd>
-                                        </dl>
-                                        <ul class="network">
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="add-contact">Add Contact</a>
-                                            </li>
-                                            <li>
-                                                <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fquestion%2Findex%3Fqid%3D20110301153400AA8GaqD&.src=knowsrch&.intl=us" class="block-user">Block</a>
-                                            </li>
-                                        </ul>
                                     </div>
                                     <div class="qa-container">
                                         <div class="content">Yes they do, but individually not much. Gobally, it adds up significantly.</div>
