@@ -134,18 +134,25 @@
                         </form>
                     </li>
                     <li id="yan-banner-answer"> <!-- ToDo : Verwijderen ? -->
-                        <div>
-                            <h2>
-                                <a href="">Answer</a>
-                            </h2>
-                        </div>
-                    </li>
-                    <li id="yan-banner-discover"> <!-- ToDo : Verwijderen ? -->
-                        <div>
-                            <h2>
-                                <a href="">Discover</a>
-                            </h2>
-                        </div>
+                        <form action="file:///C:/question/ask;_ylt=AgU9SwXIffzRvq4Ur8omKrSzxQt.;_ylv=3" method="get">
+                            <div>
+                                <div>
+                                    <label class="offscreen" for="banner-answer">What would you like to search?</label>
+                                    <input class="default" value="" maxlength="110" id="banner-answer" name="title" type="text">
+                                    <span class="cta">
+                                        <button id="" value="Continue" name="submit-go" class="cta-button">
+                                            <span>
+                                                <span>
+                                                    <span>
+                                                        <span>Search!</span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
                     </li>
                 </ul>
             </div>

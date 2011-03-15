@@ -1,12 +1,12 @@
 html, body, #yan-question {
-  background:none;
+    background:none;
 }
 a img, abbr {border:0;}
 iframe {display:none;}
 #yan {
-  border:0;
-  background:none;
-  font:13px arial, sans-serif;
+    border:0;
+    background:none;
+    font:13px arial, sans-serif;
 }
 /* print styles */
 #ygma-search,
@@ -36,11 +36,11 @@ iframe {display:none;}
 #ysfAPILog,
 #yan-bestof .actions,
 .default-index #yan-wrap h1 {
-  display:none;
+    display:none;
 }
 
 #yum-branding {
-  border:0;
+    border:0;
 }
 
 .profile a {
@@ -48,20 +48,20 @@ iframe {display:none;}
 }
 
 .profile .photo {
-  height:16px;
-  width:16px;
+    height:16px;
+    width:16px;
 }
 .profile .user .by {
-  display:none;
+    display:none;
 }
 
 .answer-util ul {
-  background:none;
-  border:0;
+    background:none;
+    border:0;
 }
 
 .answer {
-  padding-left:0;
+    padding-left:0;
 }
 
 
@@ -70,21 +70,21 @@ iframe {display:none;}
 }
 
 .answer {
-  margin-bottom:0.5em;
-  border-bottom: 1px dotted #eee;
-  padding-bottom:0.5em;
-  page-break-between:avoid;
+    margin-bottom:0.5em;
+    border-bottom: 1px dotted #eee;
+    padding-bottom:0.5em;
+    page-break-between:avoid;
 }
 .profile .contributions,
 .profile .stats,
 .profile .network,
 .utils-container,
 #yan-main h2 {
-  display:none;
+    display:none;
 }
 .user-badge,
 .user-badge img {
-  display:inline;
+    display:inline;
 }
 h1 {
     font-size:123.1%;
@@ -100,13 +100,13 @@ h1 {
     font-weight:bold;
 }
 h3 {
-  font-size: 108%;
-  font-weight: bold;
-  color: #666;
-  margin: 1em 0;
+    font-size: 108%;
+    font-weight: bold;
+    color: #666;
+    margin: 1em 0;
 }
 .profile {
-  font-weight:bold;
+    font-weight:bold;
 }
 
 #yan-breadcrumbs,
@@ -133,11 +133,11 @@ h3 {
 }
 .utils-container,
 #yan-main h2 {
-  display: none;
+    display: none;
 }
 .meta abbr:after,
 .additonal-date abbr:after {
-  content: ' ( ' attr(title) ' )';
+    content: ' ( ' attr(title) ' )';
 }
 
 #yan-comments .signin {
