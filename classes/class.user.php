@@ -56,10 +56,10 @@ Class User
                     <td>Email:</td> <td><input type="text" name="email" id="emailaddress"></td>
                 </tr>
                 <tr>
-                    <td>Country:</td> <td><select id="countrySelect" name="country" onchange="populateState()"></select><script type="text/javascript">populateCountry();</script></td>
+                    <td>Country:</td> <td><select id="countrySelect" name="country"></select></td>
                 </tr>
                 <tr>
-                    <td>State/Province:</td> <td><select id="stateSelect" name="selectedstate" onchange="populateCity()"></select></td>
+                    <td>State/Province:</td> <td><select id="stateSelect" name="selectedstate"</select></td>
                 </tr>
                 <tr>
                     <td>City:</td> <td><select id="citySelect" name="city"></select></td>
