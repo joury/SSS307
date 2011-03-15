@@ -105,9 +105,7 @@
                     <li id="yan-banner-ask">
                         <form action="file:///C:/question/ask;_ylt=AgU9SwXIffzRvq4Ur8omKrSzxQt.;_ylv=3" method="get">
                             <div>
-                                <h2>
-                                    <a href="http://answers.yahoo.com/question/ask;_ylt=At.Id2Dk_yZr5_mtfIYqTRKzxQt.;_ylv=3">Ask</a>
-                                </h2>
+                                
                                 <div>
                                     <label class="offscreen" for="banner-ask">What would you like to ask?</label>
                                     <input class="default" value="" maxlength="110" id="banner-ask" name="title" type="text">
