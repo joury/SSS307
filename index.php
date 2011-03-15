@@ -57,17 +57,14 @@
                         <div id="ymenu" class="ygmaclr">
                             <div id="mepanel">
                                 <ul id="mepanel-nav">
-                                    <li class="me1">
-                                        <em>
-                                            <a class="ygmasignup" href="">Register</a> <!-- ToDo : Link invoegen -->
-                                        </em>
-                                    </li>
-                                    <li class="me2">
-                                        <a href=""><em>Sign In</em></a> <!-- ToDo : Link invoegen -->
-                                    </li>
-                                    <li class="me3">
-                                        <a href="" target="_top">Help</a> <!-- ToDo : Link invoegen -->
-                                    </li>
+                                    <form>
+                                        <li class="me1">
+                                            <input type="text" name="username" />
+                                            <input type="password" name="password" />
+                                            <input type="submit" value="Register" />
+                                            <input type="submit" value="Log in" />
+                                        </li>
+                                    </form>
                                 </ul>
                             </div>
                             <div id="pa">
@@ -77,7 +74,7 @@
                                             <a class="sp" href="" target="_top">Logout</a> <!-- ToDo : Link invoegen -->
                                         </li>
                                         <li class="pa2 sp">
-                                            <a class="sp" href="" target="_top">Settings</a> <!-- ToDo : Link invoegen -->
+                                            <a class="sp" href="" target="_top">Help</a> <!-- ToDo : Link invoegen -->
                                         </li>
                                     </ul>
                                 </div>
@@ -91,16 +88,13 @@
                     </div>
                 </div>
             </div>
-            <div class="tabbed-content"> <!-- ToDo : Dynamische tabs vanuit DB voor makkelijk aanpassen ? -->
+            <div class="tabbed-content">
                 <ul class="tabs" id="yan-nav">
                     <li class="menu" id="yan-nav-home">
                         <a href="">Home</a> <!-- ToDo : Link invoegen -->
                     </li>
                     <li id="yan-nav-browse" class="current menu">
                         <a href="">Categories</a> <!-- ToDo : Link invoegen -->
-                    </li>
-                    <li class="menu" id="yan-nav-my-activity">
-                        <a href="">My Activity</a> <!-- ToDo : Link invoegen of compleet verwijderen ? -->
                     </li>
                     <li class="menu" id="yan-nav-about">
                         <a href="">Profile</a> <!-- ToDo : Link invoegen -->
@@ -186,8 +180,8 @@
                             </a>
                             <span class="user">
                                 <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AmmsfLbonmLPldqQYdFjLnKzxQt.;_ylv=3?show=1uxMmtIfaa">
-                                <span class="fn" title="Super Soldier">Super Soldier</span>
-                            </a>
+                                    <span class="fn" title="Super Soldier">Super Soldier</span>
+                                </a>
                             </span>
                             <dl class="stats">
                                 <dt class="member">Member since:</dt>
