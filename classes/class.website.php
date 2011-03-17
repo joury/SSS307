@@ -127,6 +127,7 @@ Class website {
             setcookie($cookiename, $_COOKIE[$cookiename], time() + $cookietime);      // Make a new cookie with the same name and same info
 
 
+
     }
 
     function DoRegister($Info) {   // Begin the register function, get the $username and $password from the function call in index.php
@@ -156,14 +157,17 @@ Class website {
                     return false;         // Tell the function call in index.php that it failed
 
 
+
             }
             else
                 echo $this->Translate('AccountwName') . " " . $username . " " . $this->Translate('AlreadyExist');     // if the account already existed, show the part below
 
 
+
         }
         else
             die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
+
 
 
     }
@@ -262,11 +266,11 @@ Class website {
         if (mysql_num_rows($query) != 0) {   // If the account exists
             $fields = mysql_fetch_assoc($query);
             $password = $fields['password'];  // Get the password of the user with $username
-        }
-        else
+        } else {
             die("Account does not exist in the DB.");  // If the password query returned nothing, the account doesn't exist
+        }
 
-            if ($sha_pass == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
+        if ($sha_pass == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
             $cookie = setcookie($cookiename, "$username,$sha_pass", time() + $cookietime);  // Set a cookie with "name,password" that is legit for the following 5 minutes
             $this->ID = $fields['id'];
             $this->Username = $username;
@@ -277,11 +281,9 @@ Class website {
             $this->City = $fields['city'];
             $this->Gender = $fields['gender'];
             $this->Birthdate = $fields['birthdate'];
-        }
-        else
+        } else {
             die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
-
-
+        }
     }
 
     function Logout() {
@@ -320,15 +322,14 @@ Class website {
         if ($old_password == $this->GetPass()) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
             $new_password = sha1($new_password);
             $change_pass = mysql_query("UPDATE `accounts` SET `password` = '" . $new_password . "' WHERE `username` = '" . $this->GetName() . "';");
-            if ($change_pass)
+            if ($change_pass) {
                 echo $this->Translate('PasswordChanged');
-            else
+            } else {
                 echo mysql_error($connection);
-        }
-        else
+            }
+        } else {
             die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
-
-
+        }
     }
 
     function ShowAdditionalForm() {
@@ -467,7 +468,7 @@ Class website {
             die("Query error when loading languages");
         } else {
             while ($fields = mysql_fetch_assoc($result)) {
-                if ($_GET && $fields['id'] == $_GET['categoryid'] {
+                if ($_GET && $fields['id'] == $_GET['categoryid']) {
                     echo '<li class="current">';
                     echo '<a class="current" href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
                 } else {
@@ -475,6 +476,22 @@ Class website {
                     echo '<a href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
                     echo "</li>";
                 }
+            }
+        }
+    }
+
+    function showBanner() {
+        require 'class.banner.php';
+        echo $banner;
+    }
+
+    function showCurrentCategory($_GET) {
+        if ($_GET && isset($_GET['categoryid'])) {
+            $result = mysql_query("SELECT `naam` FROM `talen` WHERE `id` = '" . $_GET['categoryid'] . "';");
+            if (mysql_num_rows($result) == 1) {
+                echo "<a href=?".$_GET['categoryid'].">".mysql_result($result, 0)."</a> &gt";
+            } else {
+                die("Error: unknown category parsed");
             }
         }
     }

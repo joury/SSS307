@@ -1,10 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html dir="ltr" lang="en-us">
+    <?php
+    require "classes/class.website.php";
+    require "classes/class.database.php";
+    $database = new database();
+    $website = new website($database);
+    ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Imagetoolbar" content="">
         <meta name="description" content="If you leave for example: laptop chargers, PSP cha�"> <!-- ToDo : Vraag -->
-        <meta name="keywords" content="yahoo, answers,  questions, Other - Electronics"> <!-- ToDo : Tags -> sitenaam, answers, questions, code, categorienaam -->
+        <meta name="keywords" content="answers,  questions, Programming"> <!-- ToDo : Tags -> sitenaam, answers, questions, code, categorienaam -->
         <meta name="title" content=""> <!-- ToDo : Vraag -->
         <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title> <!-- ToDo : Zelfde tekst als hierboven-->
         <link rel="shortcut icon" href="http://l.yimg.com/a/i/us/sch/gr/answers_favicon.ico">
@@ -14,22 +20,20 @@
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
     <div id="yan">
         <?php
-        require "banner.php";
-        echo $banner;
+        $website->showBanner();
         ?>
         <div id="yan-wrap">
-            <ol id="yan-breadcrumbs"> <!-- ToDo : Dynamisch browsen... -->
+            <ol id="yan-breadcrumbs">
                 <li>
                     <a href="">Home</a> &gt;
                 </li>
                 <li>
-                    <a href="">All Categories</a> &gt;
+                    <a href="">All Programming Languages</a> &gt;
                 </li>
                 <li>
-                    <a href="">Consumer Electronics</a> &gt;
-                </li>
-                <li>
-                    <a href="">Other - Electronics</a> &gt;
+                    <?php
+                    $website->showCurrentCategory($_GET);
+                    ?>
                 </li>
                 <li class="selected">
                     Open Question
@@ -70,22 +74,13 @@
                 </div>
                 <ul id="yan-question-tools">
                     <li class="label">Action Bar:</li>
-                    <li class="mail-friend">
-                        <a href="http://answers.yahoo.com/question/index;_ylt=AtK152lINGPYWjWthJ_MFPqzxQt.;_ylv=3?qid=20110301153400AA8GaqD&link=mailto" title="Email this question to a friend">Email</a>
-                    </li>
                     <li class="menu" id="yan-save-question">
                         <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fmy%2Fmy_add_trace_q%3Fqid%3D20110301153400AA8GaqD%26expires%3D1299368040%26.crumb%3DV.FB6ljOdrL&.src=knowsrch&.intl=us" title=""><span>Save</span></a>
                         <div style="visibility: hidden; z-index: 2;" class="yui-module yui-overlay yui-overlay-hidden" id="yan-save-question-menu">
-                            <div class="bd"> <!-- ToDo : Aanpassen..duh.. hier komt "Save code to..." etc. -->
+                            <div class="bd">
                                 <ul>
-                                    <li class="first-child">
-                                        <a href="" title="Add to private Watchlist">Add to private Watchlist</a>
-                                    </li>
                                     <li>
-                                        <a href="" rel="popup">Save to Yahoo! Bookmarks</a>
-                                    </li>
-                                    <li>
-                                        <a href="" rel="popup">Add to My Yahoo!</a>
+                                        <a href="" rel="popup">Add code to my storage.</a>
                                     </li>
                                 </ul>
                             </div>
@@ -146,17 +141,13 @@
                     <ul class="bd">
                         <li>
                             <a id="view-all-cats" href="">All Programming Languages</a>
-                            <li class="expanded">
-                                <ul>
-                                    <?php
-                                    require "classes/class.website.php";
-                                    require "classes/class.database.php";
-                                    $database = new database();
-                                    $website = new website($database);
-                                    $website->showCategories($_GET);
-                                    ?>
-                                </ul>
-                            </li>
+                        <li class="expanded">
+                            <ul>
+                                <?php
+                                $website->showCategories($_GET);
+                                ?>
+                            </ul>
+                        </li>
                         </li>
                     </ul>
                 </div>
