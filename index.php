@@ -52,7 +52,15 @@
                                 $website->showHomePage();
                             }
                         } else {
-                            $website->showHomePage();
+                            if ($_POST) {
+                                if (isset($_POST['Login'])) {
+
+                                } else if (isset($_POST['Register'])) {
+                                    $website->showRegister();
+                                }
+                            } else {
+                                $website->showHomePage();
+                            }
                         }
                         /*
                           <div id="profile" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->

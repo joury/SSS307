@@ -30,7 +30,10 @@ Class website {
         }
     }
 
-    function ShowRegister() {
+    function showRegister() {
+        $days = "";
+        $months = "";
+        $years = "";
         for ($i = 1; $i <= 31; $i++) {
             if ($i < 10) {
                 $i = "0" . $i;
@@ -43,7 +46,7 @@ Class website {
             }
             $months .= "<option value='$i'>$i</option>";
         }
-        for ($i = (date(Y) - 150); $i <= date(Y) - 4; $i++) {
+        for ($i = (date("Y") - 150); $i <= date("Y") - 4; $i++) {
             $years .= "<option value='$i'>$i</option>";
         }
         echo '
@@ -167,9 +170,10 @@ Class website {
 
     function GetName($id = "") {
         require $this->MainConfigFile;
+
         if ($this->Username != "" && $id == "") {
             return $this->Username;
-        } else if ($_COOKIE[$cookiename] != "" && $id == "") {
+        } else if (isset($_COOKIE[$cookiename]) && $id == "") {
             $parts = explode(",", $_COOKIE[$cookiename]);
             if ($parts[0] != "") {
                 $this->Username = $parts[0];
@@ -189,9 +193,10 @@ Class website {
 
     function GetPass() {
         require $this->MainConfigFile;
+
         if ($this->Password != "")
             return $this->Password;
-        else if ($_COOKIE[$cookiename] != "") {
+        else if (isset($_COOKIE[$cookiename])) {
             require $this->MainConfigFile;
             $parts = explode(",", $_COOKIE[$cookiename]);
             if ($parts[1] != "")
@@ -210,17 +215,17 @@ Class website {
             require $this->MainConfigFile;
             $this->DB->MakeConnection();
             if ($name != "")
-                $query = mysql_query("SELECT `id` FROM `accounts` WHERE `username` = '" . $name . "';");
+                $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $name . "';");
             else
-                $query = mysql_query("SELECT `id` FROM `accounts` WHERE `username` = '" . $this->GetName() . "';");
+                $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $this->GetName() . "';");
             if (mysql_num_rows($query) != 0) {
                 $result = mysql_result($query, 0);
                 if ($result != "") {
                     $this->ID = $result;
                     return $result;
-                }
-                else
+                } else {
                     die("Unknown error");
+                }
             }
         }
     }
@@ -230,20 +235,23 @@ Class website {
         $language_query = mysql_query($raw_language_query);
         if (@mysql_num_rows($language_query) != 0) {
             $language = mysql_result($language_query, 0);
+
+            if ($language == "") {
+                $language = "English";
+            }
         }
-        if ($language == "")
-            $language = "English";
         return $language;
     }
 
-    function ShowLogin($destination = "") {  // Show the login part (left top of index.php when not logged in)
-        if ($destination == "")
-            $destination = "index.php";
+    function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
-            <form name="LogIn" action="' . $destination . '" method="POST">
-            Username: <input type="text" name="username">
-            Password: <input type="password" name="password">
-            <input type="submit" name="LogIn" value="Log in">
+            <form action="" name="login" method="POST">
+                <li class="me1">
+                    <input type="text" name="username">
+                    <input type="password" name="password">
+                    <input type="submit" name="Register" value="Register">
+                    <input type="submit" name="Login" value="Log in">
+                </li>
             </form>
         ';
     }
@@ -478,8 +486,115 @@ Class website {
     }
 
     function showBanner() {
-        require 'class.banner.php';
-        echo $banner;
+        echo '
+            <div id="hd">
+                <link type="text/css" rel="stylesheet" href="./css/ygma1.css">
+                <link type="text/css" rel="stylesheet" href="./css/ygma2.css">
+                <div id="ygma">
+                    <div id="ygmaheader">
+                        <div class="bd sp">
+                            <div id="ymenu" class="ygmaclr">
+                                <div id="mepanel">
+                                    <ul id="mepanel-nav">
+        ';
+        if ($this->IsLoggedIn()) {
+            $this->ShowLogout();
+        } else {
+            $this->ShowLogin();
+        }
+        echo '
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="yahoo" class="ygmaclr">
+                                <div id="ygmabot">
+                                    <a href="./images/index.htm" id="ygmalogo" target="_top"><img id="ygmalogoimg" src="./images/ans.gif" alt="Yahoo! Answers!!" height="26" width="257"></a> <!-- ToDo: Logo invoegen -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tabbed-content">
+                    <ul class="tabs" id="yan-nav">
+                        <li class="menu" id="yan-nav-home">
+                            <a href="">Home</a> <!-- ToDo : Link invoegen -->
+                        </li>
+                        <li id="yan-nav-browse" class="current menu">
+                            <a href="">Categories</a> <!-- ToDo : Link invoegen -->
+                        </li>
+                        <li class="menu" id="yan-nav-about">
+                            <a href="">Profile</a> <!-- ToDo : Link invoegen -->
+                        </li>
+                    </ul>
+                </div>
+                <div id="yan-banner">
+                    <ul class="short">
+                        <li id="yan-banner-ask">
+                            <form action="" method="get">
+                                <div>
+                                    <div>
+                                        <label class="offscreen" for="banner-ask">What would you like to ask?</label>
+                                        <input class="default" value="" maxlength="110" id="banner-ask" name="title" type="text">
+                                        <span class="cta">
+                                            <button id="" value="Continue" name="submit-go" class="cta-button">
+                                                <span>
+                                                    <span>
+                                                        <span>
+                                                            <span>Ask!</span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                        <li id="yan-banner-answer">
+                            <form action="" method="get">
+                                <div>
+                                    <div>
+                                        <label class="offscreen" for="banner-answer">What would you like to search?</label>
+                                        <input class="default" value="" maxlength="110" id="banner-answer" name="title" type="text">
+                                        <span class="cta">
+                                            <button id="" value="Continue" name="submit-go" class="cta-button">
+                                                <span>
+                                                    <span>
+                                                        <span>
+                                                            <span>Search!</span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <div id="yan-header">
+                </div>
+            </div>
+        ';
+    }
+
+    function showTabs() {
+        echo '
+            <div class="tabbed-content">
+                <ul class="tabs" id="yan-nav">
+                    <li class="menu" id="yan-nav-home">
+                        <a href="">Home</a> <!-- ToDo : Link invoegen -->
+                    </li>
+                    <li id="yan-nav-browse" class="current menu">
+                        <a href="">Categories</a> <!-- ToDo : Link invoegen -->
+                    </li>
+                    <li class="menu" id="yan-nav-about">
+                        <a href="">Profile</a> <!-- ToDo : Link invoegen -->
+                    </li>
+                </ul>
+            </div>
+        ';
     }
 
     function showCurrentCategory($id) {
