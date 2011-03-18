@@ -25,66 +25,77 @@
         <div id="yan-wrap">
             <ol id="yan-breadcrumbs">
                 <li>
-                    <a href="">Home</a> &gt;
+                    <a href="index.php">Home</a> &gt;
                 </li>
-                <li>
-                    <a href="">All Programming Languages</a> &gt;
-                </li>
-                <li>
-                    <?php
-                    $website->showCurrentCategory($_GET);
-                    ?>
-                </li>
-                <li class="selected">
-                    Open Question
-                </li>
+                <?php
+                if ($_GET) {
+                    if (isset($_GET['categoryid'])) {
+                        $website->showCurrentCategory($_GET['categoryid']);
+                    }
+
+                    if (isset($_GET['questionid'])) {
+                        $website->showCurrentQuestion($_GET['questionid']);
+                    }
+                }
+                ?>
             </ol>
             <div id="yan-content">
                 <div id="yan-main">
                     <div id="yan-question">
-                        <div id="profile" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->
-                            <a href="" class="avatar">  <!-- ToDO : Link invoegen naar profiel -->
-                                <img class="photo" alt="" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
-                            </a>
-                            <span class="user">
-                                <a class="url" href="">  <!-- ToDO : Link invoegen naar profiel -->
-                                    <span class="fn" title=""></span> <!-- ToDo : Username hier -->
-                                </a>
-                            </span>
-                        </div>
-                        <div class="qa-container"> <!-- ToDo : Dynamische vraag via database -->
-                            <div class="hd">
-                                <h2>Open Question</h2>
-                            </div>
-                            <h1 class="subject"></h1>   <!-- ToDo : Invullen -->
-                            <div class="content">   <!-- ToDo : Invullen -->
-                            </div>
-                            <ul class="meta">
-                                <li>
-                                    <abbr title=""></abbr> <!-- ToDo : Invullen -->
-                                </li>
-                            </ul>
-                            <p class="cta">
-                                <a href=""> <!-- ToDo : Link invullen -->
-                                    <span><span><span><span>Answer Question</span></span></span></span>
-                                </a>
-                            </p>
-                        </div>
+                        <?php
+                        if ($_GET) {
+                            if (isset($_GET['categoryid']) && !isset($_GET['questionid'])) {
+                                $website->showQuestions($_GET['categoryid']);
+                            } else if (isset($_GET['questionid'])) {
+                                $website->showCurrentQuestion($_GET['questionid']);
+                            } else {
+                                $website->showHomePage();
+                            }
+                        } else {
+                            $website->showHomePage();
+                        }
+                        /*
+                          <div id="profile" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->
+                          <a href="" class="avatar">  <!-- ToDO : Link invoegen naar profiel -->
+                          <img class="photo" alt="" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
+                          </a>
+                          <span class="user">
+                          <a class="url" href="">  <!-- ToDO : Link invoegen naar profiel -->
+                          <span class="fn" title=""></span> <!-- ToDo : Username hier -->
+                          </a>
+                          </span>
+                          </div>
+                          <div class="qa-container"> <!-- ToDo : Dynamische vraag via database -->
+                          <div class="hd">
+                          <h2>Open Question</h2>
+                          </div>
+                          <h1 class="subject"></h1>   <!-- ToDo : Invullen -->
+                          <div class="content">   <!-- ToDo : Invullen -->
+                          </div>
+                          <ul class="meta">
+                          <li>
+                          <abbr title=""></abbr> <!-- ToDo : Invullen -->
+                          </li>
+                          </ul>
+                          <p class="cta">
+                          <a href=""> <!-- ToDo : Link invullen -->
+                          <span><span><span><span>Answer Question</span></span></span></span>
+                          </a>
+                          </p>
+                          </div> */
+                        ?>
                     </div>
                 </div>
                 <ul id="yan-question-tools">
-                    <li class="label">Action Bar:</li>
                     <li class="menu" id="yan-save-question">
-                        <a href="https://login.yahoo.com/?.done=http%3A%2F%2Fanswers.yahoo.com%2Fmy%2Fmy_add_trace_q%3Fqid%3D20110301153400AA8GaqD%26expires%3D1299368040%26.crumb%3DV.FB6ljOdrL&.src=knowsrch&.intl=us" title=""><span>Save</span></a>
-                        <div style="visibility: hidden; z-index: 2;" class="yui-module yui-overlay yui-overlay-hidden" id="yan-save-question-menu">
-                            <div class="bd">
-                                <ul>
-                                    <li>
-                                        <a href="" rel="popup">Add code to my storage.</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        <a href="" title="">
+                            <span>Save code to my account.</span>
+                        </a>
+                    </li>
+                    <li class="menu" id="yan-save-question">
+                        <a href="" title="">
+                            <span>Share code with another account.</span>
+                        </a>
                     </li>
                 </ul>
                 <div id="yan-answers" class="mod">

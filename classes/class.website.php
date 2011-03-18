@@ -465,7 +465,7 @@ Class website {
             die("Query error when loading languages");
         } else {
             while ($fields = mysql_fetch_assoc($result)) {
-                if ($_GET && $fields['id'] == $_GET['categoryid']) {
+                if ($_GET && isset($_GET['categoryid']) && $fields['id'] == $_GET['categoryid']) {
                     echo '<li class="current">';
                     echo '<a class="current" href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
                 } else {
@@ -482,14 +482,55 @@ Class website {
         echo $banner;
     }
 
-    function showCurrentCategory($_GET) {
-        if ($_GET && isset($_GET['categoryid'])) {
-            $result = mysql_query("SELECT `naam` FROM `talen` WHERE `id` = '" . $_GET['categoryid'] . "';");
-            if (mysql_num_rows($result) == 1) {
-                echo "<a href=?" . $_GET['categoryid'] . ">" . mysql_result($result, 0) . "</a> &gt";
-            } else {
-                die("Error: unknown category parsed");
+    function showCurrentCategory($id) {
+        $categoryname = $this->getCategoryName($id);
+        if ($categoryname) {
+            echo "
+                <li>
+                    <a href=?categoryid=" . $id . ">" . $categoryname . "</a> &gt
+                </li>"
+            ;
+        } else {
+            die("Error: unknown category parsed");
+        }
+    }
+
+    function getCategoryName($id) {
+        $result = mysql_query("SELECT `naam` FROM `talen` WHERE `id` = '" . $id . "';");
+        if (mysql_num_rows($result) == 1) {
+            return mysql_result($result, 0);
+        } else {
+            return false;
+        }
+    }
+
+    function showCurrentQuestion($id) {
+        $result = mysql_query("SELECT `vraag` FROM `vragen` WHERE `id` = '" . $id . "';");
+        if (mysql_num_rows($result) == 1) {
+            echo '
+                <li class="selected">
+                    ' . mysql_result($result, 0) . '
+                </li>'
+            ;
+        }
+    }
+
+    function showHomePage() {
+        $this->showQuestions();
+    }
+
+    function showQuestions($id = "") {
+        if ($id == "") {
+            $result = mysql_query("SELECT * FROM `vragen`;");
+        } else {
+            $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $_GET['categoryid'] . "';");
+        }
+        if (mysql_num_rows($result) > 0) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                echo '<li><a href="?categoryid=' . $fields['taalid'] . '&questionid=' . $fields['id'] . '">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
             }
+        } else {
+            die("No questions yet!");
         }
     }
 
