@@ -2,6 +2,7 @@
 
 Class website {
 
+    var $ID;
     var $Username;
     var $Password;
     var $DB;
@@ -11,7 +12,6 @@ Class website {
     var $City;
     var $Gender;
     var $Birthdate;
-    var $ID;
     var $MainConfigFile = "configs/config.php";
     var $LanguageDir = "languages/";
 
@@ -23,25 +23,29 @@ Class website {
         $username = $this->GetName();
         $password = $this->GetPass();
         $id = $this->GetID();
-        if ($username != "" && $password != "" && $id != "")
+        if ($username != "" && $password != "" && $id != "") {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     function ShowRegister() {
         for ($i = 1; $i <= 31; $i++) {
-            if ($i < 10)
+            if ($i < 10) {
                 $i = "0" . $i;
+            }
             $days .= "<option value='$i'>$i</option>";
         }
         for ($i = 1; $i <= 12; $i++) {
-            if ($i < 10)
+            if ($i < 10) {
                 $i = "0" . $i;
+            }
             $months .= "<option value='$i'>$i</option>";
         }
-        for ($i = (date(Y) - 150); $i <= date(Y) - 4; $i++)
+        for ($i = (date(Y) - 150); $i <= date(Y) - 4; $i++) {
             $years .= "<option value='$i'>$i</option>";
+        }
         echo '
             <table>
                 <form name="Register" onSubmit="return CheckFields();" action="index.php" method="POST">
@@ -123,11 +127,9 @@ Class website {
 
     function RefreshCookie() {
         require $this->MainConfigFile;
-        if ($_COOKIE[$cookiename] != "")
+        if ($_COOKIE[$cookiename] != "") {
             setcookie($cookiename, $_COOKIE[$cookiename], time() + $cookietime);      // Make a new cookie with the same name and same info
-
-
-
+        }
     }
 
     function DoRegister($Info) {   // Begin the register function, get the $username and $password from the function call in index.php
@@ -152,45 +154,35 @@ Class website {
                 if (mysql_num_rows($checking) != 0) {     // If we got a hit (account exists)...
                     $this->LogIn($username, $password);     // Log in to the account
                     return true;         // Tell the function call in index.php that it succeeded
-                }
-                else
+                } else {
                     return false;         // Tell the function call in index.php that it failed
-
-
-
-            }
-            else
+                }
+            } else {
                 echo $this->Translate('AccountwName') . " " . $username . " " . $this->Translate('AlreadyExist');     // if the account already existed, show the part below
-
-
-
-        }
-        else
+            }
+        } else {
             die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
-
-
-
+        }
     }
 
     function GetName($id = "") {
         require $this->MainConfigFile;
-        if ($this->Username != "" && $id == "")
+        if ($this->Username != "" && $id == "") {
             return $this->Username;
-        else if ($_COOKIE[$cookiename] != "" && $id == "") {
+        } else if ($_COOKIE[$cookiename] != "" && $id == "") {
             $parts = explode(",", $_COOKIE[$cookiename]);
-            if ($parts[0] != "")
-                $username = $parts[0];
-            if ($username != "") {
-                $this->Username = $username;
-                return $username;
+            if ($parts[0] != "") {
+                $this->Username = $parts[0];
+                return $parts[0];
             }
         } else if ($id != "") {
             $this->DB->MakeConnection();
             $query = mysql_query("select `name` FROM `accounts` WHERE `id` = '" . $id . "';");
             if (mysql_num_rows($query) != 0) {
                 $result = mysql_result($query, 0);
-                if ($result != "")
+                if ($result != "") {
                     return $result;
+                }
             }
         }
     }
@@ -289,8 +281,9 @@ Class website {
     function Logout() {
         require $this->MainConfigFile;
         setcookie($cookiename, "1", time() - 3600);  // To delete a cookie, overwrite the cookie with an expiration time of "one hour ago"
-        foreach (get_defined_vars () as $key)  // Reset all variables (clear the session)
+        foreach (get_defined_vars () as $key) {  // Reset all variables (clear the session)
             unset($GLOBALS[$key]);
+        }
         echo '<meta http-equiv="refresh" content="0">';
     }
 
@@ -373,6 +366,7 @@ Class website {
                             $ExistingFile = @fopen($SaveDir . $FileName, 'w');
                             unlink($SaveDir . $FileName);
                         }
+
                         if ($this->GetID() != "") {
                             $FileNamePieces = explode(".", $FileName);
                             $FileName = $this->GetID() . "." . $FileNamePieces[1];
@@ -380,12 +374,11 @@ Class website {
                             $Picture = 1;
                             $ImageHandler = new Image();
                             $ImageHandler->CreateDisplayPicture($User);
-                        }
-                        else
+                        } else {
                             $this->ShowLogin();
+                        }
                     }
-                }
-                else {
+                } else {
                     if ($FileSize > $MaxFileSize) {
                         echo $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB";
                     }
@@ -393,8 +386,9 @@ Class website {
                         echo $this->Translate('FileType') . $FileType;
                 }
             }
-            else
+            else {
                 $Picture = 0;
+            }
             $this->DB->MakeConnection();
             if ($this->ShowAdditional == false) {
                 foreach ($_POST as $key => $val) {
@@ -426,18 +420,20 @@ Class website {
 
     function GetImage($Thumb = "") {
         require $this->MainConfigFile;
-        if (!is_dir($SaveDir))
+        if (!is_dir($SaveDir)) {
             mkdir($SaveDir);
+        }
 
         $handle = opendir($SaveDir);
         if ($handle) {
             while (false !== ($file = readdir($handle))) {
                 if ($file != "." && $file != "..") {
                     if (preg_match("/$this->GetID()/", $file)) {
-                        if ($Thumb != "" && preg_match("/thumb/i", $file))
+                        if ($Thumb != "" && preg_match("/thumb/i", $file)) {
                             $originalImage = $SaveDir . $file;
-                        else if ($Thumb == "" && !preg_match("/thumb/i", $file))
+                        } else if ($Thumb == "" && !preg_match("/thumb/i", $file)) {
                             $originalImage = $SaveDir . $file;
+                        }
                     }
                 }
             }
@@ -456,10 +452,11 @@ Class website {
         $raw_is_admin = "SELECT `rank` FROM `accounts` WHERE `username` = '" . $this->GetName() . "';";
         $is_admin = mysql_query($raw_is_admin);
         $rank = mysql_result($is_admin, 0);
-        if ($rank == 0)
+        if ($rank == 0) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 
     function showCategories($_GET) {
@@ -489,7 +486,7 @@ Class website {
         if ($_GET && isset($_GET['categoryid'])) {
             $result = mysql_query("SELECT `naam` FROM `talen` WHERE `id` = '" . $_GET['categoryid'] . "';");
             if (mysql_num_rows($result) == 1) {
-                echo "<a href=?".$_GET['categoryid'].">".mysql_result($result, 0)."</a> &gt";
+                echo "<a href=?" . $_GET['categoryid'] . ">" . mysql_result($result, 0) . "</a> &gt";
             } else {
                 die("Error: unknown category parsed");
             }

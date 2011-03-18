@@ -42,12 +42,12 @@
             <div id="yan-content">
                 <div id="yan-main">
                     <div id="yan-question">
-                        <div id="profile-1uxMmtIfaa" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->
+                        <div id="profile" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->
                             <a href="" class="avatar">  <!-- ToDO : Link invoegen naar profiel -->
                                 <img class="photo" alt="" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
                             </a>
                             <span class="user">
-                                <a class="url" href="http://answers.yahoo.com/my/profile;_ylt=AmmsfLbonmLPldqQYdFjLnKzxQt.;_ylv=3?show=1uxMmtIfaa">
+                                <a class="url" href="">  <!-- ToDO : Link invoegen naar profiel -->
                                     <span class="fn" title=""></span> <!-- ToDo : Username hier -->
                                 </a>
                             </span>
