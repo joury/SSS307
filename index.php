@@ -28,7 +28,7 @@
                     <a href="index.php">Home</a> &gt;
                 </li>
                 <?php
-                if ($_GET) {
+                if ($_GET && !$_POST) {
                     if (isset($_GET['categoryid'])) {
                         $website->showCurrentCategory($_GET['categoryid']);
                     }
@@ -43,7 +43,7 @@
                 <div id="yan-main">
                     <div id="yan-question">
                         <?php
-                        if ($_GET) {
+                        if ($_GET && !$_POST) {
                             if (isset($_GET['categoryid']) && !isset($_GET['questionid'])) {
                                 $website->showQuestions($_GET['categoryid']);
                             } else if (isset($_GET['questionid'])) {
