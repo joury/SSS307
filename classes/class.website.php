@@ -250,7 +250,7 @@ Class website {
 
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
-            <form action="" name="login" method="POST">
+            <form action="index.php" name="login" method="POST">
                 <li class="me1">
                     <input type="text" name="username">
                     <input type="password" name="password">
