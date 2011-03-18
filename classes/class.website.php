@@ -30,7 +30,7 @@ Class website {
         }
     }
 
-    function showRegister() {
+    function showRegister($_POST) {
         $days = "";
         $months = "";
         $years = "";
@@ -47,16 +47,21 @@ Class website {
             $months .= "<option value='$i'>$i</option>";
         }
         for ($i = (date("Y") - 150); $i <= date("Y") - 4; $i++) {
-            $years .= "<option value='$i'>$i</option>";
+            if ($i == (date("Y") - 4)) {
+                $years .= "<option value='$i' SELECTED>$i</option>";
+            } else {
+                $years .= "<option value='$i'>$i</option>";
+            }
         }
         echo '
+            <script type="text/javascript" src="./scripts/checkfields.js"></script>
             <table>
                 <form name="Register" onSubmit="return CheckFields();" action="index.php" method="POST">
                 <tr>
-                    <td>Username:</td> <td><input type="text" name="username" id="username"></td>
+                    <td>Username:</td> <td><input type="text" name="username" id="username" value=' . $_POST['username'] . '></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password"></td> <td>Rules are: Atleast 6 chars, atleast 1 digit, only numbers characters and underscore are allowed.</td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value=' . $_POST['password'] . '></td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td><input type="text" name="email" id="emailaddress"></td>
@@ -91,7 +96,7 @@ Class website {
                         <select name="year">
                             ' . $years . '
                         </select>
-                    </td> <td>dd-mm-yyyy</td>
+                    </td>
                 </tr>
                 <tr>
                     <td><input type="submit" name="Register" value="Register!"></td>
@@ -476,6 +481,7 @@ Class website {
                 if ($_GET && isset($_GET['categoryid']) && $fields['id'] == $_GET['categoryid']) {
                     echo '<li class="current">';
                     echo '<a class="current" href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
+                    echo '</li>';
                 } else {
                     echo '<li>';
                     echo '<a href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
@@ -485,7 +491,7 @@ Class website {
         }
     }
 
-    function showBanner() {
+    function showBanner($_GET) {
         echo '
             <div id="hd">
                 <link type="text/css" rel="stylesheet" href="./css/ygma1.css">
@@ -508,7 +514,9 @@ Class website {
                             </div>
                             <div id="yahoo" class="ygmaclr">
                                 <div id="ygmabot">
-                                    <a href="./images/index.htm" id="ygmalogo" target="_top"><img id="ygmalogoimg" src="./images/ans.gif" alt="Yahoo! Answers!!" height="26" width="257"></a> <!-- ToDo: Logo invoegen -->
+                                    <a href="./images/index.htm" id="ygmalogo" target="_top">
+                                        <img id="ygmalogoimg" src="./images/logo.png" alt="Yahoo! Answers!!" height="26" width="257"> <!-- ToDo: Logo invoegen -->
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -516,15 +524,34 @@ Class website {
                 </div>
                 <div class="tabbed-content">
                     <ul class="tabs" id="yan-nav">
-                        <li class="menu" id="yan-nav-home">
-                            <a href="">Home</a> <!-- ToDo : Link invoegen -->
-                        </li>
-                        <li id="yan-nav-browse" class="current menu">
-                            <a href="">Categories</a> <!-- ToDo : Link invoegen -->
-                        </li>
+        ';
+        if (isset($_GET['categoryid'])) {
+            echo '
+                <li class="menu" id="yan-nav-home">
+                    <a href="index.php">Home</a>
+                </li>
+                <li class="current menu" id="yan-nav-browse">
+                    <a href="index.php?categories=1">Categories</a>
+                </li>
+            ';
+        } else {
+            echo '
+                <li class="current menu" id="yan-nav-home">
+                    <a href="index.php">Home</a>
+                </li>
+                <li class="menu" id="yan-nav-browse">
+                    <a href="index.php?categories=1">Categories</a>
+                </li>
+            ';
+        }
+        if ($this->IsLoggedIn()) {
+            echo '
                         <li class="menu" id="yan-nav-about">
-                            <a href="">Profile</a> <!-- ToDo : Link invoegen -->
+                            <a href="index.php?profile=1">Profile</a>
                         </li>
+           ';
+        }
+        echo '
                     </ul>
                 </div>
                 <div id="yan-banner">
@@ -533,7 +560,6 @@ Class website {
                             <form action="" method="get">
                                 <div>
                                     <div>
-                                        <label class="offscreen" for="banner-ask">What would you like to ask?</label>
                                         <input class="default" value="" maxlength="110" id="banner-ask" name="title" type="text">
                                         <span class="cta">
                                             <button id="" value="Continue" name="submit-go" class="cta-button">
@@ -554,7 +580,6 @@ Class website {
                             <form action="" method="get">
                                 <div>
                                     <div>
-                                        <label class="offscreen" for="banner-answer">What would you like to search?</label>
                                         <input class="default" value="" maxlength="110" id="banner-answer" name="title" type="text">
                                         <span class="cta">
                                             <button id="" value="Continue" name="submit-go" class="cta-button">

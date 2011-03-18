@@ -20,7 +20,7 @@
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
     <div id="yan">
         <?php
-        $website->showBanner();
+        $website->showBanner($_GET);
         ?>
         <div id="yan-wrap">
             <ol id="yan-breadcrumbs">
@@ -56,7 +56,7 @@
                                 if (isset($_POST['Login'])) {
 
                                 } else if (isset($_POST['Register'])) {
-                                    $website->showRegister();
+                                    $website->showRegister($_POST);
                                 }
                             } else {
                                 $website->showHomePage();
