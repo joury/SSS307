@@ -13,8 +13,8 @@
         <meta name="keywords" content="answers,  questions, Programming"> <!-- ToDo : Tags -> sitenaam, answers, questions, code, categorienaam -->
         <meta name="title" content=""> <!-- ToDo : Vraag -->
         <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title> <!-- ToDo : Zelfde tekst als hierboven-->
-        <link rel="shortcut icon" href="http://l.yimg.com/a/i/us/sch/gr/answers_favicon.ico">
-        <link rel="stylesheet" type="text/css" media="screen" href="./css/answers-fe-us.css">
+        <link rel="shortcut icon" href="./images/answers_favicon.ico">
+        <link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">
     </head>
     <body class="c-std wide question-index new-header js">
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
