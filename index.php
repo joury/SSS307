@@ -9,10 +9,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="Imagetoolbar" content="">
-        <meta name="description" content="If you leave for example: laptop chargers, PSP cha�"> <!-- ToDo : Vraag -->
-        <meta name="keywords" content="answers,  questions, Programming"> <!-- ToDo : Tags -> sitenaam, answers, questions, code, categorienaam -->
-        <meta name="title" content=""> <!-- ToDo : Vraag -->
-        <title>Does leaving a charger cable in a plug outlet waste electricity? - Yahoo! Answers</title> <!-- ToDo : Zelfde tekst als hierboven-->
+        <?php
+        $website->showHeader($_GET);
+        ?>
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
         <link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">
     </head>

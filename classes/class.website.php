@@ -634,13 +634,24 @@ Class website {
     }
 
     function showCurrentQuestion($id) {
-        $result = mysql_query("SELECT `vraag` FROM `vragen` WHERE `id` = '" . $id . "';");
-        if (mysql_num_rows($result) == 1) {
+        $question = $this->getCurrentQuestion($id);
+        if ($question) {
             echo '
                 <li class="selected">
-                    ' . mysql_result($result, 0) . '
+                    ' . $question . '
                 </li>'
             ;
+        } else {
+            die("Error: unknown question parsed");
+        }
+    }
+
+    function getCurrentQuestion($id) {
+        $result = mysql_query("SELECT `vraag` FROM `vragen` WHERE `id` = '" . $id . "';");
+        if (mysql_num_rows($result) == 1) {
+            return mysql_result($result, 0);
+        } else {
+            return false;
         }
     }
 
@@ -660,6 +671,22 @@ Class website {
             }
         } else {
             die("No questions yet!");
+        }
+    }
+
+    function showHeader($_GET) {
+        if ($_GET && isset($_GET['questionid']) && isset($_GET['categoryid'])) {
+            echo '
+                <meta name="description" content="'.$this->getCurrentQuestion($_GET['questionid']).'">
+                <meta name="keywords" content="codedump, answers,  questions, programming, '.$this->getCategoryName($_GET['categoryid']).'">
+                <meta name="title" content="'.$this->getCurrentQuestion($_GET['questionid']).'">
+                <title>'.$this->getCurrentQuestion($_GET['questionid']).' - CodeDump</title>
+            ';
+        } else {
+            echo '
+                <meta name="keywords" content="codedump, answers,  questions, programming">
+                <title>CodeDump</title>
+            ';
         }
     }
 
