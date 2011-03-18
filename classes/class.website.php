@@ -522,38 +522,7 @@ Class website {
                         </div>
                     </div>
                 </div>
-                <div class="tabbed-content">
-                    <ul class="tabs" id="yan-nav">
-        ';
-        if (isset($_GET['categoryid'])) {
-            echo '
-                <li class="menu" id="yan-nav-home">
-                    <a href="index.php">Home</a>
-                </li>
-                <li class="current menu" id="yan-nav-browse">
-                    <a href="index.php?categories=1">Categories</a>
-                </li>
-            ';
-        } else {
-            echo '
-                <li class="current menu" id="yan-nav-home">
-                    <a href="index.php">Home</a>
-                </li>
-                <li class="menu" id="yan-nav-browse">
-                    <a href="index.php?categories=1">Categories</a>
-                </li>
-            ';
-        }
-        if ($this->IsLoggedIn()) {
-            echo '
-                        <li class="menu" id="yan-nav-about">
-                            <a href="index.php?profile=1">Profile</a>
-                        </li>
-           ';
-        }
-        echo '
-                    </ul>
-                </div>
+                ' . $this->showTabs() . '
                 <div id="yan-banner">
                     <ul class="short">
                         <li id="yan-banner-ask">
@@ -605,21 +574,41 @@ Class website {
     }
 
     function showTabs() {
-        echo '
+        $tabcode = '
             <div class="tabbed-content">
-                <ul class="tabs" id="yan-nav">
-                    <li class="menu" id="yan-nav-home">
-                        <a href="">Home</a> <!-- ToDo : Link invoegen -->
-                    </li>
-                    <li id="yan-nav-browse" class="current menu">
-                        <a href="">Categories</a> <!-- ToDo : Link invoegen -->
-                    </li>
-                    <li class="menu" id="yan-nav-about">
-                        <a href="">Profile</a> <!-- ToDo : Link invoegen -->
-                    </li>
-                </ul>
-            </div>
+                    <ul class="tabs" id="yan-nav">
         ';
+        if (isset($_GET['categoryid'])) {
+            $tabcode .= '
+                <li class="menu" id="yan-nav-home">
+                    <a href="index.php">Home</a>
+                </li>
+                <li class="current menu" id="yan-nav-browse">
+                    <a href="index.php?categories=1">Categories</a>
+                </li>
+            ';
+        } else {
+            $tabcode .= '
+                <li class="current menu" id="yan-nav-home">
+                    <a href="index.php">Home</a>
+                </li>
+                <li class="menu" id="yan-nav-browse">
+                    <a href="index.php?categories=1">Categories</a>
+                </li>
+            ';
+        }
+        if ($this->IsLoggedIn()) {
+            $tabcode .= '
+                        <li class="menu" id="yan-nav-about">
+                            <a href="index.php?profile=1">Profile</a>
+                        </li>
+           ';
+        }
+        $tabcode .= '
+                    </ul>
+                </div>
+        ';
+        return $tabcode;
     }
 
     function showCurrentCategory($id) {
