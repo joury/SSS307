@@ -5,6 +5,9 @@
     require "classes/class.database.php";
     $database = new database();
     $website = new website($database);
+    if (isset($_POST['btnLogin'])) {
+        $website->LogIn($_POST['username'], $_POST['password']);
+    }
     ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -14,6 +17,11 @@
         ?>
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
         <link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">
+        <?php
+        if ($_POST) {
+            echo '<script type="text/javascript" src="./scripts/checkfields.js"></script>';
+        }
+        ?>
     </head>
     <body class="c-std wide question-index new-header js">
     <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
@@ -52,10 +60,10 @@
                             }
                         } else {
                             if ($_POST) {
-                                if (isset($_POST['Login'])) {
-
-                                } else if (isset($_POST['Register'])) {
+                                if (isset($_POST['btnRegister'])) {
                                     $website->showRegister($_POST);
+                                } else if (isset($_POST['Register'])) {
+                                    $website->DoRegister($_POST);
                                 }
                             } else {
                                 $website->showHomePage();

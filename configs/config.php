@@ -13,4 +13,5 @@ $cookietime = "600";                        // Time the cookie exists in seconds
 $MaxFileSize = "10";                        // Filesize for the avatar in MB
 $SaveDir = "Avatars/";                      // Directory in which the user's pictures end up
 $MaxAvatarDimension = "50x50";              // Resolution of the image in X , Y
+$LanguageDir = "./languages/";
 ?>

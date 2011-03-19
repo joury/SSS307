@@ -2,16 +2,7 @@
 
 Class website {
 
-    var $ID;
-    var $Username;
-    var $Password;
     var $DB;
-    var $EmailAddress;
-    var $Country;
-    var $State;
-    var $City;
-    var $Gender;
-    var $Birthdate;
     var $MainConfigFile = "configs/config.php";
     var $LanguageDir = "languages/";
 
@@ -54,26 +45,49 @@ Class website {
             }
         }
         echo '
-            <script type="text/javascript" src="./scripts/checkfields.js"></script>
             <table>
                 <form name="Register" onSubmit="return CheckFields();" action="index.php" method="POST">
                 <tr>
-                    <td>Username:</td> <td><input type="text" name="username" id="username" value=' . $_POST['username'] . '></td>
+                    <td>Username:</td> <td><input type="text" name="username" id="username" value=' . $_POST['username'] . '><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value=' . $_POST['password'] . '></td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value=' . $_POST['password'] . '><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" id="emailaddress"></td>
+                    <td>Email:</td> <td><input type="text" name="emailaddress" id="emailaddress"><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Country:</td> <td><select id="countrySelect" name="country"></select></td>
+                    <td>Country:</td>
+                    <td>
+                    <select id="country" name="country">
+                        ' . $this->getCountries() . '
+                    </select>
+                    <font color="RED">*</font>
+                    </td>
                 </tr>
                 <tr>
-                    <td>State/Province:</td> <td><select id="stateSelect" name="selectedstate"</select></td>
+                    <td>State/Province:</td> <td><select id="state" name="state"></select></td>
                 </tr>
                 <tr>
-                    <td>City:</td> <td><select id="citySelect" name="city"></select></td>
+                    <td>City:</td> <td><select id="city" name="city"></select></td>
+                </tr>
+                <tr>
+                    <td>Firstname:</td> <td><input type="text" name="firstname" id="firstname"><font color="RED">*</font></td>
+                </tr>
+                <tr>
+                    <td>Insertion:</td> <td><input type="text" name="insertion"></td>
+                </tr>
+                <tr>
+                    <td>Lastname:</td> <td><input type="text" name="lastname" id="lastname"><font color="RED">*</font></td>
+                </tr>
+                <tr>
+                    <td>MSN:</td> <td><input type="text" name="msn"></td>
+                </tr>
+                <tr>
+                    <td>Skype:</td> <td><input type="text" name="skype"></td>
+                </tr>
+                <tr>
+                    <td>Job:</td> <td><input type="checkbox" name="job" value="1"> Yes, i have a job<font color="RED">*</font></td>
                 </tr>
                 <tr>
                     <td>Gender:</td>
@@ -82,6 +96,7 @@ Class website {
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                     </select>
+                    <font color="RED">*</font>
                     </td>
                 </tr>
                 <tr>
@@ -96,6 +111,16 @@ Class website {
                         <select name="year">
                             ' . $years . '
                         </select>
+                        <font color="RED">*</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Primary language:</td>
+                    <td>
+                    <select name="language">
+                        ' . $this->getLanguages() . '
+                    </select>
+                    <font color="RED">*</font>
                     </td>
                 </tr>
                 <tr>
@@ -107,14 +132,16 @@ Class website {
     }
 
     function Translate($string) {
-        $language = $this->GetLanguage();
-        $languagefile = $LanguageDir . $language . ".php";
-        if (is_file($languagefile))
+        require $this->MainConfigFile;
+        $languagefile = $LanguageDir . $this->GetLanguage() . ".php";
+        if (is_file($languagefile)) {
             require $languagefile;
-        else
+        } else {
             require $LanguageDir . "English.php";
-        if ($Language[$string] == "")
+        }
+        if ($Language[$string] == "") {
             die("Error: " . $string . "\ncan't be translated...");
+        }
         return $Language[$string];
     }
 
@@ -140,25 +167,44 @@ Class website {
         }
     }
 
-    function DoRegister($Info) {   // Begin the register function, get the $username and $password from the function call in index.php
-        $username = $Info['username'];
-        $password = $Info['password'];
-        $email = $Info['email'];
-        $country = $Info['country'];
-        $state = $Info['selectedstate'];
-        $city = $Info['city'];
-        $gender = $Info['gender'];
-        $birthdate = $Info['day'] . "-" . $Info['month'] . "-" . $Info['year'];
+    function DoRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $email = $_POST['emailaddress'];
+        $language = $_POST['language'];
+        $country = $_POST['country'];
+        if (isset($_POST['state'])) {
+            $state = $_POST['state'];
+        } else {
+            $state = "";
+        }
+        if (isset($_POST['city'])) {
+            $city = $_POST['city'];
+        } else {
+            $city = "";
+        }
+        $firstname = $_POST['firstname'];
+        $insertion = $_POST['insertion'];
+        $lastname = $_POST['lastname'];
+        $msn = $_POST['msn'];
+        $skype = $_POST['skype'];
+        if (isset($_POST['job'])) {
+            $job = 1;
+        } else {
+            $job = 0;
+        }
+        $gender = $_POST['gender'];
+        $birthdate = $_POST['day'] . "-" . $_POST['month'] . "-" . $_POST['year'];
         require $this->MainConfigFile;        // Get the connection variables for mysql from the config file
-        if ($this->DB->MakeConnection() == true) {
+        if ($this->DB->MakeConnection()) {
             $username = mysql_real_escape_string($username);  // Make sure there are no weird tokens in the variables
             $password = mysql_real_escape_string($password);
             $sha_pass = sha1($password);       // Encrypt the password with "Sha1"
-            $check = mysql_query("select `id` FROM `accounts` WHERE `username` = '" . $username . "' OR `email` = '" . $email . "';"); // Query to check if the username isn't already in use
+            $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' OR `email` = '" . $email . "';"); // Query to check if the username isn't already in use
             if (mysql_num_rows($check) == 0) {      // If 0 results came back from the above query... (if the account name is free for usage)
-                $raw_account_query = "INSERT INTO `accounts` values ('','" . $username . "','" . $sha_pass . "','" . $email . "','" . $country . "','" . $state . "','" . $city . "','" . $gender . "','" . $birthdate . "','0');";
+                $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $firstname . "','" . $insertion . "','" . $lastname . "','" . $username . "','" . $sha_pass . "','" . $email . "','" . $language . "','" . $country . "','" . $state . "','" . $city . "','" . $gender . "','" . $msn . "','" . $skype . "','" . $birthdate . "','" . $job . "','0');";
                 $account_query = mysql_query($raw_account_query); // Insert the account info
-                $checking = mysql_query("select `id` FROM `accounts` WHERE `username` = '" . $username . "';");  // Query to check if the query succeeded
+                $checking = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Query to check if the query succeeded
                 if (mysql_num_rows($checking) != 0) {     // If we got a hit (account exists)...
                     $this->LogIn($username, $password);     // Log in to the account
                     return true;         // Tell the function call in index.php that it succeeded
@@ -176,12 +222,9 @@ Class website {
     function GetName($id = "") {
         require $this->MainConfigFile;
 
-        if ($this->Username != "" && $id == "") {
-            return $this->Username;
-        } else if (isset($_COOKIE[$cookiename]) && $id == "") {
+        if (isset($_COOKIE[$cookiename]) && $id == "") {
             $parts = explode(",", $_COOKIE[$cookiename]);
             if ($parts[0] != "") {
-                $this->Username = $parts[0];
                 return $parts[0];
             }
         } else if ($id != "") {
@@ -199,51 +242,44 @@ Class website {
     function GetPass() {
         require $this->MainConfigFile;
 
-        if ($this->Password != "")
-            return $this->Password;
-        else if (isset($_COOKIE[$cookiename])) {
+        if (isset($_COOKIE[$cookiename])) {
             require $this->MainConfigFile;
             $parts = explode(",", $_COOKIE[$cookiename]);
-            if ($parts[1] != "")
-                $password = $parts[1];
-            if ($password != "") {
-                $this->Password = $password;
-                return $password;
+            if ($parts[1] != "") {
+                return $parts[1];
             }
         }
     }
 
     function GetID($name = "") {
-        if ($this->ID != "" && $name == "")
-            return $this->ID;
-        else {
-            require $this->MainConfigFile;
-            $this->DB->MakeConnection();
-            if ($name != "")
-                $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $name . "';");
-            else
-                $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $this->GetName() . "';");
-            if (mysql_num_rows($query) != 0) {
-                $result = mysql_result($query, 0);
-                if ($result != "") {
-                    $this->ID = $result;
-                    return $result;
-                } else {
-                    die("Unknown error");
-                }
+        require $this->MainConfigFile;
+        $this->DB->MakeConnection();
+        if ($name != "") {
+            $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $name . "';");
+        } else {
+            $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $this->GetName() . "';");
+        }
+        if (mysql_num_rows($query) != 0) {
+            $result = mysql_result($query, 0);
+            if ($result != "") {
+                $this->ID = $result;
+                return $result;
+            } else {
+                die("Unknown error");
             }
         }
     }
 
     function GetLanguage() {
-        $raw_language_query = "SELECT `primary_language` FROM `additional` WHERE `id` = " . $this->GetID() . ";";
+        $raw_language_query = "SELECT `taal` FROM `gebruikers` WHERE `id` = " . $this->GetID() . ";";
         $language_query = mysql_query($raw_language_query);
+        $language = "";
         if (@mysql_num_rows($language_query) != 0) {
             $language = mysql_result($language_query, 0);
+        }
 
-            if ($language == "") {
-                $language = "English";
-            }
+        if ($language == "") {
+            $language = "English";
         }
         return $language;
     }
@@ -254,8 +290,8 @@ Class website {
                 <li class="me1">
                     <input type="text" name="username">
                     <input type="password" name="password">
-                    <input type="submit" name="Register" value="Register">
-                    <input type="submit" name="Login" value="Log in">
+                    <input type="submit" name="btnRegister" value="Register">
+                    <input type="submit" name="btnLogin" value="Log in">
                 </li>
             </form>
         ';
@@ -267,25 +303,16 @@ Class website {
         $username = mysql_real_escape_string($username);
         $password = mysql_real_escape_string($password);
         $sha_pass = sha1($password);
-        $query = mysql_query("select * FROM `accounts` WHERE `username` = '" . $username . "';");  // Get the password from the DB that's associated with this account name
+        $query = mysql_query("select * FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Get the password from the DB that's associated with this account name
         if (mysql_num_rows($query) != 0) {   // If the account exists
             $fields = mysql_fetch_assoc($query);
-            $password = $fields['password'];  // Get the password of the user with $username
+            $password = $fields['wachtwoord'];  // Get the password of the user with $username
         } else {
             die("Account does not exist in the DB.");  // If the password query returned nothing, the account doesn't exist
         }
 
         if ($sha_pass == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
             $cookie = setcookie($cookiename, "$username,$sha_pass", time() + $cookietime);  // Set a cookie with "name,password" that is legit for the following 5 minutes
-            $this->ID = $fields['id'];
-            $this->Username = $username;
-            $this->Password = $sha_pass;
-            $this->EmailAddress = $fields['email'];
-            $this->Country = $fields['country'];
-            $this->State = $fields['state'];
-            $this->City = $fields['city'];
-            $this->Gender = $fields['gender'];
-            $this->Birthdate = $fields['birthdate'];
         } else {
             die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
         }
@@ -403,7 +430,7 @@ Class website {
                 $Picture = 0;
             }
             $this->DB->MakeConnection();
-            if ($this->ShowAdditional == false) {
+            if ($this->ShowAdditionalForm() == false) {
                 foreach ($_POST as $key => $val) {
                     if ($val != "" && $key != "key" && $key != "val" && $key != "Additional") {
                         $changes .= strtolower($key) . " = '" . $val . "', ";
@@ -514,8 +541,8 @@ Class website {
                             </div>
                             <div id="yahoo" class="ygmaclr">
                                 <div id="ygmabot">
-                                    <a href="./images/index.htm" id="ygmalogo" target="_top">
-                                        <img id="ygmalogoimg" src="./images/logo.png" alt="Yahoo! Answers!!" height="26" width="257"> <!-- ToDo: Logo invoegen -->
+                                    <a href="index.php" id="ygmalogo" target="_top">
+                                        <img id="ygmalogoimg" src="./images/logo.png" alt="CodeDump!" height="26" width="257">
                                     </a>
                                 </div>
                             </div>
@@ -677,10 +704,10 @@ Class website {
     function showHeader($_GET) {
         if ($_GET && isset($_GET['questionid']) && isset($_GET['categoryid'])) {
             echo '
-                <meta name="description" content="'.$this->getCurrentQuestion($_GET['questionid']).'">
-                <meta name="keywords" content="codedump, answers,  questions, programming, '.$this->getCategoryName($_GET['categoryid']).'">
-                <meta name="title" content="'.$this->getCurrentQuestion($_GET['questionid']).'">
-                <title>'.$this->getCurrentQuestion($_GET['questionid']).' - CodeDump</title>
+                <meta name="description" content="' . $this->getCurrentQuestion($_GET['questionid']) . '">
+                <meta name="keywords" content="codedump, answers,  questions, programming, ' . $this->getCategoryName($_GET['categoryid']) . '">
+                <meta name="title" content="' . $this->getCurrentQuestion($_GET['questionid']) . '">
+                <title>' . $this->getCurrentQuestion($_GET['questionid']) . ' - CodeDump</title>
             ';
         } else {
             echo '
@@ -688,6 +715,43 @@ Class website {
                 <title>CodeDump</title>
             ';
         }
+    }
+
+    function getCountries() {
+        $countries = "";
+        $country = $this->getCountryFromIP();
+        $result = mysql_query("SELECT * FROM `landen` ORDER BY `name`;");
+        if (mysql_num_rows($result) > 0) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                if ($fields['name'] == $country) {
+                    $countries .= '<option value="' . $fields['name'] . '" SELECTED>' . $fields['name'] . '</option>';
+                } else {
+                    $countries .= '<option value="' . $fields['name'] . '">' . $fields['name'] . '</option>';
+                }
+            }
+        } else {
+            return '<option value="Amsterdam">Amsterdam</option>';
+        }
+        return $countries;
+    }
+
+    function getLanguages() {
+        $languages = "";
+        $result = mysql_query("SELECT * FROM `spreektalen` ORDER BY `name`;");
+        if (mysql_num_rows($result) > 0) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                $languages .= '<option value=' . $fields['name'] . '>' . $fields['name'] . '</option>';
+            }
+        } else {
+            return '<option value="English">English</option>';
+        }
+        return $languages;
+    }
+
+    function getCountryFromIP() {
+        $xml = file_get_contents("http://api.hostip.info/?ip=" . $_SERVER["REMOTE_ADDR"]);
+        preg_match("@<countryName>(.*?)</countryName>@si", $xml, $matches);
+        return $matches[1];
     }
 
 }
