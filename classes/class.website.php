@@ -869,34 +869,53 @@ Class website {
     }
 
     function getAnswers($categoryid, $questionid) {
-        return '
-            <div id="GqUpLTPiI1ZxF8Y21lau" class="answer">
-                <div class="profile vcard">
-                    <a href="" class="avatar">
-                        <img class="photo" alt="classicsat" src="" width="48">
-                    </a>
-                    <span class="user">
-                        <span class="by">by </span>
-                        <a class="url" href="">
-                            <span class="fn" title="classicsat">
-                                classics...
+        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '".$categoryid."' AND `vraagid` = '".$questionid."';");
+        $answers = "";
+        if (mysql_num_rows($result) > 0) {
+            require $this->MainConfigFile;
+            while ($fields = mysql_fetch_assoc($result)) {
+                $username = $this->getUsername($fields['gebruikersid']);
+                $answers .= '
+                    <div class="answer">
+                        <div class="profile vcard">
+                            <a href="index.php?userid='.$fields['gebruikersid'].'" class="avatar">
+                                <img class="photo" src="'.$SaveDir.$fields['gebruikersid'].'.jpg" width="48">
+                            </a>
+                            <span class="user">
+                                <span class="by">by </span>
+                                <a class="url" href="index.php?userid='.$fields['gebruikersid'].'">
+                                    <span class="fn" title="'.$username.'">
+                                        '.$username.'
+                                    </span>
+                                </a>
                             </span>
-                        </a>
-                    </span>
-                    <div class="user-badge top-contrib">
-                        <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                            <!-- ToDo : User status verwerken tot een "badge" -->
+                            <div class="user-badge top-contrib">
+                                <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                            </div>
+                        </div>
+                        <div class="qa-container">
+                            <div class="content">
+                                '.$fields['antwoord'].'
+                            </div>
+                            <ul class="meta">
+                                <li>
+                                    <abbr title="'.$fields['posttijd'].'">'.$this->StringTimeDifference($fields['posttijd']).'</abbr>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="qa-container">
-                    <div class="content">Yes they do, but individually not much. Gobally, it adds up significantly.</div>
-                    <ul class="meta">
-                        <li>
-                            <abbr title="2011-03-01 23:54:01 +0000">12 hours ago</abbr>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        ';
+                ';
+            }
+        }
+        return $answers;
+    }
+
+    function getUsername($userid) {
+        $result = mysql_query("SELECT `gebruikersnaam` FROM `gebruikers` WHERE `id` ='".$userid."';");
+        if (mysql_num_rows($result) == 1) {
+            return mysql_result($result, 0);
+        }
     }
 
 }

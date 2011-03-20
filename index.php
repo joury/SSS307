@@ -9,6 +9,8 @@
         $website->LogIn($_POST['username'], $_POST['password']);
     } else if (isset($_POST['LogOut'])) {
         $website->Logout();
+    } else if ($website->IsLoggedIn()) {
+        $website->RefreshCookie();
     }
     ?>
     <head>
