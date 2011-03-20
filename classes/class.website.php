@@ -316,6 +316,7 @@ Class website {
         } else {
             die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
         }
+        echo '<meta http-equiv="refresh" content="0">';
     }
 
     function Logout() {
@@ -660,21 +661,109 @@ Class website {
         }
     }
 
-    function showCurrentQuestion($id) {
-        $question = $this->getCurrentQuestion($id);
-        if ($question) {
+    function showCurrentQuestion($categoryid, $questionid) {
+        $result = mysql_query("SELECT * FROM `vragen` WHERE `id` = '" . $questionid . "' AND `taalid` = '" . $categoryid . "';");
+        if (mysql_num_rows($result) == 1) {
+            $fields = mysql_fetch_assoc($result);
             echo '
-                <li class="selected">
-                    ' . $question . '
-                </li>'
-            ;
+                <div id="profile" class="profile vcard">
+                    <a href="index.php?userid=' . $fields['gebruiker'] . '" class="avatar">
+                        <img class="photo" alt="" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
+                    </a>
+                    <span class="user">
+                        <a class="url" href="index.php?userid=' . $fields['gebruiker'] . '">
+                            <span class="fn" title=""></span> <!-- ToDo : Username hier -->
+                        </a>
+                        </span>
+                </div>
+                <div class="qa-container">
+                    <div class="hd">
+                        <h2>Open Question</h2>
+                    </div>
+                    <h1 class="subject">' . $fields['vraag'] . '</h1>
+                    <div class="content">
+                        ' . $fields['aanvulling'] . '
+                    </div>
+                    <ul class="meta">
+                        <li>
+                            <abbr title="">' . $this->StringTimeDifference($fields['posttijd']) . '</abbr>
+                        </li>
+                    </ul>
+                    <p class="cta">
+                        <a href=""> <!-- ToDo : Link invullen -->
+                            <span>
+                                <span>
+                                    <span>
+                                        <span>
+                                            Answer Question
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </a>
+                    </p>
+                </div>
+            ';
         } else {
             die("Error: unknown question parsed");
         }
     }
 
-    function getCurrentQuestion($id) {
-        $result = mysql_query("SELECT `vraag` FROM `vragen` WHERE `id` = '" . $id . "';");
+    public function StringTimeDifference($date1) {
+        if ($this->TimeDifference($date1, time())) {
+            $i = array();
+            list($d, $h, $m, $s) = (array) $this->TimeDifference($date1, time());
+
+            if ($d > 0) {
+                $i[] = sprintf('%d Days', $d);
+            }
+            if ($h > 0) {
+                $i[] = sprintf('%d Hours', $h);
+            }
+            if (($d == 0) && ($m > 0)) {
+                $i[] = sprintf('%d Minutes', $m);
+            }
+            if (($h == 0) && ($s > 0)) {
+                $i[] = sprintf('%d Seconds', $s);
+            }
+
+            return count($i) ? implode(' ', $i) . " ago" : 'Just Now';
+        } else {
+            return "Unknown";
+        }
+    }
+
+    public function TimeDifference($date1, $date2) {
+        $date1 = strtotime($date1);
+
+        if (($date1 !== false) && ($date2 !== false)) {
+            if ($date2 >= $date1) {
+                $diff = ($date2 - $date1);
+
+                $days = "";
+                $hours = "";
+                $minutes = "";
+                if (intval((floor($diff / 86400)))) {
+                    $days = intval((floor($diff / 86400)));
+                    $diff %= 86400;
+                }
+                if (intval((floor($diff / 3600)))) {
+                    $hours = intval((floor($diff / 3600)));
+                    $diff %= 3600;
+                }
+                if (intval((floor($diff / 60)))) {
+                    $minutes = intval((floor($diff / 60)));
+                    $diff %= 60;
+                }
+
+                return array($days, $hours, $minutes, intval($diff));
+            }
+        }
+        return false;
+    }
+
+    function getCurrentQuestion($categoryid, $questionid) {
+        $result = mysql_query("SELECT `vraag` FROM `vragen` WHERE `id` = '" . $questionid . "' AND `taalid` = '" . $categoryid . "';");
         if (mysql_num_rows($result) == 1) {
             return mysql_result($result, 0);
         } else {
@@ -703,11 +792,12 @@ Class website {
 
     function showHeader($_GET) {
         if ($_GET && isset($_GET['questionid']) && isset($_GET['categoryid'])) {
+            $question = $this->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
             echo '
-                <meta name="description" content="' . $this->getCurrentQuestion($_GET['questionid']) . '">
+                <meta name="description" content="' . $question . '">
                 <meta name="keywords" content="codedump, answers,  questions, programming, ' . $this->getCategoryName($_GET['categoryid']) . '">
-                <meta name="title" content="' . $this->getCurrentQuestion($_GET['questionid']) . '">
-                <title>' . $this->getCurrentQuestion($_GET['questionid']) . ' - CodeDump</title>
+                <meta name="title" content="' . $question . '">
+                <title>' . $question . ' - CodeDump</title>
             ';
         } else {
             echo '
@@ -752,6 +842,61 @@ Class website {
         $xml = file_get_contents("http://api.hostip.info/?ip=" . $_SERVER["REMOTE_ADDR"]);
         preg_match("@<countryName>(.*?)</countryName>@si", $xml, $matches);
         return $matches[1];
+    }
+
+    function showAnswers($categoryid, $questionid) {
+        echo '
+            <div id="yan-answers" class="mod">
+            <div class="hd">
+                <h3>
+                    <strong>Answers</strong> ('.$this->getAmountOfAnswers($categoryid, $questionid).')
+                </h3>
+            </div>
+            <div class="bd">
+                <ul class="shown">
+                    <li>
+                        '.$this->getAnswers($categoryid, $questionid).'
+                    </li>
+                </ul>
+            </div>
+        </div>
+        ';
+    }
+
+    function getAmountOfAnswers($categoryid, $questionid) {
+        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '".$categoryid."' AND `vraagid` = '".$questionid."';");
+        return mysql_num_rows($result);
+    }
+
+    function getAnswers($categoryid, $questionid) {
+        return '
+            <div id="GqUpLTPiI1ZxF8Y21lau" class="answer">
+                <div class="profile vcard">
+                    <a href="" class="avatar">
+                        <img class="photo" alt="classicsat" src="" width="48">
+                    </a>
+                    <span class="user">
+                        <span class="by">by </span>
+                        <a class="url" href="">
+                            <span class="fn" title="classicsat">
+                                classics...
+                            </span>
+                        </a>
+                    </span>
+                    <div class="user-badge top-contrib">
+                        <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                    </div>
+                </div>
+                <div class="qa-container">
+                    <div class="content">Yes they do, but individually not much. Gobally, it adds up significantly.</div>
+                    <ul class="meta">
+                        <li>
+                            <abbr title="2011-03-01 23:54:01 +0000">12 hours ago</abbr>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        ';
     }
 
 }

@@ -7,6 +7,8 @@
     $website = new website($database);
     if (isset($_POST['btnLogin'])) {
         $website->LogIn($_POST['username'], $_POST['password']);
+    } else if (isset($_POST['LogOut'])) {
+        $website->Logout();
     }
     ?>
     <head>
@@ -38,10 +40,10 @@
                 if ($_GET && !$_POST) {
                     if (isset($_GET['categoryid'])) {
                         $website->showCurrentCategory($_GET['categoryid']);
-                    }
 
-                    if (isset($_GET['questionid'])) {
-                        $website->showCurrentQuestion($_GET['questionid']);
+                        if (isset($_GET['questionid'])) {
+                            echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
+                        }
                     }
                 }
                 ?>
@@ -51,10 +53,12 @@
                     <div id="yan-question">
                         <?php
                         if ($_GET && !$_POST) {
-                            if (isset($_GET['categoryid']) && !isset($_GET['questionid'])) {
-                                $website->showQuestions($_GET['categoryid']);
-                            } else if (isset($_GET['questionid'])) {
-                                $website->showCurrentQuestion($_GET['questionid']);
+                            if (isset($_GET['categoryid'])) {
+                                if (isset($_GET['questionid'])) {
+                                    $website->showCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
+                                } else {
+                                    $website->showQuestions($_GET['categoryid']);
+                                }
                             } else {
                                 $website->showHomePage();
                             }
@@ -69,35 +73,6 @@
                                 $website->showHomePage();
                             }
                         }
-                        /*
-                          <div id="profile" class="profile vcard">  <!-- ToDo : Dynamische profiel informatie vanuit DB -->
-                          <a href="" class="avatar">  <!-- ToDO : Link invoegen naar profiel -->
-                          <img class="photo" alt="" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
-                          </a>
-                          <span class="user">
-                          <a class="url" href="">  <!-- ToDO : Link invoegen naar profiel -->
-                          <span class="fn" title=""></span> <!-- ToDo : Username hier -->
-                          </a>
-                          </span>
-                          </div>
-                          <div class="qa-container"> <!-- ToDo : Dynamische vraag via database -->
-                          <div class="hd">
-                          <h2>Open Question</h2>
-                          </div>
-                          <h1 class="subject"></h1>   <!-- ToDo : Invullen -->
-                          <div class="content">   <!-- ToDo : Invullen -->
-                          </div>
-                          <ul class="meta">
-                          <li>
-                          <abbr title=""></abbr> <!-- ToDo : Invullen -->
-                          </li>
-                          </ul>
-                          <p class="cta">
-                          <a href=""> <!-- ToDo : Link invullen -->
-                          <span><span><span><span>Answer Question</span></span></span></span>
-                          </a>
-                          </p>
-                          </div> */
                         ?>
                     </div>
                 </div>
@@ -113,67 +88,22 @@
                         </a>
                     </li>
                 </ul>
-                <div id="yan-answers" class="mod">
-                    <div class="hd">
-                        <h3>
-                            <strong>Answers</strong> (4) <!-- Nummertje moet dynamisch -->
-                        </h3>
-                        <form action="file:///C:/question/index" method="get" id="yan-answer-sort">
-                            <div>
-                                <input name="qid" value="20110301153400AA8GaqD" type="hidden">
-                                <label for="yan-answer-sort-box">Show:</label>
-                                <select name="show" id="yan-answer-sort-box">
-                                    <option selected="selected" value="7">All Answers</option>
-                                    <option value="1">Oldest to Newest</option>
-                                    <option value="2">Newest to Oldest</option>
-                                    <option value="3">Rated Highest to Lowest</option>
-                                </select>
-                                <input name="go" value="Go" class="button" type="submit">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="bd">
-                        <ul class="shown"> <!-- Alles hieronder moet dynamisch... de mogelijke antwoorden -->
-                            <li>  <div id="GqUpLTPiI1ZxF8Y21lau" class="answer">
-                                    <div id="profile-nQ7G1nBVaa" class="profile vcard">
-                                        <a href="" class="avatar">
-                                            <img class="photo" alt="classicsat" src="" width="48">
-                                        </a>
-                                        <span class="user">
-                                            <span class="by">by </span>
-                                            <a class="url" href=""><span class="fn" title="classicsat">classics...</span></a>
-                                        </span>
-                                        <div class="user-badge top-contrib">
-                                            <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
-                                        </div>
-                                    </div>
-                                    <div class="qa-container">
-                                        <div class="content">Yes they do, but individually not much. Gobally, it adds up significantly.</div>
-                                        <ul class="meta">
-                                            <li>
-                                                <abbr title="2011-03-01 23:54:01 +0000">12 hours ago</abbr>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <?php
+                if ($_GET && isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                    $website->showAnswers($_GET['categoryid'], $_GET['questionid']);
+                }
+                ?>
             </div>
             <div id="yan-related">
                 <div id="yan-categories" class="mod">
                     <h2 class="hd">Categories</h2>
                     <ul class="bd">
-                        <li>
-                            <a id="view-all-cats" href="">All Programming Languages</a>
                         <li class="expanded">
                             <ul>
                                 <?php
                                 $website->showCategories($_GET);
                                 ?>
                             </ul>
-                        </li>
                         </li>
                     </ul>
                 </div>
