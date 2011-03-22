@@ -5,6 +5,7 @@ Class website {
     var $DB;
     var $MainConfigFile = "configs/config.php";
     var $LanguageDir = "languages/";
+    var $user;
 
     function __construct($db) {
         $this->DB = $db;
@@ -219,38 +220,6 @@ Class website {
         }
     }
 
-    function GetName($id = "") {
-        require $this->MainConfigFile;
-
-        if (isset($_COOKIE[$cookiename]) && $id == "") {
-            $parts = explode(",", $_COOKIE[$cookiename]);
-            if ($parts[0] != "") {
-                return $parts[0];
-            }
-        } else if ($id != "") {
-            $this->DB->MakeConnection();
-            $query = mysql_query("select `name` FROM `accounts` WHERE `id` = '" . $id . "';");
-            if (mysql_num_rows($query) != 0) {
-                $result = mysql_result($query, 0);
-                if ($result != "") {
-                    return $result;
-                }
-            }
-        }
-    }
-
-    function GetPass() {
-        require $this->MainConfigFile;
-
-        if (isset($_COOKIE[$cookiename])) {
-            require $this->MainConfigFile;
-            $parts = explode(",", $_COOKIE[$cookiename]);
-            if ($parts[1] != "") {
-                return $parts[1];
-            }
-        }
-    }
-
     function GetID($name = "") {
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
@@ -268,20 +237,6 @@ Class website {
                 die("Unknown error");
             }
         }
-    }
-
-    function GetLanguage() {
-        $raw_language_query = "SELECT `taal` FROM `gebruikers` WHERE `id` = " . $this->GetID() . ";";
-        $language_query = mysql_query($raw_language_query);
-        $language = "";
-        if (@mysql_num_rows($language_query) != 0) {
-            $language = mysql_result($language_query, 0);
-        }
-
-        if ($language == "") {
-            $language = "English";
-        }
-        return $language;
     }
 
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
@@ -355,7 +310,7 @@ Class website {
         $old_password = sha1($old_password);
         if ($old_password == $this->GetPass()) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
             $new_password = sha1($new_password);
-            $change_pass = mysql_query("UPDATE `accounts` SET `password` = '" . $new_password . "' WHERE `username` = '" . $this->GetName() . "';");
+            $change_pass = mysql_query("UPDATE `accounts` SET `password` = '" . $new_password . "' WHERE `username` = '" . $this->user->username . "';");
             if ($change_pass) {
                 echo $this->Translate('PasswordChanged');
             } else {
@@ -488,7 +443,7 @@ Class website {
     }
 
     function IsAdmin() {
-        if ($this->GetName() == "")
+        if ($this->user->username() == "")
             return false;
         $raw_is_admin = "SELECT `rank` FROM `accounts` WHERE `username` = '" . $this->GetName() . "';";
         $is_admin = mysql_query($raw_is_admin);
@@ -883,7 +838,7 @@ Class website {
         if (mysql_num_rows($result) > 0) {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
-                $username = $this->getUsername($fields['gebruikersid']);
+                $user = $this->getUser($fields['gebruikersid']); //aanpassen
                 $answers .= '
                     <div class="answer">
                         <div class="profile vcard">
@@ -893,8 +848,9 @@ Class website {
                             <span class="user">
                                 <span class="by">by </span>
                                 <a class="url" href="index.php?userid=' . $fields['gebruikersid'] . '">
-                                    <span class="fn" title="' . $username . '">
-                                        ' . $username . '
+                                    <span class="fn" title="' . $user->username . '">
+                                        ' . $user->username . '
+
                                     </span>
                                 </a>
                             </span>
@@ -918,13 +874,6 @@ Class website {
             }
         }
         return $answers;
-    }
-
-    function getUsername($userid) {
-        $result = mysql_query("SELECT `gebruikersnaam` FROM `gebruikers` WHERE `id` ='" . $userid . "';");
-        if (mysql_num_rows($result) == 1) {
-            return mysql_result($result, 0);
-        }
     }
 
     function showAnswerWriter($categoryid, $questionid) {
@@ -970,6 +919,9 @@ Class website {
         ';
     }
 
+    function getUser($id){
+        return new user($id);
+    }
 }
 
 ?>
