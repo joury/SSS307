@@ -7,12 +7,6 @@ Class website {
     var $LanguageDir = "languages/";
     var $user;
 
-
-    function getuser($id){
-    return new user($id);
-
-    }
-
     function __construct($db) {
         $this->DB = $db;
     }
@@ -226,7 +220,7 @@ Class website {
         }
     }
 
-      function GetID($name = "") {
+    function GetID($name = "") {
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
         if ($name != "") {
@@ -244,8 +238,6 @@ Class website {
             }
         }
     }
-
-   
 
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
@@ -627,12 +619,14 @@ Class website {
             $fields = mysql_fetch_assoc($result);
             echo '
                 <div id="profile" class="profile vcard">
-                    <a href="index.php?userid=' . $fields['gebruiker'] . '" class="avatar">
-                        <img class="photo" alt="" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
+                    <a href="index.php?userid=' . $fields['gebruikerid'] . '" class="avatar">
+                        <img class="photo" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
                     </a>
                     <span class="user">
-                        <a class="url" href="index.php?userid=' . $fields['gebruiker'] . '">
-                            <span class="fn" title=""></span> <!-- ToDo : Username hier -->
+                        <a class="url" href="index.php?userid=' . $fields['gebruikerid'] . '">
+                            <span class="fn" title="">
+                                <!-- ToDo : Username hier -->
+                            </span>
                         </a>
                         </span>
                 </div>
@@ -650,7 +644,7 @@ Class website {
                         </li>
                     </ul>
                     <p class="cta">
-                        <a href=""> <!-- ToDo : Link invullen -->
+                        <a href="?categoryid=' . $categoryid . '&questionid=' . $questionid . '&answer=1">
                             <span>
                                 <span>
                                     <span>
@@ -845,8 +839,8 @@ Class website {
         if (mysql_num_rows($result) > 0) {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
-               $user= $this->Getuser($fields['gebruikersid']); //aanpassen
-                  $answers .= '
+                $user = $this->getUser($fields['gebruikersid']); //aanpassen
+                $answers .= '
                     <div class="answer">
                         <div class="profile vcard">
                             <a href="index.php?userid=' . $fields['gebruikersid'] . '" class="avatar">
@@ -854,9 +848,9 @@ Class website {
                             </a>
                             <span class="user">
                                 <span class="by">by </span>
-                                <a class="url" href="index.php?userid='.$fields['gebruikersid'].'">
-                                    <span class="fn" title="'.$user->username.'">
-                                        '.$user->username.'
+                                <a class="url" href="index.php?userid=' . $fields['gebruikersid'] . '">
+                                    <span class="fn" title="' . $user->username . '">
+                                        ' . $user->username . '
 
                                     </span>
                                 </a>
@@ -883,7 +877,52 @@ Class website {
         return $answers;
     }
 
+    function showAnswerWriter($categoryid, $questionid) {
+        echo '
+            <div id="yan-main">
+                <div id="yan-question">
+                    <div class="qa-container">
+                        <center>
+                            <form name="answer" method="POST" action="index.php">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <center>
+                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'b'" . ')" value="B" style="width:25px;font-weight:bold;" />
+                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'u'" . ')" value="_" style="width:20px;" />
+                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'i'" . ')" value="I" style="width:20px;font-style:italic;" />
+                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'img'" . ')" value="img" style="width:40px;" />
+                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'url'" . ')" value="url" style="width:40px;" />
+                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'code'" . ')" value="code" style="width:40px;" />
+                                                <input type="hidden" name="categoryid" value="' . $categoryid . '" />
+                                                <input type="hidden" name="questionid" value="' . $questionid . '" />
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <center>
+                                                <input type="submit" value="Submit" />
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        ';
+    }
 
-
+    function getUser($id){
+        return new user($id);
+    }
 }
+
 ?>
