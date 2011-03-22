@@ -132,7 +132,7 @@ body.yui-skin-sam .mask{background-color:#000;opacity:.6;filter:alpha(opacity=60
 #yup-dialog_c .underlay{opacity:.50;filter:alpha(opacity=50);top:-10px;left:-10px;bottom:-10px;right:-10px;margin:0;_right:0;_bottom:0;_margin:0;_padding:10px;_zoom:1;}
 #yup-dialog{border:1px solid #447499;text-align:left;background-color:#f0f4f8;}
 #yup-dialog strong{font-weight:bold;}
-#yup-dialog .hd,#yup-dialog .hd span,.updates-disclosure .hd span,#yup-dialog .button-group button{background-image:url(".../images/disclosure.png");background-repeat:repeat-x;}
+#yup-dialog .hd,#yup-dialog .hd span,.updates-disclosure .hd span,#yup-dialog .button-group button{background-image:url("../images/disclosure.png");background-repeat:repeat-x;}
 #yup-dialog .container-close{background-position:-8px -8px;top:10px;height:16px;}
 #yup-dialog .container-close:hover{background-position:-6px -30px;}
 #yup-dialog .hd{margin:0;border:0;border-bottom:1px solid #d7dee6;font-family:Arial "Sans-serif";color:#3f6685;font-size:16px;background-color:inherit;background:none;}
@@ -529,7 +529,7 @@ p.cr-nosuggestions{padding:6px;}
 #yan-banner h2 a{text-decoration:none;}
 #yan-banner em{font-weight:bold;}
 #yan-banner form{padding:0 10px 8px;margin-right:10px;background:url(../images/header-large2.png) no-repeat -56px 100%;position:relative;zoom:1;}
-#yan-banner .short form{padding:0 0 0 10px;margin:0 10px 0 0;background:url(..../images/header2.png) no-repeat -48px 100%;min-height:47px;_height:47px;}
+#yan-banner .short form{padding:0 0 0 10px;margin:0 10px 0 0;background:url(../images/header2.png) no-repeat -48px 100%;min-height:47px;_height:47px;}
 #yan-banner form div{padding:0;}
 #yan-banner div{padding:0 10px;zoom:1;}
 #yan-banner div:after{content:".";display:block;clear:both;height:0;visibility:hidden;}
@@ -537,7 +537,7 @@ p.cr-nosuggestions{padding:6px;}
 #yan-banner textarea#banner-ask{height:2.5em;width:228px;overflow:auto;}
 #yan-banner p.cta{margin:10px 0 0;}
 body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-banner #yan-banner-discover{background:url(../images/header-large2.png) no-repeat;padding-top:8px;}
-body #yan-banner .short #yan-banner-ask,body #yan-banner .short #yan-banner-answer,body #yan-banner .short #yan-banner-discover{background:url(..../images/header2.png) no-repeat;min-height:47px;_height:47px;}
+body #yan-banner .short #yan-banner-ask,body #yan-banner .short #yan-banner-answer,body #yan-banner .short #yan-banner-discover{background:url(../images/header2.png) no-repeat;min-height:47px;_height:47px;}
 body #hd #yan-banner #yan-banner-answer{background-position:-550px 0;}
 body #hd #yan-banner #yan-banner-discover{background-position:-1100px 0;}
 #yan-header{padding:15px;border-bottom:1px dotted #ccc;background:url(../images/carousel-bg-top.gif) repeat-x;}
