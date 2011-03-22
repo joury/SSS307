@@ -32,6 +32,20 @@ class user {
             while($fields = mysql_fetch_assoc($result)) {
                 $this->id = $fields['id'];
                 $this->username = $fields['gebruikersnaam'];
+                $this->password = $fiels['wachtwoord'];
+                $this->firstname = $fields['voornaam'];
+                $this->lastname = $fields['achternaam'];
+                $this->insertion = $fields['tussenvoegsel'];
+                $this->gender = $fields['geslacht'];
+                $this->email = $fields['email'];
+                $this->language = $fields['taal'];
+                $this->country = $fields['land'];
+                $this->state = $fields['provincie'];
+                $this->city = $fields['stad'];
+                $this->birthdate = $fields['geboortedatum'];
+                $this->msn = $fields['msn'];
+                $this->skype = $fields['skype'];
+
             }
         }
     }
