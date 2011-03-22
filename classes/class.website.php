@@ -617,7 +617,7 @@ Class website {
         if ($this->IsLoggedIn()) {
             $tabcode .= '
                 <li class="menu" id="yan-nav-about">
-                    <a href="index.php?userid='.$this->GetID().'">Profile</a>
+                    <a href="index.php?userid=' . $this->GetID() . '">Profile</a>
                 </li>
            ';
         }
@@ -845,13 +845,13 @@ Class website {
             <div id="yan-answers" class="mod">
             <div class="hd">
                 <h3>
-                    <strong>Answers</strong> ('.$this->getAmountOfAnswers($categoryid, $questionid).')
+                    <strong>Answers</strong> (' . $this->getAmountOfAnswers($categoryid, $questionid) . ')
                 </h3>
             </div>
             <div class="bd">
                 <ul class="shown">
                     <li>
-                        '.$this->getAnswers($categoryid, $questionid).'
+                        ' . $this->getAnswers($categoryid, $questionid) . '
                     </li>
                 </ul>
             </div>
@@ -860,12 +860,23 @@ Class website {
     }
 
     function getAmountOfAnswers($categoryid, $questionid) {
-        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '".$categoryid."' AND `vraagid` = '".$questionid."';");
+        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '" . $categoryid . "' AND `vraagid` = '" . $questionid . "';");
         return mysql_num_rows($result);
     }
 
+    function getBadges($id) {
+        $badges = "";
+        $result = mysql_query("SELECT * FROM `skills` WHERE `id` = '" . $id . "';");
+        if (mysql_num_rows($result) > 0) {      // Een of meerdere talen waar hij/zij goed in is
+            while ($fields = mysql_fetch_assoc($result)) {
+                $badges .= $fields['taalid'] . "_" . ( (int) ($fields['taalniveau'] / 25 ) ) . ".jpg";
+            }
+        }
+        return $badges;
+    }
+
     function getAnswers($categoryid, $questionid) {
-        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '".$categoryid."' AND `vraagid` = '".$questionid."';");
+        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '" . $categoryid . "' AND `vraagid` = '" . $questionid . "';");
         $answers = "";
         if (mysql_num_rows($result) > 0) {
             require $this->MainConfigFile;
@@ -874,14 +885,14 @@ Class website {
                 $answers .= '
                     <div class="answer">
                         <div class="profile vcard">
-                            <a href="index.php?userid='.$fields['gebruikersid'].'" class="avatar">
-                                <img class="photo" src="'.$SaveDir.$fields['gebruikersid'].'.jpg" width="48">
+                            <a href="index.php?userid=' . $fields['gebruikersid'] . '" class="avatar">
+                                <img class="photo" src="' . $SaveDir . $fields['gebruikersid'] . '.jpg" width="48">
                             </a>
                             <span class="user">
                                 <span class="by">by </span>
-                                <a class="url" href="index.php?userid='.$fields['gebruikersid'].'">
-                                    <span class="fn" title="'.$username.'">
-                                        '.$username.'
+                                <a class="url" href="index.php?userid=' . $fields['gebruikersid'] . '">
+                                    <span class="fn" title="' . $username . '">
+                                        ' . $username . '
                                     </span>
                                 </a>
                             </span>
@@ -892,11 +903,11 @@ Class website {
                         </div>
                         <div class="qa-container">
                             <div class="content">
-                                '.$fields['antwoord'].'
+                                ' . $fields['antwoord'] . '
                             </div>
                             <ul class="meta">
                                 <li>
-                                    <abbr title="'.$fields['posttijd'].'">'.$this->StringTimeDifference($fields['posttijd']).'</abbr>
+                                    <abbr title="' . $fields['posttijd'] . '">' . $this->StringTimeDifference($fields['posttijd']) . '</abbr>
                                 </li>
                             </ul>
                         </div>
@@ -908,7 +919,7 @@ Class website {
     }
 
     function getUsername($userid) {
-        $result = mysql_query("SELECT `gebruikersnaam` FROM `gebruikers` WHERE `id` ='".$userid."';");
+        $result = mysql_query("SELECT `gebruikersnaam` FROM `gebruikers` WHERE `id` ='" . $userid . "';");
         if (mysql_num_rows($result) == 1) {
             return mysql_result($result, 0);
         }
