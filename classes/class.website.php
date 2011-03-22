@@ -676,6 +676,9 @@ Class website {
                             <abbr title="">' . $this->StringTimeDifference($fields['posttijd']) . '</abbr>
                         </li>
                     </ul>
+            ';
+            if ($this->IsLoggedIn()) {
+                echo '
                     <p class="cta">
                         <a href="?categoryid=' . $categoryid . '&questionid=' . $questionid . '&answer=1">
                             <span>
@@ -689,6 +692,9 @@ Class website {
                             </span>
                         </a>
                     </p>
+                ';
+            }
+            echo '
                 </div>
             ';
         } else {
@@ -933,50 +939,61 @@ Class website {
     }
 
     function showAnswerWriter($categoryid, $questionid) {
-        echo '
-            <div id="yan-main">
-                <div id="yan-question">
-                    <div class="qa-container">
-                        <center>
-                            <form name="answer" method="POST" action="index.php">
-                                <table>
-                                    <tr>
-                                        <td>
-                                            <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <center>
-                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'b'" . ')" value="B" style="width:25px;font-weight:bold;" />
-                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'u'" . ')" value="_" style="width:20px;" />
-                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'i'" . ')" value="I" style="width:20px;font-style:italic;" />
-                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'img'" . ')" value="img" style="width:40px;" />
-                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'url'" . ')" value="url" style="width:40px;" />
-                                                <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'code'" . ')" value="code" style="width:40px;" />
-                                                <input type="hidden" name="categoryid" value="' . $categoryid . '" />
-                                                <input type="hidden" name="questionid" value="' . $questionid . '" />
-                                            </center>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <center>
-                                                <input type="submit" value="Submit" />
-                                            </center>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </form>
-                        </center>
+        if ($this->IsLoggedIn()) {
+            echo '
+                <div id="yan-main">
+                    <div id="yan-question">
+                        <div class="qa-container">
+                            <center>
+                                <form name="Answer" id="Answer" method="POST" action="index.php">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <center>
+                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'b'" . ')" value="B" style="width:25px;font-weight:bold;" />
+                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'u'" . ')" value="_" style="width:20px;" />
+                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'i'" . ')" value="I" style="width:20px;font-style:italic;" />
+                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'img'" . ')" value="img" style="width:40px;" />
+                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'url'" . ')" value="url" style="width:40px;" />
+                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'code'" . ')" value="code" style="width:40px;" />
+                                                    <input type="hidden" name="Answer" value="1" />
+                                                    <input type="hidden" name="categoryid" value="' . $categoryid . '" />
+                                                    <input type="hidden" name="questionid" value="' . $questionid . '" />
+                                                </center>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <center>
+                                                    <input type="submit" value="Submit" />
+                                                </center>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </center>
+                        </div>
                     </div>
                 </div>
-            </div>
-        ';
+            ';
+        }
+    }
+
+    function submitAnswer($_POST) {
+        $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `votes`, `posttijd`)
+            VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->User->id . "', '" . $_POST['text'] . "', 0, now());";
+        mysql_query($query);
     }
 
     function getUser($id) {
-        require "class.user.php";
+        if (!class_exists('user')) {
+            require "class.user.php";
+        }
         return new user($id, "", "");
     }
 
@@ -984,7 +1001,9 @@ Class website {
         require $this->MainConfigFile;
         if ($_COOKIE && $_COOKIE[$cookiename] != "") {
             $parts = explode(",", $_COOKIE[$cookiename]);
-            require "class.user.php";
+            if (!class_exists('user')) {
+                require "class.user.php";
+            }
             $this->User = new user("", $parts[0], $parts[1]);
         }
     }

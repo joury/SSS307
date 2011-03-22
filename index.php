@@ -73,6 +73,9 @@
                                     $website->showRegister($_POST);
                                 } else if (isset($_POST['RegistrationForm'])) {
                                     $website->DoRegister($_POST);
+                                } else if (isset($_POST['Answer'])) {
+                                    $website->SubmitAnswer($_POST);
+                                    $website->showCurrentQuestion($_POST['categoryid'], $_POST['questionid']);
                                 }
                             } else {
                                 $website->showHomePage();
@@ -94,11 +97,11 @@
                     </li>
                 </ul>
                 <?php
-                if ($_GET && isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                if ($_REQUEST && isset($_REQUEST['categoryid']) && isset($_REQUEST['questionid'])) {
                     if (isset($_GET['answer'])) {
                         $website->showAnswerWriter($_GET['categoryid'], $_GET['questionid']);
                     }
-                    $website->showAnswers($_GET['categoryid'], $_GET['questionid']);
+                    $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
                 }
                 ?>
             </div>
