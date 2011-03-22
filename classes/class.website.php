@@ -19,7 +19,7 @@ Class website {
 
     function IsLoggedIn() {
         $username = $this->user->username;
-        $password = $this->GetPass();
+        $password = $this->user->wachtwoord;
         $id = $this->GetID();
         if ($username != "" && $password != "" && $id != "") {
             return true;
@@ -140,7 +140,7 @@ Class website {
 
     function Translate($string) {
         require $this->MainConfigFile;
-        $languagefile = $LanguageDir . $this->GetLanguage() . ".php";
+        $languagefile = $LanguageDir . $this->$this->user->language . ".php";
         if (is_file($languagefile)) {
             require $languagefile;
         } else {
@@ -316,7 +316,7 @@ Class website {
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
         $old_password = sha1($old_password);
-        if ($old_password == $this->GetPass()) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
+        if ($old_password == $this->user->password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
             $new_password = sha1($new_password);
             $change_pass = mysql_query("UPDATE `accounts` SET `password` = '" . $new_password . "' WHERE `username` = '" . $this->user->username . "';");
             if ($change_pass) {
@@ -324,7 +324,8 @@ Class website {
             } else {
                 echo mysql_error($connection);
             }
-        } else {
+        }
+       else {
             die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
         }
     }
