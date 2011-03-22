@@ -604,37 +604,33 @@ Class website {
     function showTabs() {
         $tabcode = '
             <div class="tabbed-content">
-                    <ul class="tabs" id="yan-nav">
+                <ul class="tabs" id="yan-nav">
         ';
-        if (isset($_GET['categoryid'])) {
-            $tabcode .= '
-                <li class="menu" id="yan-nav-home">
-                    <a href="index.php">Home</a>
-                </li>
-                <li class="current menu" id="yan-nav-browse">
-                    <a href="index.php?categories=1">Categories</a>
-                </li>
-            ';
-        } else {
-            $tabcode .= '
-                <li class="current menu" id="yan-nav-home">
-                    <a href="index.php">Home</a>
-                </li>
-                <li class="menu" id="yan-nav-browse">
-                    <a href="index.php?categories=1">Categories</a>
-                </li>
-            ';
-        }
+        $tabcode .= '
+            <li class="menu" id="yan-nav-home">
+                <a href="index.php">Home</a>
+            </li>
+            <li class="menu" id="yan-nav-browse">
+                <a href="index.php?categories=1">Categories</a>
+            </li>
+        ';
         if ($this->IsLoggedIn()) {
             $tabcode .= '
-                        <li class="menu" id="yan-nav-about">
-                            <a href="index.php?profile=1">Profile</a>
-                        </li>
+                <li class="menu" id="yan-nav-about">
+                    <a href="index.php?userid='.$this->GetID().'">Profile</a>
+                </li>
            ';
         }
+        if (isset($_GET['categories']) || isset($_GET['categoryid'])) {
+            $tabcode = str_replace('<li class="menu" id="yan-nav-browse">', '<li class="current menu" id="yan-nav-browse">', $tabcode);
+        } else if ($this->IsLoggedIn() && isset($_GET['userid']) && $this->getID() == $_GET['userid']) {
+            $tabcode = str_replace('<li class="menu" id="yan-nav-about">', '<li class="current menu" id="yan-nav-about">', $tabcode);
+        } else {
+            $tabcode = str_replace('<li class="menu" id="yan-nav-home">', '<li class="current menu" id="yan-nav-home">', $tabcode);
+        }
         $tabcode .= '
-                    </ul>
-                </div>
+                </ul>
+            </div>
         ';
         return $tabcode;
     }
