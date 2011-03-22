@@ -18,7 +18,7 @@ Class website {
     }
 
     function IsLoggedIn() {
-        $username = $this->GetName();
+        $username = $this->user->username;
         $password = $this->GetPass();
         $id = $this->GetID();
         if ($username != "" && $password != "" && $id != "") {
@@ -232,7 +232,7 @@ Class website {
         if ($name != "") {
             $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $name . "';");
         } else {
-            $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $this->GetName() . "';");
+            $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $this->user->username . "';");
         }
         if (mysql_num_rows($query) != 0) {
             $result = mysql_result($query, 0);
@@ -453,7 +453,7 @@ Class website {
     function IsAdmin() {
         if ($this->user->username() == "")
             return false;
-        $raw_is_admin = "SELECT `rank` FROM `accounts` WHERE `username` = '" . $this->GetName() . "';";
+        $raw_is_admin = "SELECT `rank` FROM `accounts` WHERE `username` = '" .$this->user->username . "';";
         $is_admin = mysql_query($raw_is_admin);
         $rank = mysql_result($is_admin, 0);
         if ($rank == 0) {
