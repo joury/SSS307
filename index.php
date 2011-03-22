@@ -71,7 +71,7 @@
                             if ($_POST) {
                                 if (isset($_POST['btnRegister'])) {
                                     $website->showRegister($_POST);
-                                } else if (isset($_POST['Register'])) {
+                                } else if (isset($_POST['RegistrationForm'])) {
                                     $website->DoRegister($_POST);
                                 }
                             } else {

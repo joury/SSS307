@@ -10,8 +10,7 @@ function CheckFields()
         alert("Password field cannot be empty!");
         form.password.focus();
         return false;
-    }
-    if (form.password.value != "") {
+    } else {
         var rules = /^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/;
         if (!rules.test(form.password.value)) {
             alert("Password doesn't match the rules.");
@@ -19,16 +18,15 @@ function CheckFields()
             return false;
         }
     }
-    if (form.emailaddress.value == "") {
+    if (form.email.value == "") {
         alert("Emailaddress field cannot be empty!");
-        form.emailaddress.focus();
+        form.email.focus();
         return false;
-    }
-    if (form.emailaddress.value != "") {
+    } else if (form.email.value != "") {
         var filter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!filter.test(form.emailaddress.value)) {
+        if (!filter.test(form.email.value)) {
             alert("Please provide a valid email address");
-            form.emailaddress.focus();
+            form.email.focus();
             return false;
         }
     }

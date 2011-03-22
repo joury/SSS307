@@ -5,21 +5,59 @@ Class website {
     var $DB;
     var $MainConfigFile = "configs/config.php";
     var $LanguageDir = "languages/";
-    var $user;
+    var $User = "";
 
     function __construct($db) {
         $this->DB = $db;
+        $this->getCurrentUser();
     }
 
     function IsLoggedIn() {
-        $username = $this->user->username;
-        $password = $this->user->wachtwoord;
-        $id = $this->GetID();
-        if ($username != "" && $password != "" && $id != "") {
+        if ($this->User != "") {
             return true;
         } else {
             return false;
         }
+    }
+
+    function fillRegisterPost($_POST) {
+        if (!isset($_POST['email'])) {
+            $_POST['email'] = "";
+        }
+        if (!isset($_POST['country'])) {
+            $_POST['country'] = "";
+        }
+        if (!isset($_POST['state'])) {
+            $_POST['state'] = "";
+        }
+        if (!isset($_POST['city'])) {
+            $_POST['city'] = "";
+        }
+        if (!isset($_POST['firstname'])) {
+            $_POST['firstname'] = "";
+        }
+        if (!isset($_POST['insertion'])) {
+            $_POST['insertion'] = "";
+        }
+        if (!isset($_POST['lastname'])) {
+            $_POST['lastname'] = "";
+        }
+        if (!isset($_POST['msn'])) {
+            $_POST['msn'] = "";
+        }
+        if (!isset($_POST['skype'])) {
+            $_POST['skype'] = "";
+        }
+        if (!isset($_POST['job'])) {
+            $_POST['job'] = "";
+        }
+        if (!isset($_POST['gender'])) {
+            $_POST['gender'] = "";
+        }
+        if (!isset($_POST['language'])) {
+            $_POST['language'] = "";
+        }
+        return $_POST;
     }
 
     function showRegister($_POST) {
@@ -38,16 +76,19 @@ Class website {
             }
             $months .= "<option value='$i'>$i</option>";
         }
-        for ($i = (date("Y") - 150); $i <= date("Y") - 4; $i++) {
+        for ($i = (date("Y") - 85); $i <= date("Y") - 4; $i++) {
             if ($i == (date("Y") - 4)) {
                 $years .= "<option value='$i' SELECTED>$i</option>";
             } else {
                 $years .= "<option value='$i'>$i</option>";
             }
         }
+
+        $_POST = $this->fillRegisterPost($_POST);
+
         echo '
             <table>
-                <form name="Register" onSubmit="return CheckFields();" action="index.php" method="POST">
+                <form name="Register" id="RegistrationForm" onSubmit="return CheckFields();" action="index.php" method="POST">
                 <tr>
                     <td>Username:</td> <td><input type="text" name="username" id="username" value=' . $_POST['username'] . '><font color="RED">*</font></td>
                 </tr>
@@ -55,22 +96,32 @@ Class website {
                     <td>Password:</td> <td><input type="password" name="password" id="password" value=' . $_POST['password'] . '><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="emailaddress" id="emailaddress"><font color="RED">*</font></td>
+                    <td>Email:</td> <td><input type="text" name="email" id="email">' . $_POST['email'] . '<font color="RED">*</font></td>
                 </tr>
                 <tr>
                     <td>Country:</td>
                     <td>
-                    <select id="country" name="country">
-                        ' . $this->getCountries() . '
-                    </select>
-                    <font color="RED">*</font>
+                        <select id="country" name="country" onChange="document.getElementById(\'RegistrationForm\').submit();">
+                            ' . $this->getCountries($_POST['country']) . '
+                        </select>
+                        <font color="RED">*</font>
                     </td>
                 </tr>
                 <tr>
-                    <td>State/Province:</td> <td><select id="state" name="state"></select></td>
+                    <td>State/Province:</td>
+                    <td>
+                        <select id="state" name="state" onChange="document.getElementById(\'RegistrationForm\').submit();">
+                            ' . $this->getStates($_POST['country'], $_POST['state']) . '
+                        </select>
+                    </td>
                 </tr>
                 <tr>
-                    <td>City:</td> <td><select id="city" name="city"></select></td>
+                    <td>City:</td>
+                    <td>
+                        <select id="city" name="city">
+                            ' . $this->getCities($_POST['state'], $_POST['city']) . '
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>Firstname:</td> <td><input type="text" name="firstname" id="firstname"><font color="RED">*</font></td>
@@ -125,7 +176,10 @@ Class website {
                     </td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="Register" value="Register!"></td>
+                    <td>
+                        <input type="hidden" name="RegistrationForm" value="1">
+                        <input type="submit" name="Register" value="Register!">
+                    </td>
                 </tr>
                 </form>
             </table>
@@ -134,7 +188,11 @@ Class website {
 
     function Translate($string) {
         require $this->MainConfigFile;
-        $languagefile = $LanguageDir . $this->$this->user->language . ".php";
+        if ($this->User != "") {
+            $languagefile = $LanguageDir . $this->User->language . ".php";
+        } else {
+            $languagefile = "";
+        }
         if (is_file($languagefile)) {
             require $languagefile;
         } else {
@@ -168,74 +226,50 @@ Class website {
         }
     }
 
-    function DoRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $email = $_POST['emailaddress'];
-        $language = $_POST['language'];
-        $country = $_POST['country'];
-        if (isset($_POST['state'])) {
-            $state = $_POST['state'];
-        } else {
-            $state = "";
+    function checkFields($_POST) {
+        $good = true;
+        if ($_POST['username'] == "" ||
+                $_POST['password'] == "" ||
+                $_POST['email'] == "" ||
+                $_POST['firstname'] == "" ||
+                $_POST['lastname'] == "" ||
+                !preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) ||
+                !preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
+            $good = false;
         }
-        if (isset($_POST['city'])) {
-            $city = $_POST['city'];
-        } else {
-            $city = "";
-        }
-        $firstname = $_POST['firstname'];
-        $insertion = $_POST['insertion'];
-        $lastname = $_POST['lastname'];
-        $msn = $_POST['msn'];
-        $skype = $_POST['skype'];
-        if (isset($_POST['job'])) {
-            $job = 1;
-        } else {
-            $job = 0;
-        }
-        $gender = $_POST['gender'];
-        $birthdate = $_POST['day'] . "-" . $_POST['month'] . "-" . $_POST['year'];
-        require $this->MainConfigFile;        // Get the connection variables for mysql from the config file
-        if ($this->DB->MakeConnection()) {
-            $username = mysql_real_escape_string($username);  // Make sure there are no weird tokens in the variables
-            $password = mysql_real_escape_string($password);
-            $sha_pass = sha1($password);       // Encrypt the password with "Sha1"
-            $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' OR `email` = '" . $email . "';"); // Query to check if the username isn't already in use
-            if (mysql_num_rows($check) == 0) {      // If 0 results came back from the above query... (if the account name is free for usage)
-                $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $firstname . "','" . $insertion . "','" . $lastname . "','" . $username . "','" . $sha_pass . "','" . $email . "','" . $language . "','" . $country . "','" . $state . "','" . $city . "','" . $gender . "','" . $msn . "','" . $skype . "','" . $birthdate . "','" . $job . "','0');";
-                $account_query = mysql_query($raw_account_query); // Insert the account info
-                $checking = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Query to check if the query succeeded
-                if (mysql_num_rows($checking) != 0) {     // If we got a hit (account exists)...
-                    $this->LogIn($username, $password);     // Log in to the account
-                    return true;         // Tell the function call in index.php that it succeeded
-                } else {
-                    return false;         // Tell the function call in index.php that it failed
-                }
-            } else {
-                echo $this->Translate('AccountwName') . " " . $username . " " . $this->Translate('AlreadyExist');     // if the account already existed, show the part below
-            }
-        } else {
-            die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
-        }
+        return $good;
     }
 
-    function GetID($name = "") {
-        require $this->MainConfigFile;
-        $this->DB->MakeConnection();
-        if ($name != "") {
-            $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $name . "';");
-        } else {
-            $query = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $this->user->username . "';");
+    function DoRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
+        if (!isset($_POST['state'])) {
+            $_POST['state'] = "";
         }
-        if (mysql_num_rows($query) != 0) {
-            $result = mysql_result($query, 0);
-            if ($result != "") {
-                $this->ID = $result;
-                return $result;
+        if (!isset($_POST['city'])) {
+            $_POST['city'] = "";
+        }
+        if (!isset($_POST['job'])) {
+            $_POST['job'] = 0;
+        }
+        if ($this->checkFields($_POST)) {
+            $birthdate = $_POST['day'] . "-" . $_POST['month'] . "-" . $_POST['year'];
+            require $this->MainConfigFile;        // Get the connection variables for mysql from the config file
+            if ($this->DB->MakeConnection()) {
+                $username = mysql_real_escape_string($_POST['username']);  // Make sure there are no weird tokens in the variables
+                $password = mysql_real_escape_string($_POST['password']);
+                $sha_pass = sha1($password);       // Encrypt the password with "Sha1"
+                $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' OR `email` = '" . $email . "';"); // Query to check if the username isn't already in use
+                if (mysql_num_rows($check) == 0) {      // If 0 results came back from the above query... (if the account name is free for usage)
+                    $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $_POST['firstname'] . "','" . $_POST['insertion'] . "','" . $_POST['lastname'] . "','" . $username . "','" . $sha_pass . "','" . $_POST['email'] . "','" . $_POST['language'] . "','" . $_POST['country'] . "','" . $_POST['state'] . "','" . $_POST['city'] . "','" . $_POST['gender'] . "','" . $_POST['msn'] . "','" . $_POST['skype'] . "','" . $birthdate . "','" . $_POST['job'] . "','0');";
+                    $account_query = mysql_query($raw_account_query); // Insert the account info
+                    $this->LogIn($username, $password);     // Log in to the account
+                } else {
+                    echo $this->Translate('AccountwName') . " " . $username . " " . $this->Translate('AlreadyExist');     // if the account already existed, show the part below
+                }
             } else {
-                die("Unknown error");
+                die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
             }
+        } else {
+            $this->showRegister($_POST);
         }
     }
 
@@ -286,7 +320,7 @@ Class website {
     function ShowLogout() {    // Show the logout button
         echo '
             <form name="LogOut" action="index.php" method="POST">
-            <input type="submit" name="LogOut" value="Log out">
+                <input type="submit" name="LogOut" value="Log out">
             </form>
         ';
     }
@@ -294,10 +328,10 @@ Class website {
     function ShowChangePass() {
         echo '
             <form name="ChangePass" action="index.php" method="POST">
-            Current password: <input type="password" name="old_password">
-            New password: <input type="password" name="new_password">
-            Confirm password: <input type="password" name="new_password2">
-            <input type="submit" name="ChangePass" value="Change password">
+                Current password: <input type="password" name="old_password">
+                New password: <input type="password" name="new_password">
+                Confirm password: <input type="password" name="new_password2">
+                <input type="submit" name="ChangePass" value="Change password">
             </form>
         ';
     }
@@ -308,16 +342,15 @@ Class website {
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
         $old_password = sha1($old_password);
-        if ($old_password == $this->user->password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
+        if ($old_password == $this->User->password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
             $new_password = sha1($new_password);
-            $change_pass = mysql_query("UPDATE `accounts` SET `password` = '" . $new_password . "' WHERE `username` = '" . $this->user->username . "';");
+            $change_pass = mysql_query("UPDATE `accounts` SET `password` = '" . $new_password . "' WHERE `username` = '" . $this->User->username . "';");
             if ($change_pass) {
                 echo $this->Translate('PasswordChanged');
             } else {
                 echo mysql_error($connection);
             }
-        }
-       else {
+        } else {
             die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
         }
     }
@@ -444,9 +477,9 @@ Class website {
     }
 
     function IsAdmin() {
-        if ($this->user->username() == "")
+        if ($this->User->username() == "")
             return false;
-        $raw_is_admin = "SELECT `rank` FROM `accounts` WHERE `username` = '" .$this->user->username . "';";
+        $raw_is_admin = "SELECT `rank` FROM `accounts` WHERE `username` = '" . $this->User->username . "';";
         $is_admin = mysql_query($raw_is_admin);
         $rank = mysql_result($is_admin, 0);
         if ($rank == 0) {
@@ -573,13 +606,13 @@ Class website {
         if ($this->IsLoggedIn()) {
             $tabcode .= '
                 <li class="menu" id="yan-nav-about">
-                    <a href="index.php?userid=' . $this->GetID() . '">Profile</a>
+                    <a href="index.php?userid=' . $this->User->id . '">Profile</a>
                 </li>
            ';
         }
         if (isset($_GET['categories']) || isset($_GET['categoryid'])) {
             $tabcode = str_replace('<li class="menu" id="yan-nav-browse">', '<li class="current menu" id="yan-nav-browse">', $tabcode);
-        } else if ($this->IsLoggedIn() && isset($_GET['userid']) && $this->getID() == $_GET['userid']) {
+        } else if ($this->IsLoggedIn() && isset($_GET['userid']) && $this->User->id == $_GET['userid']) {
             $tabcode = str_replace('<li class="menu" id="yan-nav-about">', '<li class="current menu" id="yan-nav-about">', $tabcode);
         } else {
             $tabcode = str_replace('<li class="menu" id="yan-nav-home">', '<li class="current menu" id="yan-nav-home">', $tabcode);
@@ -761,22 +794,50 @@ Class website {
         }
     }
 
-    function getCountries() {
+    function getCountries($country) {
         $countries = "";
-        $country = $this->getCountryFromIP();
         $result = mysql_query("SELECT * FROM `landen` ORDER BY `name`;");
         if (mysql_num_rows($result) > 0) {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($fields['name'] == $country) {
-                    $countries .= '<option value="' . $fields['name'] . '" SELECTED>' . $fields['name'] . '</option>';
+                    $countries .= '<option value="' . $fields['name'] . '" selected>' . $fields['name'] . '</option>';
                 } else {
                     $countries .= '<option value="' . $fields['name'] . '">' . $fields['name'] . '</option>';
                 }
             }
-        } else {
-            return '<option value="Amsterdam">Amsterdam</option>';
         }
         return $countries;
+    }
+
+    function getStates($country, $state) {
+        $states = '<option value="" selected></option>';
+        $result = mysql_query("SELECT `name` FROM `provincies` WHERE `country_id` = (SELECT `country_id` FROM `landen` WHERE `name` = '" . $country . "') ORDER BY `name`;");
+
+        if (mysql_num_rows($result) > 0) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                if ($fields['name'] == $state) {
+                    $states .= '<option value="' . $fields['name'] . '" selected>' . $fields['name'] . '</option>';
+                } else {
+                    $states .= '<option value="' . $fields['name'] . '">' . $fields['name'] . '</option>';
+                }
+            }
+        }
+        return $states;
+    }
+
+    function getCities($state, $city) {
+        $states = '<option value="" selected></option>';
+        $result = mysql_query("SELECT `name` FROM `plaatsen` WHERE `state_id` = (SELECT `state_id` FROM `provincies` WHERE `name` = '" . $state . "') ORDER BY `name`;");
+        if (mysql_num_rows($result) > 0) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                if ($fields['name'] == $city) {
+                    $states .= '<option value="' . $fields['name'] . '" selected>' . $fields['name'] . '</option>';
+                } else {
+                    $states .= '<option value="' . $fields['name'] . '">' . $fields['name'] . '</option>';
+                }
+            }
+        }
+        return $states;
     }
 
     function getLanguages() {
@@ -790,12 +851,6 @@ Class website {
             return '<option value="English">English</option>';
         }
         return $languages;
-    }
-
-    function getCountryFromIP() {
-        $xml = file_get_contents("http://api.hostip.info/?ip=" . $_SERVER["REMOTE_ADDR"]);
-        preg_match("@<countryName>(.*?)</countryName>@si", $xml, $matches);
-        return $matches[1];
     }
 
     function showAnswers($categoryid, $questionid) {
@@ -920,9 +975,20 @@ Class website {
         ';
     }
 
-    function getUser($id){
-        return new user($id);
+    function getUser($id) {
+        require "class.user.php";
+        return new user($id, "", "");
     }
+
+    function getCurrentUser() {
+        require $this->MainConfigFile;
+        if ($_COOKIE && $_COOKIE[$cookiename] != "") {
+            $parts = explode(",", $_COOKIE[$cookiename]);
+            require "class.user.php";
+            $this->User = new user("", $parts[0], $parts[1]);
+        }
+    }
+
 }
 
 ?>
