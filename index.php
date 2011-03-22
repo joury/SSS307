@@ -25,6 +25,9 @@
         if ($_POST) {
             echo '<script type="text/javascript" src="./scripts/checkfields.js"></script>';
         }
+        if ($_GET && isset($_GET['answer'])) {
+            echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
+        }
         ?>
     </head>
     <body class="c-std wide question-index new-header js">
@@ -92,6 +95,9 @@
                 </ul>
                 <?php
                 if ($_GET && isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                    if (isset($_GET['answer'])) {
+                        $website->showAnswerWriter($_GET['categoryid'], $_GET['questionid']);
+                    }
                     $website->showAnswers($_GET['categoryid'], $_GET['questionid']);
                 }
                 ?>
