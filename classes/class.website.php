@@ -923,8 +923,12 @@ Class website {
     }
 
     function submitAnswer($_POST) {
+        if (!function_exists("bb2html")) {
+            require "class.bbparser.php";
+        }
+        $_POST['text'] = bb2html($_POST['text']);
         $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `votes`, `posttijd`)
-            VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->User->id . "', '" . $_POST['text'] . "', 0, now());";
+            VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser() . "', '" . $_POST['text'] . "', 0, now());";
         mysql_query($query);
     }
 

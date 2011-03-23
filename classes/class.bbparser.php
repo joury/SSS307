@@ -4,9 +4,6 @@ $prevent_xss = true;
 
 $cb_ref_title = 'go to the reference';
 
-if (!isset($corzblog['mail_addy']))
-    $corzblog['mail_addy'] = 'me@myaddress.com';
-
 // php syntax highlighting
 // for the cool colored code tags [ccc][/ccc]..
 ini_set('highlight.string', '#E53600');
@@ -76,9 +73,7 @@ function bb2html() {
     $GLOBALS['cbparser']['state'] = 0;
     $GLOBALS['cbparser']['close_tags'] = '';
     $GLOBALS['cbparser']['text'] = slash_it($bb2html);
-    if (!empty($GLOBALS['do_debug'])) {
-        debug("\n\n" . 'cbparser incoming [$bb2html]: ' . $bb2html . "\n\n");
-    }// :debug:
+
     // oops!
     if ($bb2html == '') {
         $GLOBALS['cbparser']['state'] = 1;
@@ -108,14 +103,10 @@ function bb2html() {
     $pre = array();
     $i = 9999;
     while ($pre_str = stristr($bb2html, '[pre]')) {
-        if (!empty($GLOBALS['do_debug']))
-            debug("\n" . '$pre_str: ' . "$pre_str\n\n"); // :debug:
- $pre_str = substr($pre_str, 0, strpos($pre_str, '[/pre]') + 6);
+        $pre_str = substr($pre_str, 0, strpos($pre_str, '[/pre]') + 6);
         $bb2html = str_replace($pre_str, "***pre_string***$i", $bb2html);
         $pre[$i] = encode(str_replace(array('**$@$**', '**@^@**'), array('[[', ']]'), $pre_str));
-        if (!empty($GLOBALS['do_debug']))
-            debug("\n" . '$pre[$i]: ' . "$pre[$i]\n\n"); // :debug:
- $i++; //	^^	we encode this, for html tags, etc.
+        $i++; //	^^	we encode this, for html tags, etc.
     }
 
     /*
@@ -146,20 +137,6 @@ function bb2html() {
     // generic entity encode
     $bb2html = htmlentities($bb2html, ENT_NOQUOTES, 'utf-8');
     $bb2html = str_replace('[sp]', '&nbsp;', $bb2html);
-
-
-    // process links?
-    $GLOBALS['is_spammer'] = false;
-    $bb2html = process_links($bb2html);
-
-    //	no tinned pidgeon!! (you probably have to be Scottish to understand this joke)
-    if ($prevent_spam and $GLOBALS['is_spammer']) {
-        $GLOBALS['cbparser']['state'] = 3;
-        $GLOBALS['cbparser']['warning_message'] .= $GLOBALS['cbparser']['warnings']['spammer'];
-        $GLOBALS['cbparser']['text'] = '';
-        //return false; // zero-tolerance!
-        return $GLOBALS['spammer_return_string']; // zero-tolerance!
-    }
 
     // the bbcode proper..
     // news headline block
@@ -246,7 +223,6 @@ function bb2html() {
     $bb2html = str_replace('[url=', '<a class="url" href=', $bb2html); /* on-page url */
     $bb2html = str_replace('[/url]', '<!--url--></a>', $bb2html);
     // encode the URI part? //:2do.
-    // check for spammer strings in URL right here //:2do.
     // floaters..
     $bb2html = str_replace('[right]', '<div class="right">', $bb2html);
     $bb2html = str_replace('[/right]', '<!--right--></div>', $bb2html);
@@ -333,11 +309,9 @@ function bb2html() {
     for ($i = 9999; $i <= $cp; $i++) {
         $bb2html = str_replace("***pre_string***$i", '<pre>' . $pre[$i] . '</pre>', $bb2html);
     }
-    if (!empty($GLOBALS['do_debug']))
-        debug("\n" . '$bb2html (after pre back in): ' . "$bb2html\n\n"); // :debug:
-        // re-insert the cool colored code..
-        // we fix-up the output, too, make it xhtml strict.
- $cp = count($ccc) - 1;
+    // re-insert the cool colored code..
+    // we fix-up the output, too, make it xhtml strict.
+    $cp = count($ccc) - 1;
     for ($i = 0; $i <= $cp; $i++) {
         $tmp_str = substr($ccc[$i], 5, -6);
         $tmp_str = highlight_string(stripslashes($tmp_str), true);
@@ -349,12 +323,6 @@ function bb2html() {
     }
 
     $bb2html = slash_it($bb2html);
-    if (!empty($GLOBALS['do_debug'])) {
-        debug("\n\n" . 'cbparser outgoing [$bb2html]: ' . $bb2html . "\n\n");
-    }// :debug:
-    if ($GLOBALS['trans_warp_drive']) {
-        $bb2html = strrev($bb2html);
-    }
 
     return $bb2html;
 }
@@ -571,10 +539,6 @@ function html2bb() {
     for ($i = 9999; $i <= $cp; $i++) {
         $html2bb = str_replace("***pre_string***$i", '[pre]' . substr($pre[$i], 5, -6) . '[/pre]', $html2bb);
     }
-    if (!empty($GLOBALS['do_debug'])) {
-        debug("\n\n" . 'cbparser outgoing [$html2bb]: ' . $html2bb . "\n\n");
-    }// :debug:
-//if (!empty($GLOBALS['do_debug'])) { debug('$GLOBALS: '."\t".print_r($GLOBALS, true)."\n\n\n"); }// :debug:
 
     return ($html2bb);
 }
@@ -826,67 +790,12 @@ function check_balance($bb2html) {
         return false;
     }
 
-    if (!empty($GLOBALS['do_debug'])) {
-        debug("\n" . '$bb2html Final: ' . "$bb2html\n\n");
-    }// :debug:
-
     return $bb2html;
 }
 
 // another possibility is to scan the comment and work out which tags are used, close them.
 // simply create a no-check list of non-closing tags to check against, and close others.
 // the non-symetrical tags can cause problems, though.
-
-
-/*
-  check the URL's
-  if the post is from a known spammer, set $GLOBALS['is_spammer'] to true.
- */
-function process_links($bb2html) {
-    /*
-      this is in two parts. first we check against our list of known spammer strings
-      (generally domains). In the future, I'd hope to hook this up to some reliable,
-      well-kept online database of known spammer domains.
-     */
-
-    if (!empty($GLOBALS['spammer_file']) and file_exists($GLOBALS['spammer_file'])) {
-        $GLOBALS['spammer_strings'] = get_spammer_strings($GLOBALS['spammer_file']);
-    }
-
-    // extract URL's into an array..
-    $url_array = explode('url=', $bb2html);
-
-    // spam-bot user-agents..
-    $double_agents = explode(',', $GLOBALS['spammer_agents']);
-    foreach ($double_agents as $double_agent) {
-        $double_agent = trim($double_agent);
-        if ($double_agent and stristr(@$_SERVER['HTTP_USER_AGENT'], trim($double_agent))) {
-            $GLOBALS['is_spammer'] = true;
-            return $GLOBALS['spammer_return_string'];
-        }
-    }
-    // we may do more, later.
-    return $bb2html;
-}
-
-// read the spammers file into an array of spammer strings..
-function get_spammer_strings($spammers_file) {
-    if (file_exists($spammers_file)) {
-        $fp = fopen($spammers_file, 'rb');
-        $list = fread($fp, filesize($spammers_file));
-        fclose($fp);
-        clearstatcache();
-    } else {
-        $GLOBALS['cbparser']['warning_message'] .= '<div class="centered" id="message">spammer file is missing!</div>';
-        if (!empty($GLOBALS['spammer_strings'])) {
-            return $GLOBALS['spammer_strings'];
-        } else {
-            $GLOBALS['cbparser']['warning_message'] .= '<div class="centered" id="message">spammer file is missing, and spammer_strings have been deleted. sorree!</div>';
-            return array(0, '');
-        }
-    }
-    return explode("\n", trim($list));
-}
 
 /*
   bbcode to lowercase.
