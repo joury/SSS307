@@ -64,6 +64,8 @@
                                 } else {
                                     $website->showQuestions($_GET['categoryid']);
                                 }
+                            } else if ($_GET['userid']) {
+                                $website->showUserInfo($_GET['userid']);
                             } else {
                                 $website->showHomePage();
                             }

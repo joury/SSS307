@@ -21,6 +21,9 @@ Class website {
     }
 
     function fillRegisterPost($_POST) {
+        if (!isset($_POST['confirmpassword'])) {
+            $_POST['confirmpassword'] = $_POST['password'];
+        }
         if (!isset($_POST['email'])) {
             $_POST['email'] = "";
         }
@@ -94,6 +97,9 @@ Class website {
                 </tr>
                 <tr>
                     <td>Password:</td> <td><input type="password" name="password" id="password" value=' . $_POST['password'] . '><font color="RED">*</font></td>
+                </tr>
+                <tr>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value=' . $_POST['confirmpassword'] . '><font color="RED">*</font></td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td><input type="text" name="email" id="email">' . $_POST['email'] . '<font color="RED">*</font></td>
@@ -257,13 +263,13 @@ Class website {
                 $username = mysql_real_escape_string($_POST['username']);  // Make sure there are no weird tokens in the variables
                 $password = mysql_real_escape_string($_POST['password']);
                 $sha_pass = sha1($password);       // Encrypt the password with "Sha1"
-                $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' OR `email` = '" . $email . "';"); // Query to check if the username isn't already in use
+                $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' OR `email` = '" . $_POST['email'] . "';"); // Query to check if the username isn't already in use
                 if (mysql_num_rows($check) == 0) {      // If 0 results came back from the above query... (if the account name is free for usage)
                     $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $_POST['firstname'] . "','" . $_POST['insertion'] . "','" . $_POST['lastname'] . "','" . $username . "','" . $sha_pass . "','" . $_POST['email'] . "','" . $_POST['language'] . "','" . $_POST['country'] . "','" . $_POST['state'] . "','" . $_POST['city'] . "','" . $_POST['gender'] . "','" . $_POST['msn'] . "','" . $_POST['skype'] . "','" . $birthdate . "','" . $_POST['job'] . "','0');";
                     $account_query = mysql_query($raw_account_query); // Insert the account info
                     $this->LogIn($username, $password);     // Log in to the account
                 } else {
-                    echo $this->Translate('AccountwName') . " " . $username . " " . $this->Translate('AlreadyExist');     // if the account already existed, show the part below
+                    echo '<font color="red">' . $this->Translate('AccountwName') . " <b>" . ucfirst($username) . "</b> " . $this->Translate('AlreadyExist') . '</font>';     // if the account already existed, show the part below
                 }
             } else {
                 die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
@@ -1006,6 +1012,18 @@ Class website {
             }
             $this->User = new user("", $parts[0], $parts[1]);
         }
+    }
+
+    function showUserInfo($id) {
+        $user = $this->getUser($id);
+        echo '
+            Profile info:
+            <table>
+                <tr>
+                    <td>Username</td> <td><input type="text" name="password" </td>
+                </tr>
+            </table>
+        ';
     }
 
 }

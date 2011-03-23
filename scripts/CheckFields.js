@@ -16,6 +16,10 @@ function CheckFields()
             alert("Password doesn't match the rules.");
             form.password.focus();
             return false;
+        } else if (form.password.value != form.confirmpassword.value) {
+            alert("Confirm password field doesn't match the password field.");
+            form.confirmpassword.focus();
+            return false;
         }
     }
     if (form.email.value == "") {
