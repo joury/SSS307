@@ -267,7 +267,7 @@ Class website {
                 if (mysql_num_rows($check) == 0) {      // If 0 results came back from the above query... (if the account name is free for usage)
                     $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $_POST['firstname'] . "','" . $_POST['insertion'] . "','" . $_POST['lastname'] . "','" . $username . "','" . $sha_pass . "','" . $_POST['email'] . "','" . $_POST['language'] . "','" . $_POST['country'] . "','" . $_POST['state'] . "','" . $_POST['city'] . "','" . $_POST['gender'] . "','" . $_POST['msn'] . "','" . $_POST['skype'] . "','" . $birthdate . "','" . $_POST['job'] . "','0');";
                     $account_query = mysql_query($raw_account_query); // Insert the account info
-                    $this->LogIn($username, $password);     // Log in to the account
+                    $this->Login($username, $password);     // Log in to the account
                 } else {
                     echo '<font color="red">' . $this->Translate('AccountwName') . " <b>" . ucfirst($username) . "</b> " . $this->Translate('AlreadyExist') . '</font>';     // if the account already existed, show the part below
                 }
@@ -285,14 +285,14 @@ Class website {
                 <li class="me1">
                     <input type="text" name="username">
                     <input type="password" name="password">
-                    <input type="submit" name="btnRegister" value="Register">
                     <input type="submit" name="btnLogin" value="Log in">
+                    <input type="submit" name="btnRegister" value="Register">
                 </li>
             </form>
         ';
     }
 
-    function LogIn($username, $password) {  // Check if the variables sent are correct and set the cookie
+    function Login($username, $password) {  // Check if the variables sent are correct and set the cookie
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
         $username = mysql_real_escape_string($username);
@@ -361,32 +361,7 @@ Class website {
         }
     }
 
-    function ShowAdditionalForm() {
-        $fields = $this->GetAdditional();
-        $sexuality = $fields['sexuality'];
-        $relationship = $fields['relationship'];
-        $language = $fields['primary_language'];
-        echo '
-            <table>
-                <form name="Additional" action="index.php" method="POST" enctype="multipart/form-data">
-                <tr>
-                    <td>Display Picture:</td> <td><input type="file" name="file" id="file" accept="image/jpg,image/jpeg" size = "50"></td>
-                </tr>
-                <tr>
-                    <td>:</td>
-                    <td>
-                        <select name="">
-                            <option value="">1</option>
-                            <option value="">2</option>
-                        </select>
-                    </td>
-                </tr>
-                </form>
-            </table>
-        ';
-    }
-
-    function SaveAdditional($_FILES, $_POST) {
+    function SaveImage($_FILES) {
         if ($this->GetID() != "") {
             if ($_FILES["file"]["name"] != "") {
                 $FileType = $_FILES["file"]["type"];
@@ -422,36 +397,7 @@ Class website {
                         echo $this->Translate('FileType') . $FileType;
                 }
             }
-            else {
-                $Picture = 0;
-            }
-            $this->DB->MakeConnection();
-            if ($this->ShowAdditionalForm() == false) {
-                foreach ($_POST as $key => $val) {
-                    if ($val != "" && $key != "key" && $key != "val" && $key != "Additional") {
-                        $changes .= strtolower($key) . " = '" . $val . "', ";
-                    }
-                }
-                $changes = substr($changes, 0, -2);
-                $raw_change_additional = "UPDATE `additional` SET $changes WHERE `id` = '" . $this->GetID() . "';";
-            } else {
-                foreach ($_POST as $key => $val) {
-                    if ($val != "" && $key != "key" && $key != "val" && $key != "Additional") {
-                        $changes .= "'" . $val . "', ";
-                    }
-                }
-                $changes = substr($changes, 0, -2);
-                $raw_change_additional = "INSERT INTO `additional` values (" . $this->GetID() . ", $Picture, $changes);";
-            }
-            $change_additional = mysql_query($raw_change_additional);
         }
-    }
-
-    function DeleteImage() {
-        require $this->MainConfigFile;
-        $this->DB->MakeConnection();
-        $raw_remove_picture = "UPDATE `additional` SET `picture` = '0' WHERE `username` = '$this->GetID()';";
-        $remove_picture = mysql_query($raw_change_additional);
     }
 
     function GetImage($Thumb = "") {
@@ -480,19 +426,6 @@ Class website {
             return false;
         }
         return '<img src="' . $originalImage . '"/>';
-    }
-
-    function IsAdmin() {
-        if ($this->User->username() == "")
-            return false;
-        $raw_is_admin = "SELECT `rank` FROM `accounts` WHERE `username` = '" . $this->User->username . "';";
-        $is_admin = mysql_query($raw_is_admin);
-        $rank = mysql_result($is_admin, 0);
-        if ($rank == 0) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     function showCategories($_GET) {
