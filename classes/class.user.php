@@ -27,6 +27,7 @@ class user {
     var $birthdate;
     var $msn;
     var $skype;
+    var $job;
 
     function __construct($id = "", $username = "", $password = "") {
         if ($id != "" || ($username != "" && $password != "")) {
@@ -62,6 +63,7 @@ class user {
             $this->birthdate = $fields['geboortedatum'];
             $this->msn = $fields['msn'];
             $this->skype = $fields['skype'];
+            $this->job = $fields['baan'];
         }
     }
 

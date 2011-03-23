@@ -150,11 +150,11 @@ Class website {
                 <tr>
                     <td>Gender:</td>
                     <td>
-                    <select name="gender">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                    <font color="RED">*</font>
+                        <select name="gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                        <font color="RED">*</font>
                     </td>
                 </tr>
                 <tr>
@@ -175,10 +175,10 @@ Class website {
                 <tr>
                     <td>Primary language:</td>
                     <td>
-                    <select name="language">
-                        ' . $this->getLanguages() . '
-                    </select>
-                    <font color="RED">*</font>
+                        <select name="language">
+                            ' . $this->getLanguages() . '
+                        </select>
+                        <font color="RED">*</font>
                     </td>
                 </tr>
                 <tr>
@@ -757,7 +757,6 @@ Class website {
     function getStates($country, $state) {
         $states = '<option value="" selected></option>';
         $result = mysql_query("SELECT `name` FROM `provincies` WHERE `country_id` = (SELECT `country_id` FROM `landen` WHERE `name` = '" . $country . "') ORDER BY `name`;");
-
         if (mysql_num_rows($result) > 0) {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($fields['name'] == $state) {
@@ -938,24 +937,116 @@ Class website {
 
     function getCurrentUser() {
         require $this->MainConfigFile;
-        if ($_COOKIE && $_COOKIE[$cookiename] != "") {
-            $parts = explode(",", $_COOKIE[$cookiename]);
-            if (!class_exists('user')) {
-                require "class.user.php";
+        if ($this->User != "") {
+            return $this->User;
+        } else {
+            if ($_COOKIE && $_COOKIE[$cookiename] != "") {
+                $parts = explode(",", $_COOKIE[$cookiename]);
+                if (!class_exists('user')) {
+                    require "class.user.php";
+                }
+                $this->User = new user("", $parts[0], $parts[1]);
+            } else {
+                return false;
             }
-            $this->User = new user("", $parts[0], $parts[1]);
         }
     }
 
     function showUserInfo($id) {
         $user = $this->getUser($id);
+        $owned = false;
+        if ($this->getCurrentUser() && $this->getCurrentUser()->id == $id) {
+            $owned = true;
+        }
         echo '
             Profile info:
-            <table>
+            <center>
+                <table>
+        ';
+        if ($owned) {
+            echo '
+                <form name="ProfileEdit" action="index.php" method="POST">
                 <tr>
-                    <td>Username</td> <td><input type="text" name="password" </td>
+                    <td>Password:</td> <td><input type="password" name="password" /><font color="RED">*</font></td>
                 </tr>
-            </table>
+                <tr>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" /><font color="RED">*</font></td>
+                </tr>
+                <tr>
+                    <td>Email:</td> <td><input type="text" name="email" value="' . $user->email . '" /></td>
+                </tr>
+                <tr>
+                    <td>Country:</td>
+                    <td>
+                        <select id="country" name="country" onChange="document.getElementById(\'RegistrationForm\').submit();">
+                            ' . $this->getCountries($user->country) . '
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>State/Province:</td>
+                    <td>
+                        <select id="state" name="state" onChange="document.getElementById(\'RegistrationForm\').submit();">
+                            ' . $this->getStates($user->country, $user->state) . '
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td>
+                        <select id="city" name="city">
+                            ' . $this->getCities($user->state, $user->city) . '
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>MSN:</td> <td><input type="text" name="msn" value="' . $user->msn . '" /></td>
+                </tr>
+                <tr>
+                    <td>Skype:</td> <td><input type="text" name="skype" value="' . $user->skype . '" /></td>
+                </tr>
+                <tr>
+                    <td>Job:</td> <td><input type="checkbox" name="job" value="' . $user->job . '" /> Yes, i have a job</td>
+                </tr>
+                <tr>
+                    <td><input type="submit" name="submit" value="Save" /></td>
+                </tr>
+                </form>
+            ';
+        } else {
+            echo '
+                <tr>
+                    <td>Username:</td> <td>' . ucfirst($user->username) . '</td>
+                </tr>
+                <tr>
+                    <td>Full name:</td> <td>' . $user->firstname . " " . $user->insertion . " " . $user->lastname . '</td>
+                </tr>
+                <tr>
+                    <td>Email:</td> <td>' . $user->email . '</td>
+                </tr>
+                <tr>
+                    <td>Country: </td> <td>' . $user->country . '</td>
+                </tr>
+                <tr>
+                    <td>State: </td> <td>' . $user->state . '</td>
+                </tr>
+                <tr>
+                    <td>City: </td> <td>' . $user->city . '</td>
+                </tr>
+                <tr>
+                    <td>MSN: </td> <td>' . $user->msn . '</td>
+                </tr>
+                <tr>
+                    <td>Skype: </td> <td>' . $user->skype . '</td>
+                </tr>
+                <tr>
+                    <td>Job: </td> <td>' . $user->job . '</td>
+                </tr>
+            ';
+        }
+        echo '
+                </table>
+            </center>
         ';
     }
 

@@ -25,8 +25,36 @@
         if ($_POST) {
             echo '<script type="text/javascript" src="./scripts/checkfields.js"></script>';
         }
-        if ($_GET && isset($_GET['answer'])) {
-            echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
+        if ($_GET) {
+            if (isset($_GET['answer'])) {
+                echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
+            } else if (isset($_GET['userid'])) {
+                if ($website->getCurrentUser() && $website->getCurrentUser()->id == $website->getUser($_GET['userid'])) {
+                    echo '
+                        <script type="text/javascript">
+                            function CheckPass() {
+                                var form = document.ProfileEdit;
+                                if (form.password.value != "") {
+                                    var rules = /^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/;
+                                    if (form.password.value != form.confirmpassword.value) {
+                                        alert("Confirm password field doesn\'t match the password field.");
+                                        form.confirmpassword.focus();
+                                        return false;
+                                    } else if (!rules.test(form.password.value)) {
+                                        alert("Password doesn\'t match the rules.");
+                                        form.password.focus();
+                                        return false;
+                                    }
+                                } else {
+                                    alert("Can\'t save without filling in the password fields");
+                                    form.password.focus();
+                                    return false;
+                                }
+                            }
+                        </script>
+                    ';
+                }
+            }
         }
         ?>
     </head>
@@ -64,7 +92,7 @@
                                 } else {
                                     $website->showQuestions($_GET['categoryid']);
                                 }
-                            } else if ($_GET['userid']) {
+                            } else if (isset($_GET['userid'])) {
                                 $website->showUserInfo($_GET['userid']);
                             } else {
                                 $website->showHomePage();
@@ -99,20 +127,20 @@
                     </li>
                 </ul>
                 <?php
-                if ($_REQUEST && isset($_REQUEST['categoryid']) && isset($_REQUEST['questionid'])) {
-                    if (isset($_GET['answer'])) {
-                        $website->showAnswerWriter($_GET['categoryid'], $_GET['questionid']);
-                    }
-                    $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
-                }
+                        if ($_REQUEST && isset($_REQUEST['categoryid']) && isset($_REQUEST['questionid'])) {
+                            if (isset($_GET['answer'])) {
+                                $website->showAnswerWriter($_GET['categoryid'], $_GET['questionid']);
+                            }
+                            $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
+                        }
                 ?>
-            </div>
-            <div id="yan-related">
-                <div id="yan-categories" class="mod">
-                    <h2 class="hd">Categories</h2>
-                    <ul class="bd">
-                        <li class="expanded">
-                            <ul>
+                    </div>
+                    <div id="yan-related">
+                        <div id="yan-categories" class="mod">
+                            <h2 class="hd">Categories</h2>
+                            <ul class="bd">
+                                <li class="expanded">
+                                    <ul>
                                 <?php
                                 $website->showCategories($_GET);
                                 ?>
