@@ -104,8 +104,12 @@
                                 } else if (isset($_POST['RegistrationForm'])) {
                                     $website->DoRegister($_POST);
                                 } else if (isset($_POST['Answer'])) {
-                                    $website->SubmitAnswer($_POST);
-                                    $website->showCurrentQuestion($_POST['categoryid'], $_POST['questionid']);
+                                    $website->SubmitPost($_POST);
+                                    if (isset($_POST['questionid'])) {
+                                        $website->showCurrentQuestion($_POST['categoryid'], $_POST['questionid']);
+                                    } else {
+                                        $website->showHomePage();
+                                    }
                                 }
                             } else {
                                 $website->showHomePage();
@@ -129,9 +133,11 @@
                 <?php
                         if ($_REQUEST && isset($_REQUEST['categoryid']) && isset($_REQUEST['questionid'])) {
                             if (isset($_GET['answer'])) {
-                                $website->showAnswerWriter($_GET['categoryid'], $_GET['questionid']);
+                                $website->showAnswerPoster($_GET['categoryid'], $_GET['questionid']);
                             }
                             $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
+                        } else if (isset($_GET['answer'])) {
+                            $website->showQuestionPoster();
                         }
                 ?>
                     </div>

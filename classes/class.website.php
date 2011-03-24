@@ -708,10 +708,12 @@ Class website {
     }
 
     function showQuestions($id = "") {
+        $link = '<a href="?answer=1">';
         if ($id == "") {
             $result = mysql_query("SELECT * FROM `vragen`;");
         } else {
-            $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $_GET['categoryid'] . "';");
+            $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $id . "';");
+            $link = '<a href="?categoryid=' . $id . '&answer=1">';
         }
         if (mysql_num_rows($result) > 0) {
             while ($fields = mysql_fetch_assoc($result)) {
@@ -719,6 +721,24 @@ Class website {
             }
         } else {
             die("No questions yet!");
+        }
+
+        if ($this->IsLoggedIn()) {
+            echo '
+                <p class="cta">
+                    ' . $link . '
+                        <span>
+                            <span>
+                                <span>
+                                    <span>
+                                        New Question
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                    </a>
+                </p>
+            ';
         }
     }
 
@@ -854,9 +874,8 @@ Class website {
                                     </span>
                                 </a>
                             </span>
-                            <!-- ToDo : User status verwerken tot een "badge" -->
                             <div class="user-badge top-contrib">
-                                <img src="./images/topcontrib.gif" alt="A Top Contributor is someone who is knowledgeable in a particular category.">
+                                ' . $this->getBadges($fields['gebruikersid']) . '
                             </div>
                         </div>
                         <div class="qa-container">
@@ -876,7 +895,22 @@ Class website {
         return $answers;
     }
 
-    function showAnswerWriter($categoryid, $questionid) {
+    function showQuestionPoster() {
+        $this->showAnswerPoster();
+    }
+
+    function getCategories() {
+        $categories = "";
+        $result = mysql_query("SELECT * FROM `talen`;");
+        if (mysql_num_rows($result) > 0) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                $categories .= '<option value="' . $fields['id'] . '">' . $fields['naam'] . '</option>';
+            }
+        }
+        return $categories;
+    }
+
+    function showAnswerPoster($categoryid = "", $questionid = "") {
         if ($this->IsLoggedIn()) {
             echo '
                 <div id="yan-main">
@@ -885,6 +919,30 @@ Class website {
                             <center>
                                 <form name="Answer" id="Answer" method="POST" action="index.php">
                                     <table>
+            ';
+            if ($categoryid == "" || $questionid = "") {
+                if ($categoryid == "") {
+                    echo '
+                        <tr>
+                            <td>
+                                Category :
+                                <select name="categoryid">
+                                    ' . $this->getCategories() . '
+                                </select>
+                            </td>
+                        </tr>
+                    ';
+                }
+                echo '
+                    <tr>
+                        <td>
+                            Title :
+                            <input type="text" name="title" size="50" />
+                        </td>
+                    </tr>
+                ';
+            }
+            echo '
                                         <tr>
                                             <td>
                                                 <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
@@ -900,8 +958,14 @@ Class website {
                                                     <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'url'" . ')" value="url" style="width:40px;" />
                                                     <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'code'" . ')" value="code" style="width:40px;" />
                                                     <input type="hidden" name="Answer" value="1" />
-                                                    <input type="hidden" name="categoryid" value="' . $categoryid . '" />
-                                                    <input type="hidden" name="questionid" value="' . $questionid . '" />
+            ';
+            if ($categoryid != "" && $questionid != "") {
+                echo '
+                    <input type="hidden" name="categoryid" value="' . $categoryid . '" />
+                    <input type="hidden" name="questionid" value="' . $questionid . '" />
+                ';
+            }
+            echo '
                                                 </center>
                                             </td>
                                         </tr>
@@ -922,13 +986,30 @@ Class website {
         }
     }
 
-    function submitAnswer($_POST) {
+    function submitPost($_POST) {
         if (!function_exists("bb2html")) {
             require "class.bbparser.php";
         }
         $_POST['text'] = bb2html($_POST['text']);
+
+        if (isset($_POST['questionid']) && $_POST['questionid'] != "") {
+            $this->submitAnswer($_POST);
+        } else {
+            $this->submitQuestion($_POST);
+        }
+    }
+
+    function submitQuestion($_POST) {
+        $query = "INSERT INTO `vragen` (`taalid`, `gebruikerid`, `vraag`, `aanvulling`, `beantwoord`, `posttijd`)
+            VALUES ('" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['title'] . "', '" . $_POST['text'] . "', '0', now());
+        ";
+        mysql_query($query);
+    }
+
+    function submitAnswer($_POST) {
         $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `votes`, `posttijd`)
-            VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser() . "', '" . $_POST['text'] . "', 0, now());";
+        VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', 0, now());
+        ";
         mysql_query($query);
     }
 
