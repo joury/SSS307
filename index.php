@@ -131,9 +131,9 @@
                     </li>
                 </ul>
                 <?php
-                        if ($_REQUEST && isset($_REQUEST['categoryid']) && isset($_REQUEST['questionid'])) {
+                        if (isset($_REQUEST['categoryid']) && isset($_REQUEST['questionid'])) {
                             if (isset($_GET['answer'])) {
-                                $website->showAnswerPoster($_GET['categoryid'], $_GET['questionid']);
+                                $website->showAnswerPoster($_REQUEST['categoryid'], $_REQUEST['questionid']);
                             }
                             $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
                         } else if (isset($_GET['answer'])) {

@@ -281,7 +281,7 @@ Class website {
 
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
-            <form action="index.php" name="login" method="POST">
+            <form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER["QUERY_STRING"].'" name="login" method="POST">
                 <li class="me1">
                     <input type="text" name="username">
                     <input type="password" name="password">
@@ -325,40 +325,10 @@ Class website {
 
     function ShowLogout() {    // Show the logout button
         echo '
-            <form name="LogOut" action="index.php" method="POST">
+            <form name="LogOut" action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER["QUERY_STRING"].'" method="POST">
                 <input type="submit" name="LogOut" value="Log out">
             </form>
         ';
-    }
-
-    function ShowChangePass() {
-        echo '
-            <form name="ChangePass" action="index.php" method="POST">
-                Current password: <input type="password" name="old_password">
-                New password: <input type="password" name="new_password">
-                Confirm password: <input type="password" name="new_password2">
-                <input type="submit" name="ChangePass" value="Change password">
-            </form>
-        ';
-    }
-
-    function ChangePass($_POST) {
-        $new_password = $_POST['new_password'];
-        $old_password = $_POST['old_password'];
-        require $this->MainConfigFile;
-        $this->DB->MakeConnection();
-        $old_password = sha1($old_password);
-        if ($old_password == $this->User->password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
-            $new_password = sha1($new_password);
-            $change_pass = mysql_query("UPDATE `accounts` SET `password` = '" . $new_password . "' WHERE `username` = '" . $this->User->username . "';");
-            if ($change_pass) {
-                echo $this->Translate('PasswordChanged');
-            } else {
-                echo mysql_error($connection);
-            }
-        } else {
-            die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
-        }
     }
 
     function SaveImage($_FILES) {
@@ -920,7 +890,7 @@ Class website {
                                 <form name="Answer" id="Answer" method="POST" action="index.php">
                                     <table>
             ';
-            if ($categoryid == "" || $questionid = "") {
+            if ($categoryid == "" || $questionid == "") {
                 if ($categoryid == "") {
                     echo '
                         <tr>
@@ -959,9 +929,13 @@ Class website {
                                                     <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'code'" . ')" value="code" style="width:40px;" />
                                                     <input type="hidden" name="Answer" value="1" />
             ';
-            if ($categoryid != "" && $questionid != "") {
+            if ($categoryid != "") {
                 echo '
-                    <input type="hidden" name="categoryid" value="' . $categoryid . '" />
+                    <input type="hidden" name="categoryid" value="' . $categoryid . '">
+                ';
+            }
+            if ($questionid != "") {
+                echo '
                     <input type="hidden" name="questionid" value="' . $questionid . '" />
                 ';
             }
@@ -992,10 +966,12 @@ Class website {
         }
         $_POST['text'] = bb2html($_POST['text']);
 
-        if (isset($_POST['questionid']) && $_POST['questionid'] != "") {
-            $this->submitAnswer($_POST);
-        } else {
-            $this->submitQuestion($_POST);
+        if (isset($_POST['categoryid'])) {
+            if (isset($_POST['questionid']) && $_POST['questionid'] != "") {
+                $this->submitAnswer($_POST);
+            } else {
+                $this->submitQuestion($_POST);
+            }
         }
     }
 
@@ -1008,7 +984,7 @@ Class website {
 
     function submitAnswer($_POST) {
         $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `votes`, `posttijd`)
-        VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', 0, now());
+            VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', 0, now());
         ";
         mysql_query($query);
     }
