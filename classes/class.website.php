@@ -90,16 +90,16 @@ Class website {
         echo '
                 <form name="Register" id="RegistrationForm" onSubmit="return CheckFields(this);" action="index.php" method="POST">
                 <tr>
-                    <td>Username:</td> <td><input type="text" name="username" id="username" value=' . $_POST['username'] . '><font color="RED">*</font></td>
+                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return AjaxRequest(this);"><font color="RED">*</font><img src="" id="usernameImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value=' . $_POST['password'] . '><font color="RED">*</font></td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '"><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value=' . $_POST['confirmpassword'] . '><font color="RED">*</font></td>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '"><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '"><font color="RED">*</font></td>
+                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onChange="return AjaxRequest(this);"><font color="RED">*</font><img src="" id="emailImage"></img></td>
                 </tr>
                 <tr>
                     <td>Country:</td>
@@ -229,6 +229,13 @@ Class website {
         }
     }
 
+    function GetQueryString($raw = "") {
+        if ($raw != "") {
+            $raw = '?' . $raw;
+        }
+        return $raw;
+    }
+
     function checkFields($_POST) {
         $good = true;
         if ($_POST['username'] == "" ||
@@ -241,6 +248,36 @@ Class website {
             $good = false;
         }
         return $good;
+    }
+
+    function AccountExists($username = "", $email = "") {
+        if ($username != "" && $email != "") {
+            return ($this->NameInUse($username) && $this->EmailInUse($email));
+        } else if ($username != "") {
+            return $this->NameInUse($username);
+        } else if ($email != "") {
+            return $this->EmailInUse($email);
+        }
+    }
+
+    function NameInUse($username) {
+        $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");
+        if (mysql_num_rows($check) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    function EmailInUse($email) {
+        $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `email` = '" . $email . "';");
+        if (mysql_num_rows($check) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    function EncryptPassword($password) {
+        return sha1($password);
     }
 
     function DoRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
@@ -258,11 +295,9 @@ Class website {
             require $this->MainConfigFile;        // Get the connection variables for mysql from the config file
             if ($this->DB->MakeConnection()) {
                 $username = mysql_real_escape_string($_POST['username']);  // Make sure there are no weird tokens in the variables
-                $password = mysql_real_escape_string($_POST['password']);
-                $sha_pass = sha1($password);       // Encrypt the password with "Sha1"
-                $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' OR `email` = '" . $_POST['email'] . "';"); // Query to check if the username isn't already in use
-                if (mysql_num_rows($check) == 0) {      // If 0 results came back from the above query... (if the account name is free for usage)
-                    $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $_POST['firstname'] . "','" . $_POST['insertion'] . "','" . $_POST['lastname'] . "','" . $username . "','" . $sha_pass . "','" . $_POST['email'] . "','" . $_POST['language'] . "','" . $_POST['country'] . "','" . $_POST['state'] . "','" . $_POST['city'] . "','" . $_POST['gender'] . "','" . $_POST['msn'] . "','" . $_POST['skype'] . "','" . $birthdate . "','" . $_POST['job'] . "','0');";
+                $password = $this->EncryptPassword(mysql_real_escape_string($_POST['password']));
+                if (!$this->AccountExists($username, $_POST['email'])) {
+                    $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $_POST['firstname'] . "','" . $_POST['insertion'] . "','" . $_POST['lastname'] . "','" . $username . "','" . $password . "','" . $_POST['email'] . "','" . $_POST['language'] . "','" . $_POST['country'] . "','" . $_POST['state'] . "','" . $_POST['city'] . "','" . $_POST['gender'] . "','" . $_POST['msn'] . "','" . $_POST['skype'] . "','" . $birthdate . "','" . $_POST['job'] . "','0');";
                     $account_query = mysql_query($raw_account_query); // Insert the account info
                     $this->Login($username, $password);     // Log in to the account
                 } else {
@@ -278,7 +313,7 @@ Class website {
 
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
-            <form action="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER["QUERY_STRING"] . '" name="login" method="POST">
+            <form action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" name="login" method="POST">
                 <li class="me1">
                     <input type="text" name="username">
                     <input type="password" name="password">
@@ -322,7 +357,7 @@ Class website {
 
     function ShowLogout() {    // Show the logout button
         echo '
-            <form name="LogOut" action="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER["QUERY_STRING"] . '" method="POST">
+            <form name="LogOut" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER["QUERY_STRING"]) . '" method="POST">
                 <input type="submit" name="LogOut" value="Log out">
             </form>
         ';
@@ -881,7 +916,7 @@ Class website {
                     <div id="yan-question">
                         <div class="qa-container">
                             <center>
-                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER["QUERY_STRING"] . '">
+                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER["QUERY_STRING"]) . '">
                                     <table>
             ';
             if ($categoryid == "" || $questionid == "") {
@@ -1011,7 +1046,7 @@ Class website {
         if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {
             if ($_POST['password'] == $_POST['confirmpassword']) {
                 if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&
-                    preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
+                        preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
 
                 } else {
                     echo '<font color="red">Password doesn\'t match the rules.</font>';

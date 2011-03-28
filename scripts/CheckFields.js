@@ -1,3 +1,37 @@
+function AjaxRequest(field) {
+    var url = "checker.php?" + field.id + "=" + field.value;
+    var xmlHttp;
+    try {
+        xmlHttp=new XMLHttpRequest();
+    } catch (e) {
+        try {
+            xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try {
+                xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+                alert("Your browser doesn't support AJAX!");
+                return false;
+            }
+        }
+    }
+    xmlHttp.onreadystatechange = function() {
+        if(xmlHttp.readyState==4) {
+            var exists = (xmlHttp.responseText == "true");
+            if (exists) {
+                document.getElementById(field.id + 'Image').src = "images/incorrect.gif";
+            } else {
+                document.getElementById(field.id + 'Image').src = "images/correct.gif";
+            }
+            return exists;
+        } else {
+            return true;
+        }
+    }
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send(null);
+}
+
 function CheckFields(form) {
     if (CheckPass(form) == false) {
         return false;
