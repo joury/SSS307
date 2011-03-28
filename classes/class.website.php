@@ -12,14 +12,6 @@ Class website {
         $this->getCurrentUser();
     }
 
-    function IsLoggedIn() {
-        if ($this->User != "") {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     function fillRegisterPost($_POST) {
         if (!isset($_POST['confirmpassword'])) {
             $_POST['confirmpassword'] = $_POST['password'];
@@ -96,7 +88,7 @@ Class website {
             echo 'Not all fields were filled in, please check if all fields with a <font color="red">*</font> are filled in.';
         }
         echo '
-                <form name="Register" id="RegistrationForm" onSubmit="return CheckFields();" action="index.php" method="POST">
+                <form name="Register" id="RegistrationForm" onSubmit="return CheckFields(this);" action="index.php" method="POST">
                 <tr>
                     <td>Username:</td> <td><input type="text" name="username" id="username" value=' . $_POST['username'] . '><font color="RED">*</font></td>
                 </tr>
@@ -107,7 +99,7 @@ Class website {
                     <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value=' . $_POST['confirmpassword'] . '><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" id="email">' . $_POST['email'] . '<font color="RED">*</font></td>
+                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '"><font color="RED">*</font></td>
                 </tr>
                 <tr>
                     <td>Country:</td>
@@ -314,7 +306,7 @@ Class website {
         if ($sha_pass == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
             $cookie = setcookie($cookiename, "$username,$sha_pass", time() + $cookietime);  // Set a cookie with "name,password" that is legit for the following 5 minutes
         } else {
-            die("Invalid password entered.");      // If they don't match, the entered pass wasn't correct
+            echo '<font color="red">Invalid password entered.</font>';      // If they don't match, the entered pass wasn't correct
         }
         echo '<meta http-equiv="refresh" content="0">';
     }
@@ -434,7 +426,7 @@ Class website {
                                 <div id="mepanel">
                                     <ul id="mepanel-nav">
         ';
-        if ($this->IsLoggedIn()) {
+        if ($this->getCurrentUser()) {
             $this->ShowLogout();
         } else {
             $this->ShowLogin();
@@ -518,7 +510,7 @@ Class website {
                 <a href="index.php?categories=1">Categories</a>
             </li>
         ';
-        if ($this->IsLoggedIn()) {
+        if ($this->getCurrentUser()) {
             $tabcode .= '
                 <li class="menu" id="yan-nav-about">
                     <a href="index.php?userid=' . $this->User->id . '">Profile</a>
@@ -527,7 +519,7 @@ Class website {
         }
         if (isset($_GET['categories']) || isset($_GET['categoryid'])) {
             $tabcode = str_replace('<li class="menu" id="yan-nav-browse">', '<li class="current menu" id="yan-nav-browse">', $tabcode);
-        } else if ($this->IsLoggedIn() && isset($_GET['userid']) && $this->User->id == $_GET['userid']) {
+        } else if ($this->getCurrentUser() && isset($_GET['userid']) && $this->getCurrentUser()->id == $_GET['userid']) {
             $tabcode = str_replace('<li class="menu" id="yan-nav-about">', '<li class="current menu" id="yan-nav-about">', $tabcode);
         } else {
             $tabcode = str_replace('<li class="menu" id="yan-nav-home">', '<li class="current menu" id="yan-nav-home">', $tabcode);
@@ -592,7 +584,7 @@ Class website {
                         </li>
                     </ul>
             ';
-            if ($this->IsLoggedIn()) {
+            if ($this->getCurrentUser()) {
                 echo '
                     <p class="cta">
                         <a href="?categoryid=' . $categoryid . '&questionid=' . $questionid . '&answer=1">
@@ -696,10 +688,10 @@ Class website {
                 echo '<li><a href="?categoryid=' . $fields['taalid'] . '&questionid=' . $fields['id'] . '">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
             }
         } else {
-            die("No questions yet!");
+            echo "No questions yet!";
         }
 
-        if ($this->IsLoggedIn()) {
+        if ($this->getCurrentUser()) {
             echo '
                 <p class="cta">
                     ' . $link . '
@@ -883,7 +875,7 @@ Class website {
     }
 
     function showAnswerPoster($title = "", $categoryid = "", $questionid = "") {
-        if ($this->IsLoggedIn()) {
+        if ($this->getCurrentUser()) {
             echo '
                 <div id="yan-main">
                     <div id="yan-question">
@@ -1015,12 +1007,24 @@ Class website {
         }
     }
 
+    function submitEdit($_POST) {
+        if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {
+            if ($_POST['password'] == $_POST['confirmpassword']) {
+                if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&
+                    preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
+
+                } else {
+                    echo '<font color="red">Password doesn\'t match the rules.</font>';
+                }
+            }
+        } else {
+            echo '<font color="red">Both password fields should be filled in.</font>';
+        }
+    }
+
     function showUserInfo($id) {
         $user = $this->getUser($id);
-        $owned = false;
-        if ($this->getCurrentUser() && $this->getCurrentUser()->id == $id) {
-            $owned = true;
-        }
+        $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         echo '
             Profile info:
             <center>
@@ -1028,7 +1032,7 @@ Class website {
         ';
         if ($owned) {
             echo '
-                <form name="ProfileEdit" action="index.php" method="POST">
+                <form enctype="multipart/form-data" name="ProfileEdit" action="index.php" method="POST" onSubmit="return CheckPass();">
                 <tr>
                     <td>Password:</td> <td><input type="password" name="password" /><font color="RED">*</font></td>
                 </tr>
@@ -1072,6 +1076,9 @@ Class website {
                     <td>Job:</td> <td><input type="checkbox" name="job" value="' . $user->job . '" /> Yes, i have a job</td>
                 </tr>
                 <tr>
+                    <td>Image:</td> <td><input type="file" name="image" /></td>
+                </tr>
+                <tr>
                     <td><input type="submit" name="submit" value="Save" /></td>
                 </tr>
                 </form>
@@ -1082,7 +1089,7 @@ Class website {
                     <td>Username:</td> <td>' . ucfirst($user->username) . '</td>
                 </tr>
                 <tr>
-                    <td>Full name:</td> <td>' . $user->firstname . " " . $user->insertion . " " . $user->lastname . '</td>
+                    <td>Full name:</td> <td>' . ucfirst($user->firstname) . " " . $user->insertion . " " . ucfirst($user->lastname) . '</td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td>' . $user->email . '</td>

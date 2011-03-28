@@ -9,7 +9,7 @@
         $website->LogIn($_POST['username'], $_POST['password']);
     } else if (isset($_POST['LogOut'])) {
         $website->Logout();
-    } else if ($website->IsLoggedIn()) {
+    } else if ($website->getCurrentUser()) {
         $website->RefreshCookie();
     }
     ?>
@@ -22,38 +22,12 @@
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
         <link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">
         <?php
-        if ($_POST) {
+        if ($_POST || (isset($_GET['userid']) && $website->getCurrentUser() && $website->getCurrentUser()->id == $_GET['userid'])) {
             echo '<script type="text/javascript" src="./scripts/checkfields.js"></script>';
         }
         if ($_GET) {
             if (isset($_GET['answer'])) {
                 echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
-            } else if (isset($_GET['userid'])) {
-                if ($website->getCurrentUser() && $website->getCurrentUser()->id == $website->getUser($_GET['userid'])) {
-                    echo '
-                        <script type="text/javascript">
-                            function CheckPass() {
-                                var form = document.ProfileEdit;
-                                if (form.password.value != "") {
-                                    var rules = /^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/;
-                                    if (form.password.value != form.confirmpassword.value) {
-                                        alert("Confirm password field doesn\'t match the password field.");
-                                        form.confirmpassword.focus();
-                                        return false;
-                                    } else if (!rules.test(form.password.value)) {
-                                        alert("Password doesn\'t match the rules.");
-                                        form.password.focus();
-                                        return false;
-                                    }
-                                } else {
-                                    alert("Can\'t save without filling in the password fields");
-                                    form.password.focus();
-                                    return false;
-                                }
-                            }
-                        </script>
-                    ';
-                }
             }
         }
         ?>
@@ -93,6 +67,9 @@
                                     $website->showQuestions($_GET['categoryid']);
                                 }
                             } else if (isset($_GET['userid'])) {
+                                if (isset($_POST['ProfileEdit'])) {
+                                    $website->submitEdit($_POST);
+                                }
                                 $website->showUserInfo($_GET['userid']);
                             } else {
                                 $website->showHomePage();
