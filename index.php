@@ -131,13 +131,17 @@
                     </li>
                 </ul>
                 <?php
-                        if (isset($_REQUEST['categoryid']) && isset($_REQUEST['questionid'])) {
+                        if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
                             if (isset($_GET['answer'])) {
-                                $website->showAnswerPoster($_REQUEST['categoryid'], $_REQUEST['questionid']);
+                                $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
                             }
                             $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
                         } else if (isset($_GET['answer'])) {
-                            $website->showQuestionPoster();
+                            if (isset($_GET['question'])) {
+                                $website->showAnswerPoster($_GET['question']);
+                            } else {
+                                $website->showAnswerPoster();
+                            }
                         }
                 ?>
                     </div>

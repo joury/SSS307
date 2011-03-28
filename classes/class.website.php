@@ -63,7 +63,7 @@ Class website {
         return $_POST;
     }
 
-    function showRegister($_POST) {
+    function showRegister($_POST, $error = 0) {
         $days = "";
         $months = "";
         $years = "";
@@ -91,6 +91,11 @@ Class website {
 
         echo '
             <table>
+        ';
+        if ($error == 1) {
+            echo 'Not all fields were filled in, please check if all fields with a <font color="red">*</font> are filled in.';
+        }
+        echo '
                 <form name="Register" id="RegistrationForm" onSubmit="return CheckFields();" action="index.php" method="POST">
                 <tr>
                     <td>Username:</td> <td><input type="text" name="username" id="username" value=' . $_POST['username'] . '><font color="RED">*</font></td>
@@ -275,13 +280,13 @@ Class website {
                 die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
             }
         } else {
-            $this->showRegister($_POST);
+            $this->showRegister($_POST, 1);
         }
     }
 
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
-            <form action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER["QUERY_STRING"].'" name="login" method="POST">
+            <form action="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER["QUERY_STRING"] . '" name="login" method="POST">
                 <li class="me1">
                     <input type="text" name="username">
                     <input type="password" name="password">
@@ -325,7 +330,7 @@ Class website {
 
     function ShowLogout() {    // Show the logout button
         echo '
-            <form name="LogOut" action="'.$_SERVER['PHP_SELF'].'?'.$_SERVER["QUERY_STRING"].'" method="POST">
+            <form name="LogOut" action="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER["QUERY_STRING"] . '" method="POST">
                 <input type="submit" name="LogOut" value="Log out">
             </form>
         ';
@@ -452,12 +457,13 @@ Class website {
                 <div id="yan-banner">
                     <ul class="short">
                         <li id="yan-banner-ask">
-                            <form action="" method="get">
+                            <form action="' . $_SERVER['PHP_SELF'] . '" method="GET" name="Ask">
                                 <div>
                                     <div>
-                                        <input class="default" value="" maxlength="110" id="banner-ask" name="title" type="text">
+                                        <input type="hidden" name="answer" value="1">
+                                        <input class="default" maxlength="110" id="banner-ask" name="question" type="text">
                                         <span class="cta">
-                                            <button id="" value="Continue" name="submit-go" class="cta-button">
+                                            <button value="Continue" class="cta-button">
                                                 <span>
                                                     <span>
                                                         <span>
@@ -472,12 +478,12 @@ Class website {
                             </form>
                         </li>
                         <li id="yan-banner-answer">
-                            <form action="" method="get">
+                            <form action="' . $_SERVER['PHP_SELF'] . '" method="GET" name="Search">
                                 <div>
                                     <div>
-                                        <input class="default" value="" maxlength="110" id="banner-answer" name="title" type="text">
+                                        <input class="default" maxlength="110" id="banner-answer" name="query" type="text">
                                         <span class="cta">
-                                            <button id="" value="Continue" name="submit-go" class="cta-button">
+                                            <button value="Continue" class="cta-button">
                                                 <span>
                                                     <span>
                                                         <span>
@@ -567,7 +573,7 @@ Class website {
                     <span class="user">
                         <a class="url" href="index.php?userid=' . $fields['gebruikerid'] . '">
                             <span class="fn" title="">
-                                <!-- ToDo : Username hier -->
+                                ' . $this->getUser($fields['gebruikerid'])->username . '
                             </span>
                         </a>
                         </span>
@@ -865,10 +871,6 @@ Class website {
         return $answers;
     }
 
-    function showQuestionPoster() {
-        $this->showAnswerPoster();
-    }
-
     function getCategories() {
         $categories = "";
         $result = mysql_query("SELECT * FROM `talen`;");
@@ -880,14 +882,14 @@ Class website {
         return $categories;
     }
 
-    function showAnswerPoster($categoryid = "", $questionid = "") {
+    function showAnswerPoster($title = "", $categoryid = "", $questionid = "") {
         if ($this->IsLoggedIn()) {
             echo '
                 <div id="yan-main">
                     <div id="yan-question">
                         <div class="qa-container">
                             <center>
-                                <form name="Answer" id="Answer" method="POST" action="index.php">
+                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . '?' . $_SERVER["QUERY_STRING"] . '">
                                     <table>
             ';
             if ($categoryid == "" || $questionid == "") {
@@ -907,7 +909,7 @@ Class website {
                     <tr>
                         <td>
                             Title :
-                            <input type="text" name="title" size="50" />
+                            <input type="text" name="title" size="50" value="' . $title . '" />
                         </td>
                     </tr>
                 ';

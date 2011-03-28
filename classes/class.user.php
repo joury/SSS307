@@ -39,7 +39,7 @@ class user {
             }
 
             if ($result != "") {
-                if (mysql_num_rows($result) == 1) {   // Als we 1 gebruiker hebben met dit ID (Databases kunne fouten bevatten zoals meerdere personen met hetzelfde ID...gewoon er zeker van te zijn dus)
+                if (mysql_num_rows($result) == 1) {   // Als we 1 gebruiker hebben met dit ID (Databases kunnen fouten bevatten zoals meerdere personen met hetzelfde ID...gewoon er zeker van te zijn dus)
                     $this->getVars($result);
                 }
             }
