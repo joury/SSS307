@@ -25,10 +25,8 @@
         if ($_POST || (isset($_GET['userid']) && $website->getCurrentUser() && $website->getCurrentUser()->id == $_GET['userid'])) {
             echo '<script type="text/javascript" src="./scripts/checkfields.js"></script>';
         }
-        if ($_GET) {
-            if (isset($_GET['answer'])) {
-                echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
-            }
+        if (isset($_GET['answer'])) {
+            echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
         }
         ?>
     </head>
@@ -66,7 +64,7 @@
                                 } else {
                                     $website->showQuestions($_GET['categoryid']);
                                 }
-                            } else if (isset($_GET['userid'])) {
+                            } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
                                 if (isset($_POST['ProfileEdit'])) {
                                     $website->submitEdit($_POST);
                                 }

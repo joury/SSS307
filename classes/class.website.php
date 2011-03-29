@@ -6,6 +6,7 @@ Class website {
     var $MainConfigFile = "configs/config.php";
     var $LanguageDir = "languages/";
     var $User = "";
+    var $correctLogin = true;
 
     function __construct($db) {
         $this->DB = $db;
@@ -93,7 +94,7 @@ Class website {
                     <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return AjaxRequest(this);"><font color="RED">*</font><img src="" id="usernameImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '"><font color="RED">*</font></td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '"><font color="RED">* <b>Must contain 6 characters </b></font></td>
                 </tr>
                 <tr>
                     <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '"><font color="RED">*</font></td>
@@ -319,6 +320,11 @@ Class website {
                     <input type="password" name="password">
                     <input type="submit" name="btnLogin" value="Log in">
                     <input type="submit" name="btnRegister" value="Register">
+        ';
+        if ($this->correctLogin == false) {
+            echo '<font color="red">Either the user doesn\'t exist or the password is incorrect</font>';
+        }
+        echo '
                 </li>
             </form>
         ';
@@ -328,22 +334,22 @@ Class website {
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
         $username = mysql_real_escape_string($username);
-        $password = mysql_real_escape_string($password);
-        $sha_pass = sha1($password);
+        $password = $this->EncryptPassword(mysql_real_escape_string($password));
+        $passwordInDB = "";
         $query = mysql_query("select * FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Get the password from the DB that's associated with this account name
         if (mysql_num_rows($query) != 0) {   // If the account exists
             $fields = mysql_fetch_assoc($query);
-            $password = $fields['wachtwoord'];  // Get the password of the user with $username
+            $passwordInDB = $fields['wachtwoord'];  // Get the password of the user with $username
         } else {
-            die("Account does not exist in the DB.");  // If the password query returned nothing, the account doesn't exist
+            $this->correctLogin = false;
         }
 
-        if ($sha_pass == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
-            $cookie = setcookie($cookiename, "$username,$sha_pass", time() + $cookietime);  // Set a cookie with "name,password" that is legit for the following 5 minutes
+        if ($passwordInDB == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
+            $cookie = setcookie($cookiename, $username . "," . $password, time() + $cookietime);  // Set a cookie with "name,password" that is legit for the following 5 minutes
+            echo '<meta http-equiv="refresh" content="0">';
         } else {
-            echo '<font color="red">Invalid password entered.</font>';      // If they don't match, the entered pass wasn't correct
+            $this->correctLogin = false;
         }
-        echo '<meta http-equiv="refresh" content="0">';
     }
 
     function Logout() {
@@ -545,10 +551,10 @@ Class website {
                 <a href="index.php?categories=1">Categories</a>
             </li>
         ';
-        if ($this->getCurrentUser()) {
+        if ($this->getCurrentUser() != false) {
             $tabcode .= '
                 <li class="menu" id="yan-nav-about">
-                    <a href="index.php?userid=' . $this->User->id . '">Profile</a>
+                    <a href="index.php?userid=' . $this->getCurrentUser()->id . '">Profile</a>
                 </li>
            ';
         }
@@ -994,17 +1000,21 @@ Class website {
     }
 
     function submitPost($_POST) {
-        if (!function_exists("bb2html")) {
-            require "class.bbparser.php";
-        }
-        $_POST['text'] = bb2html($_POST['text']);
-
-        if (isset($_POST['categoryid'])) {
-            if (isset($_POST['questionid']) && $_POST['questionid'] != "") {
-                $this->submitAnswer($_POST);
-            } else {
-                $this->submitQuestion($_POST);
+        if ($_POST['text'] != "" && str_replace(" ", "", $_POST['text']) != "") {
+            if (!function_exists("bb2html")) {
+                require "class.bbparser.php";
             }
+            $_POST['text'] = bb2html($_POST['text']);
+
+            if (isset($_POST['categoryid'])) {
+                if (isset($_POST['questionid']) && $_POST['questionid'] != "") {
+                    $this->submitAnswer($_POST);
+                } else {
+                    $this->submitQuestion($_POST);
+                }
+            }
+        } else {
+            echo '<font color="red">Can\'t submit an empty question!</font>';
         }
     }
 
@@ -1034,7 +1044,7 @@ Class website {
         if ($this->User != "") {
             return $this->User;
         } else {
-            if ($_COOKIE && $_COOKIE[$cookiename] != "") {
+            if (isset($_COOKIE[$cookiename]) && $_COOKIE[$cookiename] != "") {
                 $parts = explode(",", $_COOKIE[$cookiename]);
                 if (!class_exists('user')) {
                     require "class.user.php";
