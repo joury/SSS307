@@ -71,7 +71,10 @@
                                     $website->submitEdit($_POST);
                                 }
                                 $website->showUserInfo($_GET['userid']);
-                            } else {
+                            } else if (isset($_GET['categories'])) {
+                                $website->showCategories($_GET);
+                                $website->showNewQuestionButton('<a href="?answer=1">');
+                            }else {
                                 $website->showHomePage();
                             }
                         } else {
@@ -113,12 +116,13 @@
                                 $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
                             }
                             $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
+                        } else if (isset($_GET['categoryid']) && isset($_GET['answer'])) {
+                            $website->showAnswerPoster("", $_GET['categoryid'], "");
                         } else if (isset($_GET['answer'])) {
-                            if (isset($_GET['question'])) {
-                                $website->showAnswerPoster($_GET['question']);
-                            } else {
-                                $website->showAnswerPoster();
+                            if (!isset($_GET['question'])) {
+                                $_GET['question'] = "";
                             }
+                            $website->showAnswerPoster($_GET['question']);
                         }
                 ?>
                     </div>

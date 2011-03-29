@@ -726,6 +726,10 @@ Class website {
             echo "No questions yet!";
         }
 
+        $this->showNewQuestionButton($link);
+    }
+
+    function showNewQuestionButton($link) {
         if ($this->getCurrentUser()) {
             echo '
                 <p class="cta">
