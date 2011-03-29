@@ -12,7 +12,7 @@ if (isset($_GET['username'])) {
     }
 }
 if (isset($_GET['email'])) {
-    $email = stripslashes(mysql_real_escape_string($_GET['username']));
+    $email = stripslashes(mysql_real_escape_string($_GET['email']));
     if ($website->AccountExists("", $email)) {
         $exists = "true";
     }

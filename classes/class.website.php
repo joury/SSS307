@@ -91,16 +91,16 @@ Class website {
         echo '
                 <form name="Register" id="RegistrationForm" onSubmit="return CheckFields(this);" action="index.php" method="POST">
                 <tr>
-                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return AjaxRequest(this);"><font color="RED">*</font><img src="" id="usernameImage"></img></td>
+                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return CheckUsername(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="usernameImage"></img><script type="text/javascript">CheckUsername(document.getElementById(\'username\'), false);</script></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '"><font color="RED">* <b>Must contain 6 characters </b></font></td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '"><font color="RED">* <b>Must contain 6 characters </b></font><img src="images/ffffff.gif" id="passwordImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '"><font color="RED">*</font></td>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onChange="return AjaxRequest(this);"><font color="RED">*</font><img src="" id="emailImage"></img></td>
+                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onChange="return CheckEmail(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
                 </tr>
                 <tr>
                     <td>Country:</td>
@@ -128,13 +128,13 @@ Class website {
                     </td>
                 </tr>
                 <tr>
-                    <td>Firstname:</td> <td><input type="text" name="firstname" id="firstname"><font color="RED">*</font></td>
+                    <td>Firstname:</td> <td><input type="text" name="firstname" id="firstname" onChange="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
                 </tr>
                 <tr>
                     <td>Insertion:</td> <td><input type="text" name="insertion"></td>
                 </tr>
                 <tr>
-                    <td>Lastname:</td> <td><input type="text" name="lastname" id="lastname"><font color="RED">*</font></td>
+                    <td>Lastname:</td> <td><input type="text" name="lastname" id="lastname" onChange="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
                 </tr>
                 <tr>
                     <td>MSN:</td> <td><input type="text" name="msn"></td>
