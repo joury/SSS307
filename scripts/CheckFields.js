@@ -120,27 +120,51 @@ function CheckFields(form, submit) {
 }
 
 function CheckPass(form, submit) {
+    var password = true;
+    var confirm = true;
     if (form.password.value == "") {
         if (submit) {
             alert("Password field cannot be empty!");
         }
         form.password.focus();
-        return false;
+        password = false;
+        confirm = false;
     } else {
         var rules = /^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/;
-        if (form.password.value != form.confirmpassword.value) {
-            if (submit) {
-                alert("Confirm password field doesn't match the password field.");
-            }
-            form.confirmpassword.focus();
-            return false;
-        } else if (!rules.test(form.password.value)) {
+        if (!rules.test(form.password.value)) {
             if (submit) {
                 alert("Password doesn't match the rules.");
             }
             form.password.focus();
-            return false;
+            password = false;
+            confirm = false;
         }
+        else if (form.confirmpassword.value == "") {
+            if (submit) {
+                alert("Confirm password field can't be empty.");
+            }
+            form.confirmpassword.focus();
+            confirm = false;
+        }
+        else if (form.password.value != form.confirmpassword.value) {
+            if (submit) {
+                alert("Confirm password field doesn't match the password field.");
+            }
+            form.confirmpassword.focus();
+            confirm = false;
+        }
+        
     }
-    return true;
+    if (password) {
+        document.getElementById('passwordImage').src = "images/correct.gif";
+    } else {
+        document.getElementById('passwordImage').src = "images/incorrect.gif";
+    }
+    if (confirm) {
+        document.getElementById('confirmpasswordImage').src = "images/correct.gif";
+    } else {
+        document.getElementById('confirmpasswordImage').src = "images/incorrect.gif";
+    }
+    var ok = password && confirm;
+    return ok;
 }

@@ -97,7 +97,7 @@ Class website {
                     <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '"><font color="RED">* <b>Must contain 6 characters </b></font><img src="images/ffffff.gif" id="passwordImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onChange="return CheckEmail(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
@@ -1076,20 +1076,19 @@ Class website {
         $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         echo '
             Profile info:
-            <center>
-                <table>
+            <table>
         ';
         if ($owned) {
             echo '
-                <form enctype="multipart/form-data" name="ProfileEdit" action="index.php" method="POST" onSubmit="return CheckPass();">
+                <form enctype="multipart/form-data" id="ProfileEdit" name="ProfileEdit" action="index.php" method="POST" onSubmit="return CheckPass(this, true);">
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" /><font color="RED">*</font></td>
+                    <td>Password:</td> <td><input type="password" name="password" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="passwordImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" /><font color="RED">*</font></td>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" value="' . $user->email . '" /></td>
+                    <td>Email:</td> <td><input type="text" name="email" value="' . $user->email . '" onChange="return CheckEmail(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
                 </tr>
                 <tr>
                     <td>Country:</td>
@@ -1116,20 +1115,24 @@ Class website {
                     </td>
                 </tr>
                 <tr>
-                    <td>MSN:</td> <td><input type="text" name="msn" value="' . $user->msn . '" /></td>
+                    <td>MSN:</td> <td><input type="text" name="msn" value="' . $user->msn . '"></td>
                 </tr>
                 <tr>
-                    <td>Skype:</td> <td><input type="text" name="skype" value="' . $user->skype . '" /></td>
+                    <td>Skype:</td> <td><input type="text" name="skype" value="' . $user->skype . '"></td>
                 </tr>
                 <tr>
-                    <td>Job:</td> <td><input type="checkbox" name="job" value="' . $user->job . '" /> Yes, i have a job</td>
+                    <td>Job:</td> <td><input type="checkbox" name="job" value="' . $user->job . '"> Yes, i have a job</td>
                 </tr>
                 <tr>
-                    <td>Image:</td> <td><input type="file" name="image" /></td>
+                    <td>Image:</td> <td><input type="file" name="image"></td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="submit" value="Save" /></td>
+                    <td><input type="submit" name="submit" value="Save"></td>
                 </tr>
+                <script type="text/javascript">
+                    CheckPass(document.getElementById(\'ProfileEdit\'), false);
+                    CheckEmail(document.getElementById(\'ProfileEdit\'), false);
+                </script>
                 </form>
             ';
         } else {
@@ -1164,8 +1167,7 @@ Class website {
             ';
         }
         echo '
-                </table>
-            </center>
+            </table>
         ';
     }
 
