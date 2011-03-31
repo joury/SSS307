@@ -9,9 +9,12 @@
         $website->LogIn($_POST['username'], $_POST['password']);
     } else if (isset($_POST['LogOut'])) {
         $website->Logout();
+    } else if (isset($_POST['RegistrationForm'])) {
+        $website->DoRegister($_POST);
     } else if ($website->getCurrentUser()) {
         $website->RefreshCookie();
     }
+    
     ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -69,17 +72,17 @@
                             } else if (isset($_GET['categories'])) {
                                 $website->showCategories($_GET);
                                 $website->showNewQuestionButton('<a href="?answer=1">');
-                            }else {
+                            } else {
                                 $website->showHomePage();
                             }
                         } else {
                             if ($_POST) {
                                 if (isset($_POST['btnProfileEdit'])) {
                                     $website->submitEdit($_POST);
+                                } else if (isset($_POST['btnAdditionalInfo'])) {
+                                    $website->submitAdditional($_POST);
                                 } else if (isset($_POST['btnRegister'])) {
                                     $website->showRegister($_POST);
-                                } else if (isset($_POST['RegistrationForm'])) {
-                                    $website->DoRegister($_POST);
                                 } else if (isset($_POST['Answer'])) {
                                     $website->SubmitPost($_POST);
                                     if (isset($_POST['questionid'])) {

@@ -1,0 +1,1 @@
+alter table `codedump`.`gebruikers` change `geslacht` `geslacht` varchar(6) character set latin1 collate latin1_swedish_ci NULL;
