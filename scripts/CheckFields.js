@@ -1,4 +1,17 @@
-var succes = "";
+function CheckRegister(form) {
+    var correct = CheckPass(form, true) && CheckUsername(form.username, true) && CheckEmail(form.email, true, true);
+    return correct;
+}
+
+function CheckProfileEdit(form) {
+    var correct = CheckPass(form, true) && CheckEmail(form.email, true, false) && !IsEmpty(form.oldpassword);
+    return correct;
+}
+
+function CheckAdditional(form, currentyear) {
+    var correct = CheckFirstname(form.firstname, true) && CheckLastname(form.lastname, true) && CheckBirthdate(form, currentyear);
+    return correct;
+}
 
 function AjaxRequest(field) {
     var url = "checker.php?" + field.id + "=" + field.value;
@@ -12,7 +25,7 @@ function AjaxRequest(field) {
             try {
                 xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
             } catch (e) {
-                alert("Your browser doesn't support AJAX!");
+                alert("Your browser doesn't support AJAX, this means the image next to email and username might not be correct.");
                 return false;
             }
         }
@@ -42,7 +55,7 @@ function CheckUsername(username, submit) {
     return true;
 }
 
-function CheckEmail(email, submit) {
+function CheckEmail(email, submit, newone) {
     if (email.value == "") {
         if (submit) {
             alert("Emailaddress field cannot be empty!");
@@ -59,7 +72,7 @@ function CheckEmail(email, submit) {
             document.getElementById('emailImage').src = "images/incorrect.gif";
             email.focus();
             return false;
-        } else if (AjaxRequest(email)) {
+        } else if (newone && AjaxRequest(email)) {
             if (submit) {
                 alert("There\'s already an account registered with that emailaddress.");
             }
@@ -98,27 +111,6 @@ function CheckLastname(lastname, submit) {
     return true;
 }
 
-function CheckFields(form, submit) {
-    var correct = true;
-    if (CheckPass(form, submit) == false) {
-        correct = false;
-    }
-    if (CheckUsername(form.username, submit) == false) {
-        correct = false;
-    }
-    if (CheckEmail(form.email, submit) == false) {
-        correct = false;
-    }
-    if (CheckFirstname(form.firstname, submit) == false) {
-        correct = false;
-    }
-    if (CheckLastname(form.lastname, submit) == false) {
-        correct = false;
-    }
-    alert(correct);
-    return correct;
-}
-
 function CheckPass(form, submit) {
     var password = true;
     var confirm = true;
@@ -130,8 +122,8 @@ function CheckPass(form, submit) {
         password = false;
         confirm = false;
     } else {
-        var rules = /^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/;
-        if (!rules.test(form.password.value)) {
+        var rules = /^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/;
+        if (!rules.test(form.password.value) || form.password.value.length > 15) {
             if (submit) {
                 alert("Password doesn't match the rules.");
             }
@@ -167,4 +159,41 @@ function CheckPass(form, submit) {
     }
     var ok = password && confirm;
     return ok;
+}
+
+function CheckBirthdate(form, currentyear) {
+    var correct = true;
+    if (form.day.value == "" || form.day.value < 1 || form.day.value > 31) {
+        if (form.day.value != "") {
+            alert('You can\'t be born on the ' + form.day.value + 'th day.');
+        }
+        correct = false;
+    }
+    if (form.month.value == "" || form.month.value < 1 || form.month.value > 12) {
+        if (form.month.value != "") {
+            alert('You can\'t be born on the ' + form.month.value + 'th month.');
+        }
+        correct = false;
+    }
+    if (form.year.value == "" || form.year.value < currentyear-100 || form.year.value > currentyear-8) {
+        if (form.year.value != "") {
+            alert('You can\'t be born in ' + form.year.value + '.');
+        }
+        correct = false;
+    }
+    if (correct) {
+        document.getElementById('birthdateImage').src = "images/correct.gif";
+    } else {
+        document.getElementById('birthdateImage').src = "images/incorrect.gif";
+    }
+    return correct;
+}
+
+function IsEmpty(field) {
+    if (field.value == "") {
+        alert(field.id + " is empty!");
+        field.focus();
+        return true;
+    }
+    return false;
 }

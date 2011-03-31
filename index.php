@@ -65,9 +65,6 @@
                                     $website->showQuestions($_GET['categoryid']);
                                 }
                             } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
-                                if (isset($_POST['ProfileEdit'])) {
-                                    $website->submitEdit($_POST);
-                                }
                                 $website->showUserInfo($_GET['userid']);
                             } else if (isset($_GET['categories'])) {
                                 $website->showCategories($_GET);
@@ -77,7 +74,9 @@
                             }
                         } else {
                             if ($_POST) {
-                                if (isset($_POST['btnRegister'])) {
+                                if (isset($_POST['btnProfileEdit'])) {
+                                    $website->submitEdit($_POST);
+                                } else if (isset($_POST['btnRegister'])) {
                                     $website->showRegister($_POST);
                                 } else if (isset($_POST['RegistrationForm'])) {
                                     $website->DoRegister($_POST);

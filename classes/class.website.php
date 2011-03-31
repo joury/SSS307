@@ -20,163 +20,46 @@ Class website {
         if (!isset($_POST['email'])) {
             $_POST['email'] = "";
         }
-        if (!isset($_POST['country'])) {
-            $_POST['country'] = "";
-        }
-        if (!isset($_POST['state'])) {
-            $_POST['state'] = "";
-        }
-        if (!isset($_POST['city'])) {
-            $_POST['city'] = "";
-        }
-        if (!isset($_POST['firstname'])) {
-            $_POST['firstname'] = "";
-        }
-        if (!isset($_POST['insertion'])) {
-            $_POST['insertion'] = "";
-        }
-        if (!isset($_POST['lastname'])) {
-            $_POST['lastname'] = "";
-        }
-        if (!isset($_POST['msn'])) {
-            $_POST['msn'] = "";
-        }
-        if (!isset($_POST['skype'])) {
-            $_POST['skype'] = "";
-        }
-        if (!isset($_POST['job'])) {
-            $_POST['job'] = "";
-        }
-        if (!isset($_POST['gender'])) {
-            $_POST['gender'] = "";
-        }
-        if (!isset($_POST['language'])) {
-            $_POST['language'] = "";
-        }
         return $_POST;
     }
 
-    function showRegister($_POST, $error = 0) {
-        $days = "";
-        $months = "";
-        $years = "";
-        for ($i = 1; $i <= 31; $i++) {
-            if ($i < 10) {
-                $i = "0" . $i;
-            }
-            $days .= "<option value='$i'>$i</option>";
-        }
-        for ($i = 1; $i <= 12; $i++) {
-            if ($i < 10) {
-                $i = "0" . $i;
-            }
-            $months .= "<option value='$i'>$i</option>";
-        }
-        for ($i = (date("Y") - 85); $i <= date("Y") - 4; $i++) {
-            if ($i == (date("Y") - 4)) {
-                $years .= "<option value='$i' SELECTED>$i</option>";
-            } else {
-                $years .= "<option value='$i'>$i</option>";
-            }
-        }
-
+    function showRegister($_POST, $error = "") {
         $_POST = $this->fillRegisterPost($_POST);
 
         echo '
             <table>
         ';
-        if ($error == 1) {
-            echo 'Not all fields were filled in, please check if all fields with a <font color="red">*</font> are filled in.';
+        if ($error != "") {
+            echo '<font color="red">One or more <b>errors</b> occured:</font><br>';
+            echo $error;
         }
         echo '
                 <form name="Register" id="RegistrationForm" onSubmit="return CheckFields(this);" action="index.php" method="POST">
                 <tr>
-                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return CheckUsername(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="usernameImage"></img><script type="text/javascript">CheckUsername(document.getElementById(\'username\'), false);</script></td>
+                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return CheckUsername(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="usernameImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '"><font color="RED">* <b>Must contain 6 characters </b></font><img src="images/ffffff.gif" id="passwordImage"></img></td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '" onChange="return CheckPass(document.getElementById(\'RegistrationForm\'), false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '" onChange="return CheckPass(document.getElementById(\'RegistrationForm\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onChange="return CheckEmail(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Country:</td>
-                    <td>
-                        <select id="country" name="country" onChange="document.getElementById(\'RegistrationForm\').submit();">
-                            ' . $this->getCountries($_POST['country']) . '
-                        </select>
-                        <font color="RED">*</font>
-                    </td>
+                    <td>Job:</td> <td><input type="hidden" name="job" value="0"><input type="checkbox" name="job" value="1"> Yes, i have a job</td>
                 </tr>
                 <tr>
-                    <td>State/Province:</td>
-                    <td>
-                        <select id="state" name="state" onChange="document.getElementById(\'RegistrationForm\').submit();">
-                            ' . $this->getStates($_POST['country'], $_POST['state']) . '
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>City:</td>
-                    <td>
-                        <select id="city" name="city">
-                            ' . $this->getCities($_POST['state'], $_POST['city']) . '
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Firstname:</td> <td><input type="text" name="firstname" id="firstname" onChange="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
-                </tr>
-                <tr>
-                    <td>Insertion:</td> <td><input type="text" name="insertion"></td>
-                </tr>
-                <tr>
-                    <td>Lastname:</td> <td><input type="text" name="lastname" id="lastname" onChange="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
-                </tr>
-                <tr>
-                    <td>MSN:</td> <td><input type="text" name="msn"></td>
-                </tr>
-                <tr>
-                    <td>Skype:</td> <td><input type="text" name="skype"></td>
-                </tr>
-                <tr>
-                    <td>Job:</td> <td><input type="checkbox" name="job" value="1"> Yes, i have a job<font color="RED">*</font></td>
-                </tr>
-                <tr>
-                    <td>Gender:</td>
-                    <td>
-                        <select name="gender">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                        <font color="RED">*</font>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Birthdate:</td>
-                    <td>
-                        <select name="day">
-                            ' . $days . '
-                        </select>
-                        <select name="month">
-                            ' . $months . '
-                        </select>
-                        <select name="year">
-                            ' . $years . '
-                        </select>
-                        <font color="RED">*</font>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Primary language:</td>
+                    <td>Site language:</td>
                     <td>
                         <select name="language">
-                            ' . $this->getLanguages() . '
+        ';
+        foreach ($this->GetLanguageFiles() as $languagefile) {
+            echo '<option value="' . $languagefile . '">' . $languagefile . '</option>';
+        }
+        echo '
                         </select>
-                        <font color="RED">*</font>
                     </td>
                 </tr>
                 <tr>
@@ -185,6 +68,11 @@ Class website {
                         <input type="submit" name="Register" value="Register!">
                     </td>
                 </tr>
+                <script type="text/javascript">
+                    CheckEmail(document.getElementById(\'email\'), false, true);
+                    CheckPass(document.getElementById(\'RegistrationForm\'), false);
+                    CheckUsername(document.getElementById(\'username\'), false);
+                </script>
                 </form>
             </table>
         ';
@@ -209,6 +97,7 @@ Class website {
     }
 
     function GetLanguageFiles() {
+        require $this->MainConfigFile;
         $handle = opendir($LanguageDir);
         if ($handle) {
             $LanguageFiles = array();
@@ -235,20 +124,6 @@ Class website {
             $raw = '?' . $raw;
         }
         return $raw;
-    }
-
-    function checkFields($_POST) {
-        $good = true;
-        if ($_POST['username'] == "" ||
-                $_POST['password'] == "" ||
-                $_POST['email'] == "" ||
-                $_POST['firstname'] == "" ||
-                $_POST['lastname'] == "" ||
-                !preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) ||
-                !preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
-            $good = false;
-        }
-        return $good;
     }
 
     function AccountExists($username = "", $email = "") {
@@ -281,34 +156,56 @@ Class website {
         return sha1($password);
     }
 
+    function checkFields($_POST) {
+        $good = "";
+        if ($_POST['username'] == "") {
+            $good .= "Username field is empty.<br>";
+        }
+        if ($_POST['password'] == "") {
+            $good .= "Password field is empty.<br>";
+        }
+        if ($_POST['confirmpassword'] == "") {
+            $good .= "Confirm password field is empty.<br>";
+        }
+        if ($_POST['confirmpassword'] != $_POST['password']) {
+            $good .= "Password and confirm password fields don't match.<br>";
+        }
+        if (!preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
+            $good .= "Password doesn't match the rules (hover over the image next to the field for info)<br>";
+        }
+        if ($_POST['email'] == "") {
+            $good .= "Email field is empty.<br>";
+        }
+        if (!preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email'])) {
+            $good .= "What you filled in as emailaddress is not a valid emailaddress<br>";
+        }
+        if ($this->AccountExists(stripslashes(mysql_real_escape_string($_POST['username'])), stripslashes(mysql_real_escape_string($_POST['email'])))) {
+            $good .= "Either the username or the emailaddress is already in use.";
+        }
+        if ($good == "") {
+            $good = true;
+        }
+
+        return $good;
+    }
+
     function DoRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
-        if (!isset($_POST['state'])) {
-            $_POST['state'] = "";
-        }
-        if (!isset($_POST['city'])) {
-            $_POST['city'] = "";
-        }
-        if (!isset($_POST['job'])) {
-            $_POST['job'] = 0;
-        }
-        if ($this->checkFields($_POST)) {
-            $birthdate = $_POST['day'] . "-" . $_POST['month'] . "-" . $_POST['year'];
+        $check = $this->checkFields($_POST);
+        if (is_bool($check)) {
             require $this->MainConfigFile;        // Get the connection variables for mysql from the config file
             if ($this->DB->MakeConnection()) {
-                $username = mysql_real_escape_string($_POST['username']);  // Make sure there are no weird tokens in the variables
-                $password = $this->EncryptPassword(mysql_real_escape_string($_POST['password']));
-                if (!$this->AccountExists($username, $_POST['email'])) {
-                    $raw_account_query = "INSERT INTO `gebruikers` VALUES ('','" . $_POST['firstname'] . "','" . $_POST['insertion'] . "','" . $_POST['lastname'] . "','" . $username . "','" . $password . "','" . $_POST['email'] . "','" . $_POST['language'] . "','" . $_POST['country'] . "','" . $_POST['state'] . "','" . $_POST['city'] . "','" . $_POST['gender'] . "','" . $_POST['msn'] . "','" . $_POST['skype'] . "','" . $birthdate . "','" . $_POST['job'] . "','0');";
-                    $account_query = mysql_query($raw_account_query); // Insert the account info
-                    $this->Login($username, $password);     // Log in to the account
-                } else {
-                    echo '<font color="red">' . $this->Translate('AccountwName') . " <b>" . ucfirst($username) . "</b> " . $this->Translate('AlreadyExist') . '</font>';     // if the account already existed, show the part below
-                }
+                $username = stripslashes(mysql_real_escape_string($_POST['username']));  // Make sure there are no weird tokens in the variables
+                $password = stripslashes(mysql_real_escape_string($_POST['password']));
+                $encryptedPass = $this->EncryptPassword($password);
+                $email = stripslashes(mysql_real_escape_string($_POST['email']));
+                $raw_account_query = "INSERT INTO `gebruikers` (`gebruikersnaam`, `wachtwoord`, `email`, `taal`, `baan`) VALUES ('" . $username . "', '" . $encryptedPass . "', '" . $email . "', '" . $_POST['language'] . "', '" . $_POST['job'] . "');";
+                $account_query = mysql_query($raw_account_query); // Insert the account info
+                $this->Login($username, $password);     // Log in to the account
             } else {
                 die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
             }
         } else {
-            $this->showRegister($_POST, 1);
+            $this->showRegister($_POST, $check);
         }
     }
 
@@ -336,10 +233,10 @@ Class website {
         $username = mysql_real_escape_string($username);
         $password = $this->EncryptPassword(mysql_real_escape_string($password));
         $passwordInDB = "";
-        $query = mysql_query("select * FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Get the password from the DB that's associated with this account name
+        $query = mysql_query("SELECT `wachtwoord` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Get the password from the DB that's associated with this account name
         if (mysql_num_rows($query) != 0) {   // If the account exists
-            $fields = mysql_fetch_assoc($query);
-            $passwordInDB = $fields['wachtwoord'];  // Get the password of the user with $username
+            $passwordInDB = mysql_result($query, 0);  // Get the password of the user with $username
+            echo "user exists!";
         } else {
             $this->correctLogin = false;
         }
@@ -1057,17 +954,37 @@ Class website {
     }
 
     function submitEdit($_POST) {
-        if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {
-            if ($_POST['password'] == $_POST['confirmpassword']) {
-                if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&
-                        preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
-
+        if ($this->EncryptPassword($_POST['oldpassword']) == $this->getCurrentUser()->password) {
+            if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {
+                if ($_POST['password'] == $_POST['confirmpassword']) {
+                    if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&
+                            preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z])\w{6,}$/', $_POST['password'])) {
+                        if (!isset($_POST['msn'])) {
+                            $_POST['msn'] = "";
+                        }
+                        if (!isset($_POST['skype'])) {
+                            $_POST['skype'] = "";
+                        }
+                        if (!isset($_POST['job'])) {
+                            $_POST['job'] = "";
+                        }
+                        $query = "UPDATE `gebruikers` SET `wachtwoord` = '" . $this->EncryptPassword($_POST['password']) . "'
+                            AND `email` = '" . $_POST['email'] . "'AND `land` = '" . $_POST['country'] . "' AND `provincie` = '" . $_POST['state'] . "'
+                                AND `stad` = '" . $_POST['city'] . "' AND `baan` = '" . $_POST['job'] . "' AND `msn` = '" . $_POST['msn'] . "' AND `skype` = '" . $_POST['skype'] . "'
+                                    WHERE `id` = '" . $_POST['userid'] . "';";
+                        echo $query;
+                        mysql_query($query);
+                    } else {
+                        echo '<font color="red">Password doesn\'t match the rules.</font>';
+                    }
                 } else {
-                    echo '<font color="red">Password doesn\'t match the rules.</font>';
+                    echo '<font color="red">Password and Confirm password fields don\'t match.</font>';
                 }
+            } else {
+                echo '<font color="red">Both password fields should be filled in and abide to the rules.</font>';
             }
         } else {
-            echo '<font color="red">Both password fields should be filled in.</font>';
+            echo '<font color="RED">Old password field doesn\'t match this account\'s current password.</font>';
         }
     }
 
@@ -1075,20 +992,94 @@ Class website {
         $user = $this->getUser($id);
         $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         echo '
-            Profile info:
+            <b>Profile info:</b>
             <table>
         ';
         if ($owned) {
+            if ($this->getCurrentUser()->firstname == "") {
+                $days = "";
+                $months = "";
+                $years = "";
+                for ($i = 1; $i <= 31; $i++) {
+                    if ($i < 10) {
+                        $i = "0" . $i;
+                    }
+                    $days .= "<option value='$i'>$i</option>";
+                }
+                for ($i = 1; $i <= 12; $i++) {
+                    if ($i < 10) {
+                        $i = "0" . $i;
+                    }
+                    $months .= "<option value='$i'>$i</option>";
+                }
+                for ($i = (date("Y") - 85); $i <= date("Y") - 4; $i++) {
+                    if ($i == (date("Y") - 4)) {
+                        $years .= "<option value='$i' SELECTED>$i</option>";
+                    } else {
+                        $years .= "<option value='$i'>$i</option>";
+                    }
+                }
+                echo '
+                    <form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="index.php" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">
+                    <tr>
+                        <td>Firstname:</td> <td><input type="text" name="firstname" id="firstname" onChange="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
+                    </tr>
+                    <tr>
+                        <td>Insertion:</td> <td><input type="text" name="insertion"></td>
+                    </tr>
+                    <tr>
+                        <td>Lastname:</td> <td><input type="text" name="lastname" id="lastname" onChange="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
+                    </tr>
+                    <tr>
+                        <td>MSN:</td> <td><input type="text" name="msn"></td>
+                    </tr>
+                    <tr>
+                        <td>Skype:</td> <td><input type="text" name="skype"></td>
+                    </tr>
+                    <tr>
+                        <td>Gender:</td>
+                        <td>
+                            <select name="gender">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Birthdate:</td>
+                        <td>
+                            <input type="text" id="day" name="day" onChange="CheckBirthdate(document.getElementById(\'AdditionalInfo\'), ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                                -
+                            <input type="text" id="month" name="month" onChange="CheckBirthdate(document.getElementById(\'AdditionalInfo\'), ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                                -
+                            <input type="text" id="year" name="year" onChange="CheckBirthdate(document.getElementById(\'AdditionalInfo\'), ' . Date("Y") . ');" style="width:30px;" maxlength="4">
+                            <font color="RED">*</font>
+                            <img src="images/ffffff.gif" id="birthdateImage"></img>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" name="btnProfileEdit" value="Save"></td>
+                    </tr>
+                    </form>
+                    <tr>
+                        <td><hr></td> <td><hr></td>
+                    </hr>
+                ';
+            }
             echo '
-                <form enctype="multipart/form-data" id="ProfileEdit" name="ProfileEdit" action="index.php" method="POST" onSubmit="return CheckPass(this, true);">
+                <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="index.php" onSubmit="return CheckProfileEdit(this);">
+                <input type="hidden" name="userid" id="userid" value="' . $id . '">
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="passwordImage"></img></td>
+                    <td>Old password:</td> <td><input type="password" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Password:</td> <td><input type="password" id="password" name="password" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" value="' . $user->email . '" onChange="return CheckEmail(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" id="confirmpassword" name="confirmpassword" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                </tr>
+                <tr>
+                    <td>Email:</td> <td><input type="text" id="email" name="email" value="' . $user->email . '" onChange="return CheckEmail(this, false, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
                 </tr>
                 <tr>
                     <td>Country:</td>
@@ -1127,11 +1118,11 @@ Class website {
                     <td>Image:</td> <td><input type="file" name="image"></td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="submit" value="Save"></td>
+                    <td><input type="submit" name="btnProfileEdit" value="Save"></td>
                 </tr>
                 <script type="text/javascript">
                     CheckPass(document.getElementById(\'ProfileEdit\'), false);
-                    CheckEmail(document.getElementById(\'ProfileEdit\'), false);
+                    CheckEmail(document.getElementById(\'email\'), false, false);
                 </script>
                 </form>
             ';
