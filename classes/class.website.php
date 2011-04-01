@@ -265,73 +265,6 @@ Class website {
         ';
     }
 
-    function SaveImage($_FILES) {
-        if ($this->GetID() != "") {
-            if ($_FILES["file"]["name"] != "") {
-                $FileType = $_FILES["file"]["type"];
-                $FileName = $_FILES["file"]["name"];
-                $FileSize = round($_FILES["file"]["size"] / 1024 / 1024, 2);
-                if (!is_dir($SaveDir))
-                    mkdir($SaveDir);
-                if ((($FileType == "image/png") || ($FileType == "image/jpg") || ($FileType == "image/jpeg") || ($FileType == "image/bmp")) && ($FileSize < $MaxFileSize)) {
-                    if ($_FILES["file"]["error"] > 0) {
-                        echo $this->Translate('ErrorCode') . ": " . $_FILES["file"]["error"] . "<br />";
-                    } else {
-                        if (file_exists($SaveDir . $FileName)) {
-                            $ExistingFile = @fopen($SaveDir . $FileName, 'w');
-                            unlink($SaveDir . $FileName);
-                        }
-
-                        if ($this->GetID() != "") {
-                            $FileNamePieces = explode(".", $FileName);
-                            $FileName = $this->GetID() . "." . $FileNamePieces[1];
-                            $Moved = @move_uploaded_file($_FILES["file"]["tmp_name"], $SaveDir . $FileName);
-                            $Picture = 1;
-                            $ImageHandler = new Image();
-                            $ImageHandler->CreateDisplayPicture($User);
-                        } else {
-                            $this->ShowLogin();
-                        }
-                    }
-                } else {
-                    if ($FileSize > $MaxFileSize) {
-                        echo $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB";
-                    }
-                    else
-                        echo $this->Translate('FileType') . $FileType;
-                }
-            }
-        }
-    }
-
-    function GetImage($Thumb = "") {
-        require $this->MainConfigFile;
-        if (!is_dir($SaveDir)) {
-            mkdir($SaveDir);
-        }
-
-        $handle = opendir($SaveDir);
-        if ($handle) {
-            while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != "..") {
-                    if (preg_match("/$this->GetID()/", $file)) {
-                        if ($Thumb != "" && preg_match("/thumb/i", $file)) {
-                            $originalImage = $SaveDir . $file;
-                        } else if ($Thumb == "" && !preg_match("/thumb/i", $file)) {
-                            $originalImage = $SaveDir . $file;
-                        }
-                    }
-                }
-            }
-        }
-        closedir($handle);
-        if ($originalImage == "") {
-            $this->DeleteImage();
-            return false;
-        }
-        return '<img src="' . $originalImage . '"/>';
-    }
-
     function showCategories($_GET) {
         $result = mysql_query("SELECT * FROM `talen`;");
         if (mysql_num_rows($result) == 0) {
@@ -996,6 +929,7 @@ Class website {
                                 `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
                                     WHERE `id` = '" . $this->getCurrentUser()->id . "';";
                             mysql_query($query);
+                            $this->saveImage($_FILES);
                             $this->showHomePage();
                         } else {
                             $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">Password doesn\'t match the rules.</font>');
@@ -1010,6 +944,82 @@ Class website {
                 $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="RED">Old password field doesn\'t match this account\'s current password.</font>');
             }
         }
+    }
+
+    function saveImage($_FILES) {
+        if ($this->getCurrentUser() && $this->getCurrentUser()->id != "") {
+            if ($_FILES["file"]["name"] != "") {
+                require $this->MainConfigFile;
+                $FileType = $_FILES["file"]["type"];
+                $FileName = $_FILES["file"]["name"];
+                $FileSize = round($_FILES["file"]["size"] / 1024 / 1024, 2);
+                if (!is_dir($SaveDir)) {
+                    mkdir($SaveDir);
+                }
+
+                if ($FileSize > $MaxFileSize) {
+                    echo $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB";
+                } else {
+                    if (in_array($FileType, $AllowedFileTypes)) {
+                        if ($_FILES["file"]["error"] > 0) {
+                            echo $this->Translate('ErrorCode') . ": " . $_FILES["file"]["error"] . "<br />";
+                        } else {
+                            if (file_exists($SaveDir . $FileName)) {
+                                unlink($SaveDir . $FileName);
+                            }
+
+                            $FileNamePieces = explode(".", $FileName);
+                            $FileName = $this->getCurrentUser()->id . "." . $FileNamePieces[1];
+                            $Moved = @move_uploaded_file($_FILES["file"]["tmp_name"], $SaveDir . $FileName);
+
+                            if ($Moved) {
+                                $Dimensions = explode("x", $MaxAvatarDimension);
+                                $toWidth = $Dimensions[0];
+                                $toHeight = $Dimensions[1];
+
+                                list($width, $height) = getimagesize($SaveDir . $FileName);
+                                $xscale = $width / $toWidth;
+                                $yscale = $height / $toHeight;
+                                if ($yscale > $xscale) {
+                                    $toWidth = round($width * (1 / $yscale));
+                                    $toHeight = round($height * (1 / $yscale));
+                                } else {
+                                    $toWidth = round($width * (1 / $xscale));
+                                    $toHeight = round($height * (1 / $xscale));
+                                }
+                                $imageTmp = imagecreatefromJPEG($SaveDir . $FileName);
+                                $imageResized = imagecreatetruecolor($toWidth, $toHeight);
+                                ImageJPEG($imageResized, $SaveDir . $FileName);
+                            } else {
+                                echo "File could not be saved due to unknown reason...<br>";
+                            }
+                        }
+                    } else {
+                        echo $this->Translate('FileType') . $FileType;
+                    }
+                }
+            }
+        }
+    }
+
+    function GetImage($id) {
+        require $this->MainConfigFile;
+        $handle = @opendir($SaveDir);
+        $file = "";
+        if ($handle) {
+            while (false !== ($file = readdir($handle))) {
+                if ($file != "." && $file != "..") {
+                    if (preg_match("/" . $id . "/", $file)) {
+                        $file = $SaveDir . $file;
+                    }
+                }
+            }
+        }
+        closedir($handle);
+        if ($file == "") {
+            return false;
+        }
+        return '<img src="' . $file . '" alt="' . $id . '" />';
     }
 
     function showUserInfo($id, $_POST = "", $errors = "") {
@@ -1124,13 +1134,13 @@ Class website {
             echo '
                 <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="index.php" onSubmit="return CheckProfileEdit(this);">
                 <tr>
-                    <td>Old password:</td> <td><input type="password" value="'.$_POST['oldpassword'].'" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
+                    <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" value="'.$_POST['password'].'" id="password" name="password" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
+                    <td>Password:</td> <td><input type="password" value="' . $_POST['password'] . '" id="password" name="password" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" value="'.$_POST['confirmpassword'].'" id="confirmpassword" name="confirmpassword" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" value="' . $_POST['confirmpassword'] . '" id="confirmpassword" name="confirmpassword" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td><input type="text" id="email" name="email" value="' . $user->email . '" onChange="return CheckEmail(this, false, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
@@ -1169,7 +1179,7 @@ Class website {
                     <td>Job:</td> <td><input type="hidden" name="job" value="0"><input type="checkbox" name="job" value="' . $user->job . '"> Yes, i have a job</td>
                 </tr>
                 <tr>
-                    <td>Image:</td> <td><input type="file" name="image"></td>
+                    <td>Image:</td> <td><input type="hidden" name="MAX_FILE_SIZE" value="2000000"><input type="file" name="image">Maximum filesize is 2MB</td>
                 </tr>
                 <tr>
                     <td><input type="hidden" name="btnProfileEdit" value="1"><input type="submit" name="btnProfileEdit" value="Save"></td>
