@@ -430,7 +430,7 @@ Class website {
             echo '
                 <div id="profile" class="profile vcard">
                     <a href="index.php?userid=' . $fields['gebruikerid'] . '" class="avatar">
-                        <img class="photo" src="" width="48">    <!-- ToDo : Link invoegen naar user plaatje -->
+                        <img class="photo" src="'.$this->GetImage($fields['gebruikerid']).'" width="50">
                     </a>
                     <span class="user">
                         <a class="url" href="index.php?userid=' . $fields['gebruikerid'] . '">
@@ -602,7 +602,7 @@ Class website {
     }
 
     function getCountries($country) {
-        $countries = "";
+        $countries = '<option value=""></option>';
         $result = mysql_query("SELECT * FROM `landen` ORDER BY `name`;");
         if (mysql_num_rows($result) > 0) {
             while ($fields = mysql_fetch_assoc($result)) {
@@ -705,7 +705,7 @@ Class website {
                     <div class="answer">
                         <div class="profile vcard">
                             <a href="index.php?userid=' . $fields['gebruikersid'] . '" class="avatar">
-                                <img class="photo" src="' . $SaveDir . $fields['gebruikersid'] . '.jpg" width="48">
+                                <img class="photo" src="' . $this->GetImage($fields['gebruikersid']) . '." width="5">
                             </a>
                             <span class="user">
                                 <span class="by">by </span>
@@ -948,11 +948,11 @@ Class website {
 
     function saveImage($_FILES) {
         if ($this->getCurrentUser() && $this->getCurrentUser()->id != "") {
-            if ($_FILES["file"]["name"] != "") {
+            if ($_FILES["imageFile"]["name"] != "") {
                 require $this->MainConfigFile;
-                $FileType = $_FILES["file"]["type"];
-                $FileName = $_FILES["file"]["name"];
-                $FileSize = round($_FILES["file"]["size"] / 1024 / 1024, 2);
+                $FileType = $_FILES["imageFile"]["type"];
+                $FileName = $_FILES["imageFile"]["name"];
+                $FileSize = round($_FILES["imageFile"]["size"] / 1024 / 1024, 2);
                 if (!is_dir($SaveDir)) {
                     mkdir($SaveDir);
                 }
@@ -961,8 +961,8 @@ Class website {
                     echo $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB";
                 } else {
                     if (in_array($FileType, $AllowedFileTypes)) {
-                        if ($_FILES["file"]["error"] > 0) {
-                            echo $this->Translate('ErrorCode') . ": " . $_FILES["file"]["error"] . "<br />";
+                        if ($_FILES["imageFile"]["error"] > 0) {
+                            echo $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"] . "<br />";
                         } else {
                             if (file_exists($SaveDir . $FileName)) {
                                 unlink($SaveDir . $FileName);
@@ -970,7 +970,7 @@ Class website {
 
                             $FileNamePieces = explode(".", $FileName);
                             $FileName = $this->getCurrentUser()->id . "." . $FileNamePieces[1];
-                            $Moved = @move_uploaded_file($_FILES["file"]["tmp_name"], $SaveDir . $FileName);
+                            $Moved = @move_uploaded_file($_FILES["imageFile"]["tmp_name"], $SaveDir . $FileName);
 
                             if ($Moved) {
                                 $Dimensions = explode("x", $MaxAvatarDimension);
@@ -989,7 +989,8 @@ Class website {
                                 }
                                 $imageTmp = imagecreatefromJPEG($SaveDir . $FileName);
                                 $imageResized = imagecreatetruecolor($toWidth, $toHeight);
-                                ImageJPEG($imageResized, $SaveDir . $FileName);
+                                imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $toWidth, $toHeight, $width, $height);
+                                imagejpeg($imageResized, $SaveDir . $FileName, 100);
                             } else {
                                 echo "File could not be saved due to unknown reason...<br>";
                             }
@@ -1005,21 +1006,21 @@ Class website {
     function GetImage($id) {
         require $this->MainConfigFile;
         $handle = @opendir($SaveDir);
-        $file = "";
+        $File = "";
         if ($handle) {
-            while (false !== ($file = readdir($handle))) {
-                if ($file != "." && $file != "..") {
-                    if (preg_match("/" . $id . "/", $file)) {
-                        $file = $SaveDir . $file;
+            while (false !== ($testFile = readdir($handle))) {
+                if ($testFile != "." && $testFile != "..") {
+                    if (preg_match("/" . $id . "/", $testFile)) {
+                        $File = $testFile;
                     }
                 }
             }
         }
         closedir($handle);
-        if ($file == "") {
+        if ($File == "") {
             return false;
         }
-        return '<img src="' . $file . '" alt="' . $id . '" />';
+        return $SaveDir . $File;
     }
 
     function showUserInfo($id, $_POST = "", $errors = "") {
@@ -1179,7 +1180,7 @@ Class website {
                     <td>Job:</td> <td><input type="hidden" name="job" value="0"><input type="checkbox" name="job" value="' . $user->job . '"> Yes, i have a job</td>
                 </tr>
                 <tr>
-                    <td>Image:</td> <td><input type="hidden" name="MAX_FILE_SIZE" value="2000000"><input type="file" name="image">Maximum filesize is 2MB</td>
+                    <td>Image:</td> <td><input type="hidden" name="MAX_FILE_SIZE" value="2000000"><input type="file" name="imageFile">Maximum filesize is 2MB</td>
                 </tr>
                 <tr>
                     <td><input type="hidden" name="btnProfileEdit" value="1"><input type="submit" name="btnProfileEdit" value="Save"></td>
