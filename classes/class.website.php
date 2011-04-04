@@ -30,7 +30,7 @@ Class website {
             <table>
         ';
         if ($error != "") {
-            echo '<font color="red">One or more <b>errors</b> occured:</font><br>';
+            echo '<font color="red">' . $this->Translate("ErrorOccured") . '</font><br>';
             echo $error;
         }
         echo '
@@ -85,13 +85,15 @@ Class website {
         } else {
             $languagefile = "";
         }
+
         if (is_file($languagefile)) {
             require $languagefile;
         } else {
             require $LanguageDir . "English.php";
         }
+
         if ($Language[$string] == "") {
-            die("Error: " . $string . "\ncan't be translated...");
+            echo "Error: " . $string . "\ncan't be translated...";
         }
         return $Language[$string];
     }
@@ -133,6 +135,8 @@ Class website {
             return $this->NameInUse($username);
         } else if ($email != "") {
             return $this->EmailInUse($email);
+        } else {
+            return $this->Translate("ErrorOccured") . "Both the username and the email parameters are empty!";
         }
     }
 
@@ -159,28 +163,28 @@ Class website {
     function checkFields($_POST) {
         $good = "";
         if ($_POST['username'] == "") {
-            $good .= "Username field is empty.<br>";
+            $good .= $this->Translate("Username") . " " . $this->Translate("FieldEmpty");
         }
         if ($_POST['password'] == "") {
-            $good .= "Password field is empty.<br>";
+            $good .= $this->Translate("Password") . " " . $this->Translate("FieldEmpty");
         }
         if ($_POST['confirmpassword'] == "") {
-            $good .= "Confirm password field is empty.<br>";
+            $good .= $this->Translate("ConfirmPassword") . " " . $this->Translate("FieldEmpty");
         }
         if ($_POST['confirmpassword'] != $_POST['password']) {
-            $good .= "Password and confirm password fields don't match.<br>";
+            $good .= $this->Translate("PasswordMatch");
         }
         if (!preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) {
-            $good .= "Password doesn't match the rules (hover over the image next to the field for info)<br>";
+            $good .= $this->Translate("PasswordRules");
         }
         if ($_POST['email'] == "") {
-            $good .= "Email field is empty.<br>";
+            $good .= "Email " . $this->Translate("FieldEmpty");
         }
         if (!preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email'])) {
-            $good .= "What you filled in as emailaddress is not a valid emailaddress<br>";
+            $good .= $this->Translate("EmailInvalid");
         }
         if ($this->AccountExists(stripslashes(mysql_real_escape_string($_POST['username'])), stripslashes(mysql_real_escape_string($_POST['email'])))) {
-            $good .= "Either the username or the emailaddress is already in use.";
+            $good .= $this->Translate("AccountEmailUsername");
         }
         if ($good == "") {
             $good = true;
@@ -219,7 +223,7 @@ Class website {
                     <input type="submit" name="btnRegister" value="Register">
         ';
         if ($this->correctLogin == false) {
-            echo '<font color="red">Either the user doesn\'t exist or the password is incorrect</font>';
+            echo '<font color="red">' . $this->Translate("LoginFailed") . '</font>';
         }
         echo '
                 </li>
@@ -252,7 +256,7 @@ Class website {
         require $this->MainConfigFile;
         setcookie($cookiename, "1", time() - 3600);  // To delete a cookie, overwrite the cookie with an expiration time of "one hour ago"
         foreach (get_defined_vars () as $key) {  // Reset all variables (clear the session)
-            unset($GLOBALS[$key]);
+            unset($key);
         }
         echo '<meta http-equiv="refresh" content="0">';
     }
@@ -409,8 +413,6 @@ Class website {
                     <a href=?categoryid=" . $id . ">" . $categoryname . "</a> &gt
                 </li>"
             ;
-        } else {
-            die("Error: unknown category parsed");
         }
     }
 
@@ -430,7 +432,7 @@ Class website {
             echo '
                 <div id="profile" class="profile vcard">
                     <a href="index.php?userid=' . $fields['gebruikerid'] . '" class="avatar">
-                        <img class="photo" src="'.$this->GetImage($fields['gebruikerid']).'" width="50">
+                        <img class="photo" src="' . $this->GetImage($fields['gebruikerid']) . '" width="50">
                     </a>
                     <span class="user">
                         <a class="url" href="index.php?userid=' . $fields['gebruikerid'] . '">
@@ -474,8 +476,6 @@ Class website {
             echo '
                 </div>
             ';
-        } else {
-            die("Error: unknown question parsed");
         }
     }
 
@@ -539,10 +539,6 @@ Class website {
         } else {
             return false;
         }
-    }
-
-    function showHomePage() {
-        $this->showQuestions();
     }
 
     function showQuestions($id = "") {
@@ -932,16 +928,16 @@ Class website {
                             $this->saveImage($_FILES);
                             $this->showHomePage();
                         } else {
-                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">Password doesn\'t match the rules.</font>');
+                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("MatchRules") . '</font>');
                         }
                     } else {
-                        $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">Password and Confirm password fields don\'t match.</font>');
+                        $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
                     }
                 } else {
-                    $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">Both password fields should be filled in and abide to the rules.</font>');
+                    $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordEmpty") . '</font>');
                 }
             } else {
-                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="RED">Old password field doesn\'t match this account\'s current password.</font>');
+                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="RED">' . $this->Translate("PassChangeMatch") . '</font>');
             }
         }
     }
@@ -992,7 +988,7 @@ Class website {
                                 imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $toWidth, $toHeight, $width, $height);
                                 imagejpeg($imageResized, $SaveDir . $FileName, 100);
                             } else {
-                                echo "File could not be saved due to unknown reason...<br>";
+                                echo $this->Translate('SaveError');
                             }
                         }
                     } else {
@@ -1027,12 +1023,12 @@ Class website {
         $user = $this->getUser($id);
         $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         if ($errors != "") {
-            echo "The following error(s) occured:<br>";
+            echo $this->Translate("ErrorOccured");
             echo $errors;
             echo "<br>";
         }
         echo '
-            <b>Profile info:</b>
+            <b>' . $this->Translate("ProfileInfo") . ':</b>
             <table>
         ';
         if ($owned) {

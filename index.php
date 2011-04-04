@@ -73,7 +73,7 @@
                                 $website->showCategories($_GET);
                                 $website->showNewQuestionButton('<a href="?answer=1">');
                             } else {
-                                $website->showHomePage();
+                                $website->showQuestions();
                             }
                         } else {
                             if ($_POST) {
@@ -88,11 +88,11 @@
                                     if (isset($_POST['questionid'])) {
                                         $website->showCurrentQuestion($_POST['categoryid'], $_POST['questionid']);
                                     } else {
-                                        $website->showHomePage();
+                                        $website->showQuestions();
                                     }
                                 }
                             } else {
-                                $website->showHomePage();
+                                $website->showQuestions();
                             }
                         }
                         ?>

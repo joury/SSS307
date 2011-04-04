@@ -11,7 +11,7 @@ $required_rank = "1";               // Rank required to view the ban list (0 = u
 $cookiename = "codedumper_login";   // Name of the cookie that will be used to store the username and sha1 of the pass
 $cookietime = "600";                        // Time the cookie exists in seconds
 $MaxFileSize = "10";                        // Filesize for the avatar in MB
-$SaveDir = "Avatars/";                      // Directory in which the user's pictures end up
+$SaveDir = "./avatars/";                      // Directory in which the user's pictures end up
 $MaxAvatarDimension = "50x50";              // Resolution of the image in X , Y
 $AllowedFileTypes = array("image/png", "image/jpg", "image/jpeg", "image/bmp");
 $LanguageDir = "./languages/";
