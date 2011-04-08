@@ -53,20 +53,20 @@ class user {
     function getVars($result) {
         while ($fields = mysql_fetch_assoc($result)) {
             $this->id = $fields['id'];
-            $this->username = $fields['gebruikersnaam'];
+            $this->username = ucfirst($fields['gebruikersnaam']);
             $this->password = $fields['wachtwoord'];
-            $this->firstname = $fields['voornaam'];
-            $this->lastname = $fields['achternaam'];
+            $this->firstname = ucfirst($fields['voornaam']);
             $this->insertion = $fields['tussenvoegsel'];
+            $this->lastname = ucfirst($fields['achternaam']);
             $this->gender = $fields['geslacht'];
-            $this->email = $fields['email'];
+            $this->email = ucfirst($fields['email']);
             $this->language = $fields['taal'];
             $this->country = $fields['land'];
             $this->state = $fields['provincie'];
             $this->city = $fields['stad'];
             $this->birthdate = $fields['geboortedatum'];
-            $this->msn = $fields['msn'];
-            $this->skype = $fields['skype'];
+            $this->msn = ucfirst($fields['msn']);
+            $this->skype = ucfirst($fields['skype']);
             $this->job = $fields['baan'];
         }
     }

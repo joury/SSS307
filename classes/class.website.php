@@ -696,16 +696,16 @@ Class website {
         if (mysql_num_rows($result) > 0) {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
-                $user = $this->getUser($fields['gebruikersid']); //aanpassen
+                $user = $this->getUser($fields['gebruikersid']);
                 $answers .= '
                     <div class="answer">
                         <div class="profile vcard">
-                            <a href="index.php?userid=' . $fields['gebruikersid'] . '" class="avatar">
-                                <img class="photo" src="' . $this->GetImage($fields['gebruikersid']) . '." width="5">
+                            <a href="index.php?userid=' . $user->id . '" class="avatar">
+                                <img class="photo" src="' . $this->GetImage($user->id) . '." width="5">
                             </a>
                             <span class="user">
                                 <span class="by">by </span>
-                                <a class="url" href="index.php?userid=' . $fields['gebruikersid'] . '">
+                                <a class="url" href="index.php?userid=' . $user->id . '">
                                     <span class="fn" title="' . $user->username . '">
                                         ' . $user->username . '
 
@@ -1190,10 +1190,10 @@ Class website {
         } else {
             echo '
                 <tr>
-                    <td>Username:</td> <td>' . ucfirst($user->username) . '</td>
+                    <td>Username:</td> <td>' . $user->username . '</td>
                 </tr>
                 <tr>
-                    <td>Full name:</td> <td>' . ucfirst($user->firstname) . " " . $user->insertion . " " . ucfirst($user->lastname) . '</td>
+                    <td>Full name:</td> <td>' . $user->firstname . " " . $user->insertion . " " . $user->lastname . '</td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td>' . $user->email . '</td>
