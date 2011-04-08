@@ -25,11 +25,14 @@
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
         <link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">
         <?php
-        if ($_POST || (isset($_GET['userid']) && $website->getCurrentUser() && $website->getCurrentUser()->id == $_GET['userid'])) {
+        if ($_POST || (isset($_GET['userid']) && $website->getCurrentUser() && $website->getCurrentUser()->id == $_GET['userid'])) {    // ToDo: deze IF kan beter ;-)
             echo '<script type="text/javascript" src="./scripts/checkfields.js"></script>';
         }
         if (isset($_GET['answer'])) {
             echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
+        }
+        if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+            echo '<script type="text/javascript" src="./scripts/vote.js"></script>';
         }
         ?>
     </head>
@@ -87,6 +90,8 @@
                                     } else {
                                         $website->showQuestions();
                                     }
+                                } else if (isset($_POST['answerid']) && isset($_POST['userid'])) {
+                                    $website->submitVote($_POST['answerid'], $_POST['userid'], $_POST['submit']);
                                 }
                             } else {
                                 $website->showQuestions();

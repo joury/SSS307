@@ -1,0 +1,1 @@
+alter table `codedump`.`antwoorden` drop column `votes`;

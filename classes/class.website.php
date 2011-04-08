@@ -697,6 +697,14 @@ Class website {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
                 $user = $this->getUser($fields['gebruikersid']);
+                $positive = mysql_result(mysql_query("SELECT SUM(`positive`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
+                $negative = mysql_result(mysql_query("SELECT SUM(`negative`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
+                if ($positive == "") {
+                    $positive = 0;
+                }
+                if ($negative == "") {
+                    $negative = 0;
+                }
                 $answers .= '
                     <div class="answer">
                         <div class="profile vcard">
@@ -713,16 +721,34 @@ Class website {
                                 </a>
                             </span>
                             <div class="user-badge top-contrib">
-                                ' . $this->getBadges($fields['gebruikersid']) . '
+                                ' . $this->getBadges($user->id) . '
                             </div>
                         </div>
-                        <div align="right">
-                            <form method="POST" action="'.$_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']).'">
-                                <input type="image" id="'.$categoryid.'" name="'.$questionid.'" value="+1" style="width:30px;" src="images/vote_up.gif">
-                                <input type="image" id="'.$categoryid.'" name="'.$questionid.'" value="-1" style="width:30px;" src="images/vote_down.gif">
-                            </form>
-                        </div>
+                        
                         <div class="qa-container">
+                            <div style="text-align:center;float:right;">
+                                <table>
+                                    <tr>
+                                        <td style="width:30px;"><center><font color="green"><div id="positive_' . $fields['id'] . '">' . $positive . '</div></font></center></td>
+                                        <td><center><font color="red"><div id="negative_' . $fields['id'] . '">' . $negative . '</div></font></center></td>
+                                    </tr>
+                ';
+                if ($this->getCurrentUser() && !$this->hasVotedOnAnswer($fields['id'])) {
+                    $answers .= '
+                                    <tr id="votebuttons_' . $fields['id'] . '">
+                                        <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return Vote(this, this.vote.value);">
+                                            <input type="hidden" name="answerid" id="answerid" value="' . $fields['id'] . '">
+                                            <input type="hidden" name="userid" id="userid" value="' . $user->id . '">
+                                            <input type="hidden" name="vote" id="vote" value="">
+                                            <td><input type="image" id="submit" name="submit" value="1" style="width:30px;" src="images/vote_up.gif" onClick="this.form.vote.value=1;"></td>
+                                            <td><input type="image" id="submit" name="submit" value="-1" style="width:30px;" src="images/vote_down.gif" onClick="this.form.vote.value=-1;"></td>
+                                        </form>
+                                    </tr>
+                    ';
+                }
+                $answers .= '
+                                </table>
+                            </div>
                             <div class="content">
                                 ' . $fields['antwoord'] . '
                             </div>
@@ -737,6 +763,25 @@ Class website {
             }
         }
         return $answers;
+    }
+
+    function hasVotedOnAnswer($answerid) {
+        $result = mysql_query("SELECT * FROM `votes` WHERE `antwoordid` = '" . $answerid . "' AND `gebruikersid`= '" . $this->getCurrentUser()->id . "';");
+        if (mysql_num_rows($result) == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    function submitVote($answerid, $userid, $vote) {
+        $negative = 0;
+        $positive = 0;
+        if ($vote < 0) {
+            $negative = 1;
+        } else {
+            $positive = 1;
+        }
+        mysql_query("INSERT INTO `votes` VALUES ('" . $answerid . "', '" . $userid . "', '" . $positive . "', '" . $negative . "');");
     }
 
     function getCategories() {
@@ -757,7 +802,7 @@ Class website {
                     <div id="yan-question">
                         <div class="qa-container">
                             <center>
-                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&answer=1" , "", $this->GetQueryString($_SERVER["QUERY_STRING"])) . '">
+                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&answer=1", "", $this->GetQueryString($_SERVER["QUERY_STRING"])) . '">
                                     <table>
             ';
             if ($categoryid == "" || $questionid == "") {
