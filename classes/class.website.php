@@ -117,7 +117,7 @@ Class website {
     function RefreshCookie() {
         require $this->MainConfigFile;
         if ($_COOKIE[$cookiename] != "") {
-            setcookie($cookiename, $_COOKIE[$cookiename], time() + $cookietime);      // Make a new cookie with the same name and same info
+            setcookie($cookiename, $_COOKIE[$cookiename], time() + ($cookietime * 60));      // Make a new cookie with the same name and same info
         }
     }
 
@@ -245,7 +245,7 @@ Class website {
         }
 
         if ($passwordInDB == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
-            $cookie = setcookie($cookiename, $username . "," . $password, time() + $cookietime);  // Set a cookie with "name,password" that is legit for the following 5 minutes
+            $cookie = setcookie($cookiename, $username . "," . $password, time() + ($cookietime * 60));  // Set a cookie with "name,password" that is legit for the following 5 minutes
             echo '<meta http-equiv="refresh" content="0">';
         } else {
             $this->correctLogin = false;
@@ -709,7 +709,7 @@ Class website {
                     <div class="answer">
                         <div class="profile vcard">
                             <a href="index.php?userid=' . $user->id . '" class="avatar">
-                                <img class="photo" src="' . $this->GetImage($user->id) . '." width="5">
+                                <img class="photo" src="' . $this->GetImage($user->id) . '." width="50">
                             </a>
                             <span class="user">
                                 <span class="by">by </span>
@@ -727,10 +727,10 @@ Class website {
                         
                         <div class="qa-container">
                             <div style="text-align:center;float:right;">
-                                <table>
+                                <table style="width:60px;">
                                     <tr>
-                                        <td style="width:30px;"><center><font color="green"><div id="positive_' . $fields['id'] . '">' . $positive . '</div></font></center></td>
-                                        <td><center><font color="red"><div id="negative_' . $fields['id'] . '">' . $negative . '</div></font></center></td>
+                                        <td style="width:30px;"><center><font color="green"><b><div id="positive_' . $fields['id'] . '">' . $positive . '</div></b></font></center></td>
+                                        <td><center><font color="red"><b><div id="negative_' . $fields['id'] . '">' . $negative . '</div></b></font></center></td>
                                     </tr>
                 ';
                 if ($this->getCurrentUser() && !$this->hasVotedOnAnswer($fields['id'])) {
@@ -828,21 +828,21 @@ Class website {
                 ';
             }
             echo '
-                                        <tr>
-                                            <td>
-                                                <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <center>
-                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'b'" . ')" value="B" style="width:25px;font-weight:bold;" />
-                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'u'" . ')" value="_" style="width:20px;" />
-                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'i'" . ')" value="I" style="width:20px;font-style:italic;" />
-                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'img'" . ')" value="img" style="width:40px;" />
-                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'url'" . ')" value="url" style="width:40px;" />
-                                                    <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'code'" . ')" value="code" style="width:40px;" />
-                                                    <input type="hidden" name="Answer" value="1" />
+                <tr>
+                    <td>
+                        <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <center>
+                            <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'b'" . ')" value="B" style="width:25px;font-weight:bold;" />
+                            <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'u'" . ')" value="_" style="width:20px;" />
+                            <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'i'" . ')" value="I" style="width:20px;font-style:italic;" />
+                            <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'img'" . ')" value="img" style="width:40px;" />
+                            <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'url'" . ')" value="url" style="width:40px;" />
+                            <input type="button" onclick="bbcode_ins(' . "'comment'" . ', ' . "'code'" . ')" value="code" style="width:40px;" />
+                            <input type="hidden" name="Answer" value="1" />
             ';
             if ($categoryid != "") {
                 echo '
@@ -872,6 +872,8 @@ Class website {
                     </div>
                 </div>
             ';
+        } else {
+            echo '<script type="text/javascript">window.location = "index.php";</script>';
         }
     }
 
@@ -902,8 +904,8 @@ Class website {
     }
 
     function submitAnswer($_POST) {
-        $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `votes`, `posttijd`)
-            VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', 0, now());
+        $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `posttijd`)
+            VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', now());
         ";
         mysql_query($query);
     }
@@ -977,7 +979,7 @@ Class website {
                                     WHERE `id` = '" . $this->getCurrentUser()->id . "';";
                             mysql_query($query);
                             $this->saveImage($_FILES);
-                            $this->showHomePage();
+                            $this->showQuestions();
                         } else {
                             $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("MatchRules") . '</font>');
                         }
