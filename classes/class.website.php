@@ -751,7 +751,7 @@ Class website {
                     <div id="yan-question">
                         <div class="qa-container">
                             <center>
-                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER["QUERY_STRING"]) . '">
+                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&answer=1" , "", $this->GetQueryString($_SERVER["QUERY_STRING"])) . '">
                                     <table>
             ';
             if ($categoryid == "" || $questionid == "") {
@@ -829,7 +829,7 @@ Class website {
             if (!function_exists("bb2html")) {
                 require "class.bbparser.php";
             }
-            $_POST['text'] = bb2html($_POST['text']);
+            $_POST['text'] = mysql_real_escape_string(bb2html($_POST['text']));
 
             if (isset($_POST['categoryid'])) {
                 if (isset($_POST['questionid']) && $_POST['questionid'] != "") {

@@ -34,7 +34,6 @@
         ?>
     </head>
     <body class="c-std wide question-index new-header js">
-    <iframe style="position: absolute; visibility: visible; width: 2em; height: 2em; top: -31px; left: 0pt; border-width: 0pt;" title="Text Resize Monitor" id="_yuiResizeMonitor"></iframe>
     <div id="yan">
         <?php
         $website->showBanner($_GET);
@@ -45,7 +44,6 @@
                     <a href="index.php">Home</a> &gt;
                 </li>
                 <?php
-                if ($_GET && !$_POST) {
                     if (isset($_GET['categoryid'])) {
                         $website->showCurrentCategory($_GET['categoryid']);
 
@@ -53,7 +51,6 @@
                             echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
                         }
                     }
-                }
                 ?>
             </ol>
             <div id="yan-content">
