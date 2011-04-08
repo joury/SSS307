@@ -717,8 +717,10 @@ Class website {
                             </div>
                         </div>
                         <div align="right">
-                            <input type="button" id="'.$categoryid.'" name="'.$questionid.'" value="+1" style="width:30px;" onclick="Rate()"></button>
-                            <input type="button" id="'.$categoryid.'" name="'.$questionid.'" value="-1" style="width:30px;" onclick="Rate()"></button>
+                            <form method="POST" action="'.$_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']).'">
+                                <input type="image" id="'.$categoryid.'" name="'.$questionid.'" value="+1" style="width:30px;" src="images/vote_up.gif">
+                                <input type="image" id="'.$categoryid.'" name="'.$questionid.'" value="-1" style="width:30px;" src="images/vote_down.gif">
+                            </form>
                         </div>
                         <div class="qa-container">
                             <div class="content">
