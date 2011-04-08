@@ -4,7 +4,12 @@ function CheckRegister(form) {
 }
 
 function CheckProfileEdit(form) {
-    var correct = CheckPass(form, true) && CheckEmail(form.email, true, false) && !IsEmpty(form.oldpassword);
+    var correct = "";
+    if (form.password.value == "" && form.confirmpassword.value == "") {
+        correct = CheckEmail(form.email, true, false) && !IsEmpty(form.oldpassword);
+    } else {
+        correct = CheckPass(form, true) && CheckEmail(form.email, true, false) && !IsEmpty(form.oldpassword);
+    }
     return correct;
 }
 

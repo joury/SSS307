@@ -13,9 +13,9 @@ $Language = array(
     "ConfirmPassword" => "Confirm password",
 
     // File handling
-    "FileBig" => "File is too big, file is ",
+    "FileBig" => "File is too big, file is",
     "FileSize" => " but is allowed to be",
-    "FileType" => "Invalid filetype ",
+    "FileType" => "Invalid filetype",
     "SaveError" => "File could not be saved due to unknown reason...",
 
     // Buttons/Forms
@@ -26,8 +26,9 @@ $Language = array(
     "AccountwName" => "Account with name",
     "AccountExist" => "already exists.",
     "AccountEmailUsername" => "Either the username or the emailaddress is already in use.",
-    "LoginFailed" => "Either the user doesn\'t exist or the password is incorrect",
-    "EmailInvalid" => "What you filled in as emailaddress is not a valid emailaddress",
+    "LoginFailed" => "Either the user doesn\'t exist or the password is incorrect.",
+    "EmailInvalid" => "What you filled in as emailaddress is not a valid emailaddress.",
+    "EmailEmpty" => "Email field should be filled in.",
     "PasswordChanged" => "Password has been changed succesfully.",
     "PasswordRules" => "Password doesn't match the rules (hover over the image next to the field for info).",
     "PasswordMatch" => "Password and Confirm password fields don\'t match.",

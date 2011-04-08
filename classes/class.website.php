@@ -92,8 +92,8 @@ Class website {
             require $LanguageDir . "English.php";
         }
 
-        if ($Language[$string] == "") {
-            echo "Error: " . $string . "\ncan't be translated...";
+        if (@$Language[$string] == "") {
+            return "Error: " . $string . "\ncan't be translated...";
         }
         return $Language[$string];
     }
@@ -964,33 +964,50 @@ Class website {
         } else {
             if ($this->getCurrentUser() && $this->EncryptPassword($_POST['oldpassword']) == $this->getCurrentUser()->password) {
                 if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {
-                    if ($_POST['password'] == $_POST['confirmpassword']) {
-                        if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&
-                                preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) {
+                    if ($_POST['password'] != "" && $_POST['confirmpassword'] != "") {
+                        if ($_POST['password'] == $_POST['confirmpassword']) {
+                            if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&
+                                    preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) {
+                                if (!isset($_POST['msn'])) {
+                                    $_POST['msn'] = "";
+                                }
+                                if (!isset($_POST['skype'])) {
+                                    $_POST['skype'] = "";
+                                }
+                                $query = "UPDATE `gebruikers` SET `wachtwoord` = '" . $this->EncryptPassword($_POST['password']) . "',
+                                `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
+                                    `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
+                                        WHERE `id` = '" . $this->getCurrentUser()->id . "';";
+                                mysql_query($query);
+                                $this->saveImage($_FILES);
+                                $this->showQuestions();
+                            } else {
+                                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');
+                            }
+                        } else {
+                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
+                        }
+                    } else {
+                        if ($_POST['password'] != "" || $_POST['confirmpassword'] != "") {
+                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordEmpty") . '</font>');
+                        } else {
                             if (!isset($_POST['msn'])) {
                                 $_POST['msn'] = "";
                             }
                             if (!isset($_POST['skype'])) {
                                 $_POST['skype'] = "";
                             }
-                            $query = "UPDATE `gebruikers` SET `wachtwoord` = '" . $this->EncryptPassword($_POST['password']) . "',
-                            `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
-                                `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
-                                    WHERE `id` = '" . $this->getCurrentUser()->id . "';";
+                            $query = "UPDATE `gebruikers` SET  `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
+                                    `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
+                                        WHERE `id` = '" . $this->getCurrentUser()->id . "';";
                             mysql_query($query);
                             $this->saveImage($_FILES);
                             $this->showQuestions();
-                        } else {
-                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("MatchRules") . '</font>');
                         }
-                    } else {
-                        $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
                     }
-                } else {
-                    $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordEmpty") . '</font>');
                 }
             } else {
-                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="RED">' . $this->Translate("PassChangeMatch") . '</font>');
+                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PassChangeMatch") . '</font>');
             }
         }
     }
@@ -1182,7 +1199,7 @@ Class website {
             $states = $this->getStates($country, $state);
             $cities = $this->getCities($state, $city);
             echo '
-                <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="index.php" onSubmit="return CheckProfileEdit(this);">
+                <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckProfileEdit(this);">
                 <tr>
                     <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
                 </tr>
