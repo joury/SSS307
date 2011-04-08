@@ -291,9 +291,8 @@ Class website {
     function showBanner($_GET) {
         echo '
             <div id="hd">
-                <link type="text/css" rel="stylesheet" href="./css/ygma1.css">
-                <link type="text/css" rel="stylesheet" href="./css/ygma2.css">
-                <div id="ygma">
+                <link type="text/css" rel="stylesheet" href="./css/answers.css">
+                 <div id="ygma">
                     <div id="ygmaheader">
                         <div class="bd sp">
                             <div id="ymenu" class="ygmaclr">
