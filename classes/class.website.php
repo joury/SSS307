@@ -691,7 +691,7 @@ Class website {
     }
 
     function getAnswers($categoryid, $questionid) {
-        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '" . $categoryid . "' AND `vraagid` = '" . $questionid . "';");
+        $result = mysql_query("SELECT * FROM `antwoorden` a WHERE a.taalid = '" . $categoryid . "' AND a.vraagid = '" . $questionid . "' ORDER BY (SELECT SUM(v.positive) - SUM(v.negative) FROM `votes` v WHERE v.antwoordid = a.id) DESC;");
         $answers = "";
         if (mysql_num_rows($result) > 0) {
             require $this->MainConfigFile;
