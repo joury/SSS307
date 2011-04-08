@@ -39,10 +39,10 @@ Class website {
                     <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return CheckUsername(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="usernameImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '" onChange="return CheckPass(document.getElementById(\'RegistrationForm\'), false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '" onChange="return CheckPass(document.getElementById(\'RegistrationForm\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onChange="return CheckEmail(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
@@ -1011,10 +1011,10 @@ Class website {
                     }
                 }
             }
+            closedir($handle);
         }
-        closedir($handle);
         if ($File == "") {
-            return false;
+            return "images/ffffff.gif";
         }
         return $SaveDir . $File;
     }
@@ -1074,11 +1074,11 @@ Class website {
                     <tr>
                         <td>Birthdate:</td>
                         <td>
-                            <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onChange="CheckBirthdate(document.getElementById(\'AdditionalInfo\'), ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                            <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
                                 -
-                            <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onChange="CheckBirthdate(document.getElementById(\'AdditionalInfo\'), ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                            <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
                                 -
-                            <input type="text" id="year" value="' . $_POST['lastname'] . '" name="year" onChange="CheckBirthdate(document.getElementById(\'AdditionalInfo\'), ' . Date("Y") . ');" style="width:30px;" maxlength="4">
+                            <input type="text" id="year" value="' . $_POST['lastname'] . '" name="year" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:30px;" maxlength="4">
                             <font color="RED">*</font>
                             <img src="images/ffffff.gif" id="birthdateImage"></img>
                         </td>
@@ -1134,10 +1134,10 @@ Class website {
                     <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" value="' . $_POST['password'] . '" id="password" name="password" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
+                    <td>Password:</td> <td><input type="password" value="' . $_POST['password'] . '" id="password" name="password" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" value="' . $_POST['confirmpassword'] . '" id="confirmpassword" name="confirmpassword" onChange="return CheckPass(document.getElementById(\'ProfileEdit\'), false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" value="' . $_POST['confirmpassword'] . '" id="confirmpassword" name="confirmpassword" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
                     <td>Email:</td> <td><input type="text" id="email" name="email" value="' . $user->email . '" onChange="return CheckEmail(this, false, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
@@ -1145,7 +1145,7 @@ Class website {
                 <tr>
                     <td>Country:</td>
                     <td>
-                        <select id="country" name="country" onChange="document.getElementById(\'ProfileEdit\').submit();">
+                        <select id="country" name="country" onChange="this.form.submit();">
                             ' . $countries . '
                         </select>
                     </td>
@@ -1153,7 +1153,7 @@ Class website {
                 <tr>
                     <td>State/Province:</td>
                     <td>
-                        <select id="state" name="state" onChange="document.getElementById(\'ProfileEdit\').submit();">
+                        <select id="state" name="state" onChange="this.form.submit();">
                             ' . $states . '
                         </select>
                     </td>
@@ -1220,6 +1220,23 @@ Class website {
         }
         echo '
             </table>
+        ';
+    }
+
+    function showTools() {
+        echo '
+            <ul id="yan-question-tools">
+                <li class="menu" id="yan-save-question">
+                    <a href="" title="">
+                        <span>Save code to my account.</span>
+                    </a>
+                </li>
+                <li class="menu" id="yan-save-question">
+                    <a href="" title="">
+                        <span>Share code with another account.</span>
+                    </a>
+                </li>
+            </ul>
         ';
     }
 

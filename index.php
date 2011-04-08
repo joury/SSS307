@@ -98,20 +98,9 @@
                         ?>
                     </div>
                 </div>
-                <ul id="yan-question-tools">
-                    <li class="menu" id="yan-save-question">
-                        <a href="" title="">
-                            <span>Save code to my account.</span>
-                        </a>
-                    </li>
-                    <li class="menu" id="yan-save-question">
-                        <a href="" title="">
-                            <span>Share code with another account.</span>
-                        </a>
-                    </li>
-                </ul>
                 <?php
                         if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                            $website->showTools();
                             if (isset($_GET['answer'])) {
                                 $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
                             }

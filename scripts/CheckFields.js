@@ -130,15 +130,13 @@ function CheckPass(form, submit) {
             form.password.focus();
             password = false;
             confirm = false;
-        }
-        else if (form.confirmpassword.value == "") {
+        } else if (form.confirmpassword.value == "") {
             if (submit) {
                 alert("Confirm password field can't be empty.");
             }
             form.confirmpassword.focus();
             confirm = false;
-        }
-        else if (form.password.value != form.confirmpassword.value) {
+        } else if (form.password.value != form.confirmpassword.value) {
             if (submit) {
                 alert("Confirm password field doesn't match the password field.");
             }
