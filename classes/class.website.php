@@ -292,7 +292,7 @@ Class website {
         echo '
             <div id="hd">
                 <link type="text/css" rel="stylesheet" href="./css/answers.css">
-                 <div id="ygma">
+                <div id="ygma">
                     <div id="ygmaheader">
                         <div class="bd sp">
                             <div id="ymenu" class="ygmaclr">
@@ -711,7 +711,6 @@ Class website {
                                 <img class="photo" src="' . $this->GetImage($user->id) . '." width="50">
                             </a>
                             <span class="user">
-                                <span class="by">by </span>
                                 <a class="url" href="index.php?userid=' . $user->id . '">
                                     <span class="fn" title="' . $user->username . '">
                                         ' . $user->username . '
