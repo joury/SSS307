@@ -716,6 +716,10 @@ Class website {
                                 ' . $this->getBadges($fields['gebruikersid']) . '
                             </div>
                         </div>
+                        <div align="right">
+                            <input type="button" id="'.$categoryid.'" name="'.$questionid.'" value="+1" style="width:30px;" onclick="Rate()"></button>
+                            <input type="button" id="'.$categoryid.'" name="'.$questionid.'" value="-1" style="width:30px;" onclick="Rate()"></button>
+                        </div>
                         <div class="qa-container">
                             <div class="content">
                                 ' . $fields['antwoord'] . '
