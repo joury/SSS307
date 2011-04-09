@@ -269,23 +269,40 @@ Class website {
         ';
     }
 
-    function showCategories($_GET) {
+    function showCategories($_GET = "") {
+        echo $this->getCategories($_GET);
+    }
+
+    function getCategories($_GET = "") {
+        $categories = "";
         $result = mysql_query("SELECT * FROM `talen`;");
         if (mysql_num_rows($result) == 0) {
-            die("Query error when loading languages");
+            $categories .= "Query error when loading languages";
         } else {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($_GET && isset($_GET['categoryid']) && $fields['id'] == $_GET['categoryid']) {
-                    echo '<li class="current">';
-                    echo '<a class="current" href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
-                    echo '</li>';
+                    $categories .= '<li class="current">';
+                    $categories .= '<a class="current" href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
+                    $categories .= '</li>';
                 } else {
-                    echo '<li>';
-                    echo '<a href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
-                    echo "</li>";
+                    $categories .= '<li>';
+                    $categories .= '<a href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
+                    $categories .= "</li>";
                 }
             }
         }
+        return $categories;
+    }
+
+    function getCategoriesAsOption() {
+        $categories = "";
+        $result = mysql_query("SELECT * FROM `talen`;");
+        if (mysql_num_rows($result) > 0) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                $categories .= '<option value="' . $fields['id'] . '">' . $fields['naam'] . '</option>';
+            }
+        }
+        return $categories;
     }
 
     function showBanner($_GET) {
@@ -318,7 +335,7 @@ Class website {
                         </div>
                     </div>
                 </div>
-                ' . $this->showTabs() . '
+                ' . $this->getTabs() . '
                 <div id="yan-banner">
                     <ul class="short">
                         <li id="yan-banner-ask">
@@ -370,23 +387,23 @@ Class website {
         ';
     }
 
-    function showTabs() {
+    function getTabs() {
         $tabcode = '
             <div class="tabbed-content">
                 <ul class="tabs" id="yan-nav">
         ';
         $tabcode .= '
             <li class="menu" id="yan-nav-home">
-                <a href="index.php">Home</a>
+                <a href="index.php" onclick="return loadHome();">Home</a>
             </li>
             <li class="menu" id="yan-nav-browse">
-                <a href="index.php?categories=1">Categories</a>
+                <a href="index.php?categories=1" onclick="return loadCategories();">Categories</a>
             </li>
         ';
-        if ($this->getCurrentUser() != false) {
+        if ($this->getCurrentUser()) {
             $tabcode .= '
                 <li class="menu" id="yan-nav-about">
-                    <a href="index.php?userid=' . $this->getCurrentUser()->id . '">Profile</a>
+                    <a href="index.php?userid=' . $this->getCurrentUser()->id . '" onclick="return loadProfile(' . $this->getCurrentUser()->id . ');">Profile</a>
                 </li>
            ';
         }
@@ -541,6 +558,11 @@ Class website {
     }
 
     function showQuestions($id = "") {
+        echo $this->getQuestions($id);
+    }
+
+    function getQuestions($id = "") {
+        $questions = "";
         $link = '<a href="?answer=1">';
         if ($id == "") {
             $result = mysql_query("SELECT * FROM `vragen`;");
@@ -550,18 +572,24 @@ Class website {
         }
         if (mysql_num_rows($result) > 0) {
             while ($fields = mysql_fetch_assoc($result)) {
-                echo '<li><a href="?categoryid=' . $fields['taalid'] . '&questionid=' . $fields['id'] . '">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
+                $questions .= '<li><a href="?categoryid=' . $fields['taalid'] . '&questionid=' . $fields['id'] . '">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
             }
         } else {
-            echo "No questions yet!";
+            $questions .= "No questions yet!";
         }
 
-        $this->showNewQuestionButton($link);
+        $questions .= $this->getNewQuestionButton($link);
+        return $questions;
     }
 
     function showNewQuestionButton($link) {
+        echo $this->getNewQuestionButton($link);
+    }
+
+    function getNewQuestionButton($link) {
+        $button = "";
         if ($this->getCurrentUser()) {
-            echo '
+            $button = '
                 <p class="cta">
                     ' . $link . '
                         <span>
@@ -577,6 +605,7 @@ Class website {
                 </p>
             ';
         }
+        return $button;
     }
 
     function showHeader($_GET) {
@@ -782,17 +811,6 @@ Class website {
         mysql_query("INSERT INTO `votes` VALUES ('" . $answerid . "', '" . $userid . "', '" . $positive . "', '" . $negative . "');");
     }
 
-    function getCategories() {
-        $categories = "";
-        $result = mysql_query("SELECT * FROM `talen`;");
-        if (mysql_num_rows($result) > 0) {
-            while ($fields = mysql_fetch_assoc($result)) {
-                $categories .= '<option value="' . $fields['id'] . '">' . $fields['naam'] . '</option>';
-            }
-        }
-        return $categories;
-    }
-
     function showAnswerPoster($title = "", $categoryid = "", $questionid = "") {
         if ($this->getCurrentUser()) {
             echo '
@@ -810,7 +828,7 @@ Class website {
                             <td>
                                 Category :
                                 <select name="categoryid">
-                                    ' . $this->getCategories() . '
+                                    ' . $this->getCategoriesAsOption() . '
                                 </select>
                             </td>
                         </tr>
@@ -950,14 +968,14 @@ Class website {
         if ($errors == "") {
             return true;
         } else {
-            $this->showUserInfo($this->getCurrentUser()->id, $_POST, $errors);
+            $this->getUserInfo($this->getCurrentUser()->id, $_POST, $errors);
         }
     }
 
     function submitEdit($_POST) {
         if ($_POST['country'] != "") {
             if ($_POST['city'] == "") {
-                $this->showUserInfo($this->getCurrentUser()->id, $_POST, "");
+                $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
             }
         } else {
             if ($this->getCurrentUser() && $this->EncryptPassword($_POST['oldpassword']) == $this->getCurrentUser()->password) {
@@ -980,14 +998,14 @@ Class website {
                                 $this->saveImage($_FILES);
                                 $this->showQuestions();
                             } else {
-                                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');
+                                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');
                             }
                         } else {
-                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
+                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
                         }
                     } else {
                         if ($_POST['password'] != "" || $_POST['confirmpassword'] != "") {
-                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordEmpty") . '</font>');
+                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordEmpty") . '</font>');
                         } else {
                             if (!isset($_POST['msn'])) {
                                 $_POST['msn'] = "";
@@ -1005,7 +1023,7 @@ Class website {
                     }
                 }
             } else {
-                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PassChangeMatch") . '</font>');
+                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PassChangeMatch") . '</font>');
             }
         }
     }
@@ -1053,16 +1071,16 @@ Class website {
                                 imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $toWidth, $toHeight, $width, $height);
                                 imagejpeg($imageResized, $SaveDir . $FileName, 100);
                             } else {
-                                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('SaveError') . '</font>');
+                                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('SaveError') . '</font>');
                             }
                         } else {
-                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $FileError . '</font>');
+                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $FileError . '</font>');
                         }
                     } else {
-                        $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $FileType . '</font>');
+                        $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $FileType . '</font>');
                     }
                 } else {
-                    $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB</font>");
+                    $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB</font>");
                 }
             }
         }
@@ -1089,15 +1107,20 @@ Class website {
     }
 
     function showUserInfo($id, $_POST = "", $errors = "") {
+        echo $this->getUserInfo($id, $_POST, $errors);
+    }
+
+    function getUserInfo($id, $_POST = "", $errors = "") {
+        $userinfo = "";
         $user = $this->getUser($id);
         $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         if ($errors != "") {
-            echo $this->Translate("ErrorOccured");
-            echo "<br>";
-            echo $errors;
-            echo "<br>";
+            $userinfo .= $this->Translate("ErrorOccured");
+            $userinfo .= "<br>";
+            $userinfo .= $errors;
+            $userinfo .= "<br>";
         }
-        echo '
+        $userinfo .= '
             <b>' . $this->Translate("ProfileInfo") . ':</b>
             <table>
         ';
@@ -1121,7 +1144,7 @@ Class website {
                 if (!isset($_POST['year'])) {
                     $_POST['year'] = "";
                 }
-                echo '
+                $userinfo .= '
                     <form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="index.php" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">
                     <tr>
                         <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
@@ -1198,7 +1221,7 @@ Class website {
             $countries = $this->getCountries($country);
             $states = $this->getStates($country, $state);
             $cities = $this->getCities($state, $city);
-            echo '
+            $userinfo .= '
                 <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckProfileEdit(this);">
                 <tr>
                     <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
@@ -1258,7 +1281,7 @@ Class website {
                 </form>
             ';
         } else {
-            echo '
+            $userinfo .= '
                 <tr>
                     <td>Username:</td> <td>' . $user->username . '</td>
                 </tr>
@@ -1288,9 +1311,10 @@ Class website {
                 </tr>
             ';
         }
-        echo '
+        $userinfo .= '
             </table>
         ';
+        return $userinfo;
     }
 
     function showTools() {

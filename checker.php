@@ -21,5 +21,11 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
     echo $exists;
 } else if (isset($_GET['answerid']) && isset($_GET['userid']) && isset($_GET['vote'])) {
     $website->submitVote($_GET['answerid'], $_GET['userid'], $_GET['vote']);
+} else if (isset($_GET['profile'])) {
+    echo $website->getUserInfo($_GET['profile']);
+} else if (isset($_GET['homepage'])) {
+    echo $website->getQuestions();
+} else if (isset($_GET['categories'])) {
+    echo $website->getCategories();
 }
 ?>

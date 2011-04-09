@@ -24,114 +24,111 @@
         ?>
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
         <link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">
+        <script type="text/javascript" src="./scripts/navigation.js"></script>
+        <script type="text/javascript" src="./scripts/checkfields.js"></script>
+        <script type="text/javascript" src="./scripts/vote.js"></script>
         <?php
-        if ($_POST || (isset($_GET['userid']) && $website->getCurrentUser() && $website->getCurrentUser()->id == $_GET['userid'])) {    // ToDo: deze IF kan beter ;-)
-            echo '<script type="text/javascript" src="./scripts/checkfields.js"></script>';
-        }
-        if (isset($_GET['answer'])) {
-            echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
-        }
-        if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
-            echo '<script type="text/javascript" src="./scripts/vote.js"></script>';
-        }
+            if (isset($_GET['answer'])) {
+                echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
+            }
         ?>
     </head>
     <body class="c-std wide question-index new-header js">
-    <div id="yan">
-        <?php
-        $website->showBanner($_GET);
-        ?>
-        <div id="yan-wrap">
-            <ol id="yan-breadcrumbs">
-                <li>
-                    <a href="index.php">Home</a> &gt;
-                </li>
-                <?php
-                    if (isset($_GET['categoryid'])) {
-                        $website->showCurrentCategory($_GET['categoryid']);
+        <div id="yan">
+            <?php
+            $website->showBanner($_GET);
+            ?>
+            <div id="yan-wrap">
+                <ol id="yan-breadcrumbs">
+                    <li>
+                        <a href="index.php">Home</a> &gt;
+                    </li>
+                    <?php
+                        if (isset($_GET['categoryid'])) {
+                            $website->showCurrentCategory($_GET['categoryid']);
 
-                        if (isset($_GET['questionid'])) {
-                            echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
-                        }
-                    }
-                ?>
-            </ol>
-            <div id="yan-content">
-                <div id="yan-main">
-                    <div id="yan-question">
-                        <?php
-                        if ($_GET && !$_POST) {
-                            if (isset($_GET['categoryid'])) {
-                                if (isset($_GET['questionid'])) {
-                                    $website->showCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
-                                } else {
-                                    $website->showQuestions($_GET['categoryid']);
-                                }
-                            } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
-                                $website->showUserInfo($_GET['userid']);
-                            } else if (isset($_GET['categories'])) {
-                                $website->showCategories($_GET);
-                                $website->showNewQuestionButton('<a href="?answer=1">');
-                            } else {
-                                $website->showQuestions();
+                            if (isset($_GET['questionid'])) {
+                                echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
                             }
-                        } else {
-                            if ($_POST) {
-                                if (isset($_POST['btnProfileEdit'])) {
-                                    $website->submitEdit($_POST);
-                                } else if (isset($_POST['btnAdditionalInfo'])) {
-                                    $website->submitAdditional($_POST);
-                                } else if (isset($_POST['btnRegister'])) {
-                                    $website->showRegister($_POST);
-                                } else if (isset($_POST['Answer'])) {
-                                    $website->SubmitPost($_POST);
-                                    if (isset($_POST['questionid'])) {
-                                        $website->showCurrentQuestion($_POST['categoryid'], $_POST['questionid']);
+                        }
+                    ?>
+                </ol>
+                <div id="yan-content">
+                    <div id="yan-main">
+                        <div id="yan-question">
+                            <?php
+                            if ($_GET && !$_POST) {
+                                if (isset($_GET['categoryid'])) {
+                                    if (isset($_GET['questionid'])) {
+                                        $website->showCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
                                     } else {
-                                        $website->showQuestions();
+                                        $website->showQuestions($_GET['categoryid']);
                                     }
-                                } else if (isset($_POST['answerid']) && isset($_POST['userid'])) {
-                                    $website->submitVote($_POST['answerid'], $_POST['userid'], $_POST['submit']);
+                                } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
+                                    $website->showUserInfo($_GET['userid']);
+                                } else if (isset($_GET['categories'])) {
+                                    $website->showCategories($_GET);
+                                    $website->showNewQuestionButton('<a href="?answer=1">');
+                                } else {
+                                    $website->showQuestions();
                                 }
                             } else {
-                                $website->showQuestions();
+                                if ($_POST) {
+                                    if (isset($_POST['btnProfileEdit'])) {
+                                        $website->submitEdit($_POST);
+                                    } else if (isset($_POST['btnAdditionalInfo'])) {
+                                        $website->submitAdditional($_POST);
+                                    } else if (isset($_POST['btnRegister'])) {
+                                        $website->showRegister($_POST);
+                                    } else if (isset($_POST['Answer'])) {
+                                        $website->SubmitPost($_POST);
+                                        if (isset($_POST['questionid'])) {
+                                            $website->showCurrentQuestion($_POST['categoryid'], $_POST['questionid']);
+                                        } else {
+                                            $website->showQuestions();
+                                        }
+                                    } else if (isset($_POST['answerid']) && isset($_POST['userid'])) {
+                                        $website->submitVote($_POST['answerid'], $_POST['userid'], $_POST['submit']);
+                                    }
+                                } else {
+                                    $website->showQuestions();
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
                     </div>
-                </div>
-                <?php
-                        if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
-                            $website->showTools();
-                            if (isset($_GET['answer'])) {
-                                $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
+                    <?php
+                            if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                                $website->showTools();
+                                if (isset($_GET['answer'])) {
+                                    $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
+                                }
+                                $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
+                            } else if (isset($_GET['categoryid']) && isset($_GET['answer'])) {
+                                $website->showAnswerPoster("", $_GET['categoryid'], "");
+                            } else if (isset($_GET['answer'])) {
+                                if (!isset($_GET['question'])) {
+                                    $_GET['question'] = "";
+                                }
+                                $website->showAnswerPoster($_GET['question']);
                             }
-                            $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
-                        } else if (isset($_GET['categoryid']) && isset($_GET['answer'])) {
-                            $website->showAnswerPoster("", $_GET['categoryid'], "");
-                        } else if (isset($_GET['answer'])) {
-                            if (!isset($_GET['question'])) {
-                                $_GET['question'] = "";
-                            }
-                            $website->showAnswerPoster($_GET['question']);
-                        }
-                ?>
+                    ?>
+                        </div>
+                        <div id="yan-related">
+                            <div id="yan-categories" class="mod">
+                                <h2 class="hd">Categories</h2>
+                                <ul class="bd">
+                                    <li class="expanded">
+                                        <ul>
+                                    <?php
+                                    $website->showCategories($_GET);
+                                    ?>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
-                    <div id="yan-related">
-                        <div id="yan-categories" class="mod">
-                            <h2 class="hd">Categories</h2>
-                            <ul class="bd">
-                                <li class="expanded">
-                                    <ul>
-                                <?php
-                                $website->showCategories($_GET);
-                                ?>
-                            </ul>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
-    </div>
-</body>
+    </body>
 </html>
