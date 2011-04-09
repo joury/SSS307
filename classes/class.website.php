@@ -708,7 +708,7 @@ Class website {
                     <div class="answer">
                         <div class="profile vcard">
                             <a href="index.php?userid=' . $user->id . '" class="avatar">
-                                <img class="photo" src="' . $this->GetImage($user->id) . '." width="50">
+                                <img class="photo" src="' . $this->GetImage($user->id) . '" width="50">
                             </a>
                             <span class="user">
                                 <a class="url" href="index.php?userid=' . $user->id . '">
