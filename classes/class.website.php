@@ -731,7 +731,7 @@ Class website {
                                         <td><center><font color="red"><b><div id="negative_' . $fields['id'] . '">' . $negative . '</div></b></font></center></td>
                                     </tr>
                 ';
-                if ($this->getCurrentUser() && !$this->hasVotedOnAnswer($fields['id'])) {
+                if ($this->getCurrentUser() && $this->getCurrentUser()->id != $user->id && !$this->hasVotedOnAnswer($fields['id'])) {
                     $answers .= '
                                     <tr id="votebuttons_' . $fields['id'] . '">
                                         <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return Vote(this, this.vote.value);">
