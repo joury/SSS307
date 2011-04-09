@@ -999,7 +999,7 @@ Class website {
                                     `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
                                         WHERE `id` = '" . $this->getCurrentUser()->id . "';";
                             mysql_query($query);
-                            $this->saveImage($_FILES);
+                            $this->saveImage($_FILES, $_POST);
                             $this->showQuestions();
                         }
                     }
@@ -1010,13 +1010,14 @@ Class website {
         }
     }
 
-    function saveImage($_FILES) {
+    function saveImage($_FILES, $_POST = "") {
         if ($this->getCurrentUser() && $this->getCurrentUser()->id != "") {
             if ($_FILES["imageFile"]["name"] != "") {
                 require $this->MainConfigFile;
                 $FileType = $_FILES["imageFile"]["type"];
                 $FileName = $_FILES["imageFile"]["name"];
                 $FileSize = round($_FILES["imageFile"]["size"] / 1024 / 1024, 2);
+                $FileError = $_FILES["imageFile"]["error"];
                 if (!is_dir($SaveDir)) {
                     mkdir($SaveDir);
                 }
@@ -1025,9 +1026,7 @@ Class website {
                     echo $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB";
                 } else {
                     if (in_array($FileType, $AllowedFileTypes)) {
-                        if ($_FILES["imageFile"]["error"] > 0) {
-                            echo $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"] . "<br />";
-                        } else {
+                        if (!($FileError > 0)) {
                             if (file_exists($SaveDir . $FileName)) {
                                 unlink($SaveDir . $FileName);
                             }
@@ -1056,11 +1055,13 @@ Class website {
                                 imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $toWidth, $toHeight, $width, $height);
                                 imagejpeg($imageResized, $SaveDir . $FileName, 100);
                             } else {
-                                echo $this->Translate('SaveError');
+                                $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('SaveError') . '</font>');
                             }
+                        } else {
+                            $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $FileError . '</font>');
                         }
                     } else {
-                        echo $this->Translate('FileType') . $FileType;
+                        $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $FileType . '</font>');
                     }
                 }
             }
