@@ -36,16 +36,16 @@ Class website {
         echo '
                 <form name="Register" id="RegistrationForm" onSubmit="return CheckFields(this);" action="index.php" method="POST">
                 <tr>
-                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onChange="return CheckUsername(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="usernameImage"></img></td>
+                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onKeyup="return CheckUsername(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="usernameImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
+                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onChange="return CheckEmail(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
+                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onKeyup="return CheckEmail(this, false, true);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
                 </tr>
                 <tr>
                     <td>Job:</td> <td><input type="hidden" name="job" value="0"><input type="checkbox" name="job" value="1"> Yes, i have a job</td>
@@ -180,7 +180,7 @@ Class website {
         if ($_POST['email'] == "") {
             $good .= "Email " . $this->Translate("FieldEmpty");
         }
-        if (!preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email'])) {
+        if (!preg_match('/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/', $_POST['email'])) {
             $good .= $this->Translate("EmailInvalid");
         }
         if ($this->AccountExists(stripslashes(mysql_real_escape_string($_POST['username'])), stripslashes(mysql_real_escape_string($_POST['email'])))) {
@@ -1022,9 +1022,7 @@ Class website {
                     mkdir($SaveDir);
                 }
 
-                if ($FileSize > $MaxFileSize) {
-                    echo $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB";
-                } else {
+                if ($FileSize <= $MaxFileSize) {
                     if (in_array($FileType, $AllowedFileTypes)) {
                         if (!($FileError > 0)) {
                             if (file_exists($SaveDir . $FileName)) {
@@ -1063,6 +1061,8 @@ Class website {
                     } else {
                         $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $FileType . '</font>');
                     }
+                } else {
+                    $this->showUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB</font>");
                 }
             }
         }
@@ -1093,6 +1093,7 @@ Class website {
         $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         if ($errors != "") {
             echo $this->Translate("ErrorOccured");
+            echo "<br>";
             echo $errors;
             echo "<br>";
         }
@@ -1123,13 +1124,13 @@ Class website {
                 echo '
                     <form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="index.php" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">
                     <tr>
-                        <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onChange="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
+                        <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
                     </tr>
                     <tr>
                         <td>Insertion:</td> <td><input type="text" value="' . $_POST['insertion'] . '" name="insertion"></td>
                     </tr>
                     <tr>
-                        <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onChange="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
+                        <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onKeyup="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
                     </tr>
                     <tr>
                         <td>Gender:</td>
@@ -1203,13 +1204,13 @@ Class website {
                     <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" value="' . $_POST['password'] . '" id="password" name="password" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
+                    <td>Password:</td> <td><input type="password" value="' . $_POST['password'] . '" id="password" name="password" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" value="' . $_POST['confirmpassword'] . '" id="confirmpassword" name="confirmpassword" onChange="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Confirm password:</td> <td><input type="password" value="' . $_POST['confirmpassword'] . '" id="confirmpassword" name="confirmpassword" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" id="email" name="email" value="' . $user->email . '" onChange="return CheckEmail(this, false, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
+                    <td>Email:</td> <td><input type="text" id="email" name="email" value="' . $user->email . '" onKeyup="return CheckEmail(this, false, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
                 </tr>
                 <tr>
                     <td>Country:</td>

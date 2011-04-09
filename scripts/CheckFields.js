@@ -41,19 +41,15 @@ function AjaxRequest(field) {
 }
 
 function CheckUsername(username, submit) {
-    if (username.value == "") {
+    if (username.value == "" || AjaxRequest(username)) {
         if (submit) {
-            alert("Username field cannot be empty!");
+            if (username.value == "") {
+                alert("Username field cannot be empty!");
+            } else {
+                alert("Username is already in use.");
+            }
         }
         document.getElementById('usernameImage').src = "images/incorrect.gif";
-        username.focus();
-        return false;
-    } else if (AjaxRequest(username)) {
-        if (submit) {
-            alert("Username is already in use.");
-        }
-        document.getElementById('usernameImage').src = "images/incorrect.gif";
-        username.focus();
         return false;
     }
     document.getElementById('usernameImage').src = "images/correct.gif";
@@ -61,30 +57,19 @@ function CheckUsername(username, submit) {
 }
 
 function CheckEmail(email, submit, newone) {
-    if (email.value == "") {
+    var filter = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+    if (email.value == "" || !filter.test(email.value) || (newone && AjaxRequest(email))) {
         if (submit) {
-            alert("Emailaddress field cannot be empty!");
-        }
-        document.getElementById('emailImage').src = "images/incorrect.gif";
-        email.focus();
-        return false;
-    } else if (email.value != "") {
-        var filter = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/;
-        if (!filter.test(email.value)) {
-            if (submit) {
-                alert("Please provide a valid email address");
-            }
-            document.getElementById('emailImage').src = "images/incorrect.gif";
-            email.focus();
-            return false;
-        } else if (newone && AjaxRequest(email)) {
-            if (submit) {
+            if (email.value == "") {
+                alert("Emailaddress field cannot be empty!");
+            } else if (!filter.test(email.value)) {
+                alert("Please provide a valid email address");                
+            } else {
                 alert("There\'s already an account registered with that emailaddress.");
             }
-            document.getElementById('emailImage').src = "images/incorrect.gif";
-            email.focus();
-            return false;
         }
+        document.getElementById('emailImage').src = "images/incorrect.gif";
+        return false;
     }
     document.getElementById('emailImage').src = "images/correct.gif";
     return true;
@@ -96,7 +81,6 @@ function CheckFirstname(firstname, submit) {
             alert("Firstname field cannot be empty!");
         }
         document.getElementById('firstnameImage').src = "images/incorrect.gif";
-        firstname.focus();
         return false;
     }
     document.getElementById('firstnameImage').src = "images/correct.gif";
@@ -109,7 +93,6 @@ function CheckLastname(lastname, submit) {
             alert("Lastname field cannot be empty!");
         }
         document.getElementById('lastnameImage').src = "images/incorrect.gif";
-        lastname.focus();
         return false;
     }
     document.getElementById('lastnameImage').src = "images/correct.gif";
@@ -123,7 +106,6 @@ function CheckPass(form, submit) {
         if (submit) {
             alert("Password field cannot be empty!");
         }
-        form.password.focus();
         password = false;
         confirm = false;
     } else {
@@ -132,20 +114,17 @@ function CheckPass(form, submit) {
             if (submit) {
                 alert("Password doesn't match the rules.");
             }
-            form.password.focus();
             password = false;
             confirm = false;
         } else if (form.confirmpassword.value == "") {
             if (submit) {
                 alert("Confirm password field can't be empty.");
             }
-            form.confirmpassword.focus();
             confirm = false;
         } else if (form.password.value != form.confirmpassword.value) {
             if (submit) {
                 alert("Confirm password field doesn't match the password field.");
             }
-            form.confirmpassword.focus();
             confirm = false;
         }
         
@@ -190,13 +169,4 @@ function CheckBirthdate(form, currentyear) {
         document.getElementById('birthdateImage').src = "images/incorrect.gif";
     }
     return correct;
-}
-
-function IsEmpty(field) {
-    if (field.value == "") {
-        alert(field.id + " is empty!");
-        field.focus();
-        return true;
-    }
-    return false;
 }
