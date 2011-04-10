@@ -67,8 +67,8 @@
                                 } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
                                     $website->showUserInfo($_GET['userid']);
                                 } else if (isset($_GET['categories'])) {
-                                    $website->showCategories($_GET);
-                                    $website->showNewQuestionButton('<a href="?answer=1">');
+                                    $website->showCategories();
+                                    $website->showNewQuestionButton();
                                 } else {
                                     $website->showQuestions();
                                 }

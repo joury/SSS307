@@ -4,6 +4,12 @@ function loadHome() {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
+    if (document.getElementById("yan-answers")) {
+        document.getElementById("yan-answers").innerHTML = "";
+    }
+    if (document.getElementById("answerposter")) {
+        document.getElementById("yan_content").removeChild(document.getElementById("answerposter"));
+    }
     var content = ContentRequest("?homepage=1");
     if (content) {
         document.getElementById("yan-question").innerHTML = content;
@@ -18,6 +24,12 @@ function loadProfile(id) {
     document.getElementById("yan-nav-browse").className="menu";
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="current menu";
+    }
+    if (document.getElementById("yan-answers")) {
+        document.getElementById("yan-answers").innerHTML = "";
+    }
+    if (document.getElementById("answerposter")) {
+        document.getElementById("yan_content").removeChild(document.getElementById("answerposter"));
     }
     var content = ContentRequest("?profile="+id);
     if (content) {
@@ -34,6 +46,12 @@ function loadCategories() {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
+    if (document.getElementById("yan-answers")) {
+        document.getElementById("yan-answers").innerHTML = "";
+    }
+    if (document.getElementById("answerposter")) {
+        document.getElementById("yan_content").removeChild(document.getElementById("answerposter"));
+    }
     var content = ContentRequest("?categories=1");
     if (content) {
         document.getElementById("yan-question").innerHTML = content;
@@ -41,6 +59,29 @@ function loadCategories() {
     } else {
         return true;
     }
+}
+
+function loadAnswerPoster(categoryid, questionid) {
+    if (!document.getElementById("answerposter")) {
+        if (categoryid == null || questionid == null) {
+            if (categoryid == null && questionid == null) {
+                var content = ContentRequest("?answer=1");
+                if (content) {
+                    document.getElementById("yan-content").innerHTML += content;
+                    return false;
+                }
+            }
+        } else {
+            var content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid);
+            if (content) {
+                document.getElementById("yan-content").insertbefore(content, document.getElementById("yan-question-tools"));
+                return false;
+            }
+        }
+    } else {
+        return false;
+    }
+    return true;
 }
 
 function getXMLHttp() {

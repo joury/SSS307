@@ -27,5 +27,12 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
     echo $website->getQuestions();
 } else if (isset($_GET['categories'])) {
     echo $website->getCategories();
+    echo $website->getNewQuestionButton();
+} else if (isset($_GET['categoryid']) || isset($_GET['answer'])) {
+    if (isset($_GET['questionid'])) {
+        echo $website->getAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
+    } else if (isset($_GET['answer'])) {
+        echo $website->getAnswerPoster();
+    }
 }
 ?>

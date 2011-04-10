@@ -442,11 +442,11 @@ Class website {
             $fields = mysql_fetch_assoc($result);
             echo '
                 <div id="profile" class="profile vcard">
-                    <a href="index.php?userid=' . $fields['gebruikerid'] . '" class="avatar">
+                    <a href="index.php?userid=' . $fields['gebruikerid'] . '" onclick="return loadProfile(' . $fields['gebruikerid'] . ');" class="avatar">
                         <img class="photo" src="' . $this->GetImage($fields['gebruikerid']) . '" width="50">
                     </a>
                     <span class="user">
-                        <a class="url" href="index.php?userid=' . $fields['gebruikerid'] . '">
+                        <a class="url" href="index.php?userid=' . $fields['gebruikerid'] . '" onclick="return loadProfile(' . $fields['gebruikerid'] . ');">
                             <span class="fn" title="">
                                 ' . $this->getUser($fields['gebruikerid'])->username . '
                             </span>
@@ -470,7 +470,7 @@ Class website {
             if ($this->getCurrentUser()) {
                 echo '
                     <p class="cta">
-                        <a href="?categoryid=' . $categoryid . '&questionid=' . $questionid . '&answer=1">
+                        <a href="?categoryid=' . $categoryid . '&questionid=' . $questionid . '&answer=1" onclick="return loadAnswerPoster(' . $categoryid . ', ' . $questionid . ');">
                             <span>
                                 <span>
                                     <span>
@@ -558,12 +558,10 @@ Class website {
 
     function getQuestions($id = "") {
         $questions = "";
-        $link = '<a href="?answer=1">';
         if ($id == "") {
             $result = mysql_query("SELECT * FROM `vragen`;");
         } else {
             $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $id . "';");
-            $link = '<a href="?categoryid=' . $id . '&answer=1">';
         }
         if (mysql_num_rows($result) > 0) {
             while ($fields = mysql_fetch_assoc($result)) {
@@ -573,15 +571,21 @@ Class website {
             $questions .= "No questions yet!";
         }
 
-        $questions .= $this->getNewQuestionButton($link);
+        $questions .= $this->getNewQuestionButton($id);
         return $questions;
     }
 
-    function showNewQuestionButton($link) {
-        echo $this->getNewQuestionButton($link);
+    function showNewQuestionButton($id = "") {
+        echo $this->getNewQuestionButton($id);
     }
 
-    function getNewQuestionButton($link) {
+    function getNewQuestionButton($id = "") {
+        $link = "";
+        if ($id == "") {
+            $link = '<a href="?answer=1" onclick="return loadAnswerPoster(null, null);">';
+        } else {
+            $link = '<a href="?categoryid=' . $id . '&answer=1" onclick="return loadAnswerPoster(' . $id . ', null);">';
+        }
         $button = "";
         if ($this->getCurrentUser()) {
             $button = '
@@ -807,8 +811,14 @@ Class website {
     }
 
     function showAnswerPoster($title = "", $categoryid = "", $questionid = "") {
+        echo $this->getAnswerPoster($title, $categoryid, $questionid);
+    }
+
+    function getAnswerPoster($title = "", $categoryid = "", $questionid = "") {
+        $answerposter = "";
         if ($this->getCurrentUser()) {
-            echo '
+            $answerposter .= '
+                <div id="answerposter">
                 <div id="yan-main">
                     <div id="yan-question">
                         <div class="qa-container">
@@ -818,7 +828,7 @@ Class website {
             ';
             if ($categoryid == "" || $questionid == "") {
                 if ($categoryid == "") {
-                    echo '
+                    $answerposter .= '
                         <tr>
                             <td>
                                 Category :
@@ -829,7 +839,7 @@ Class website {
                         </tr>
                     ';
                 }
-                echo '
+                $answerposter .= '
                     <tr>
                         <td>
                             Title :
@@ -838,7 +848,7 @@ Class website {
                     </tr>
                 ';
             }
-            echo '
+            $answerposter .= '
                 <tr>
                     <td>
                         <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
@@ -856,16 +866,16 @@ Class website {
                             <input type="hidden" name="Answer" value="1" />
             ';
             if ($categoryid != "") {
-                echo '
+                $answerposter .= '
                     <input type="hidden" name="categoryid" value="' . $categoryid . '">
                 ';
             }
             if ($questionid != "") {
-                echo '
+                $answerposter .= '
                     <input type="hidden" name="questionid" value="' . $questionid . '" />
                 ';
             }
-            echo '
+            $answerposter .= '
                                                 </center>
                                             </td>
                                         </tr>
@@ -881,11 +891,12 @@ Class website {
                             </center>
                         </div>
                     </div>
-                </div>
+                </div></div>
             ';
         } else {
-            echo '<script type="text/javascript">window.location = "index.php";</script>';
+            $answerposter .= '<script type="text/javascript">window.location = "index.php";</script>';
         }
+        return $answerposter;
     }
 
     function submitPost($_POST) {
