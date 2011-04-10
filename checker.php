@@ -28,11 +28,23 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
 } else if (isset($_GET['categories'])) {
     echo $website->getCategories();
     echo $website->getNewQuestionButton();
-} else if (isset($_GET['categoryid']) || isset($_GET['answer'])) {
-    if (isset($_GET['questionid'])) {
+} else if (isset($_GET['answer'])) {
+    if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
         echo $website->getAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
-    } else if (isset($_GET['answer'])) {
+    } else if (isset($_GET['categoryid'])) {
+        echo $website->getAnswerPoster("", $_GET['categoryid']);
+    } else {
         echo $website->getAnswerPoster();
+    }
+} else if (isset($_GET['categoryid'])) {
+    if (isset($_GET['questionid'])) {
+        if (isset($_GET['answers'])) {
+            echo $website->getAnswerDiv($_GET['categoryid'], $_GET['questionid']);
+        } else {
+            echo $website->getQuestion($_GET['categoryid'], $_GET['questionid']);
+        }
+    } else {
+        echo $website->getQuestions($_GET['categoryid']);
     }
 }
 ?>

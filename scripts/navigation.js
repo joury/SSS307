@@ -1,14 +1,20 @@
+function clear() {
+    if (document.getElementById("yan-answers")) {
+        document.getElementById("yan-answers").innerHTML = "";
+    }
+    if (document.getElementById("answerposter")) {
+        document.getElementById("yan-content").removeChild(document.getElementById("answerposter"));
+    }
+    if (document.getElementById("yan-answers")) {
+        document.getElementById("yan-content").removeChild(document.getElementById("yan-answers"));
+    }
+}
+
 function loadHome() {
     document.getElementById("yan-nav-home").className="current menu";
     document.getElementById("yan-nav-browse").className="menu";
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
-    }
-    if (document.getElementById("yan-answers")) {
-        document.getElementById("yan-answers").innerHTML = "";
-    }
-    if (document.getElementById("answerposter")) {
-        document.getElementById("yan_content").removeChild(document.getElementById("answerposter"));
     }
     var content = ContentRequest("?homepage=1");
     if (content) {
@@ -25,12 +31,7 @@ function loadProfile(id) {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="current menu";
     }
-    if (document.getElementById("yan-answers")) {
-        document.getElementById("yan-answers").innerHTML = "";
-    }
-    if (document.getElementById("answerposter")) {
-        document.getElementById("yan_content").removeChild(document.getElementById("answerposter"));
-    }
+    clear();
     var content = ContentRequest("?profile="+id);
     if (content) {
         document.getElementById("yan-question").innerHTML = content;
@@ -46,12 +47,7 @@ function loadCategories() {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
-    if (document.getElementById("yan-answers")) {
-        document.getElementById("yan-answers").innerHTML = "";
-    }
-    if (document.getElementById("answerposter")) {
-        document.getElementById("yan_content").removeChild(document.getElementById("answerposter"));
-    }
+    clear();
     var content = ContentRequest("?categories=1");
     if (content) {
         document.getElementById("yan-question").innerHTML = content;
@@ -62,21 +58,68 @@ function loadCategories() {
 }
 
 function loadAnswerPoster(categoryid, questionid) {
+    var content = "";
     if (!document.getElementById("answerposter")) {
         if (categoryid == null || questionid == null) {
             if (categoryid == null && questionid == null) {
-                var content = ContentRequest("?answer=1");
+                content = ContentRequest("?answer=1");
+                if (content) {
+                    document.getElementById("yan-content").innerHTML += content;
+                    return false;
+                }
+            } else if (categoryid != null) {
+                content = ContentRequest("?categoryid="+categoryid+"&answer=1");
                 if (content) {
                     document.getElementById("yan-content").innerHTML += content;
                     return false;
                 }
             }
         } else {
-            var content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid);
+            content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid+"&answer=1");
             if (content) {
                 document.getElementById("yan-content").insertbefore(content, document.getElementById("yan-question-tools"));
                 return false;
             }
+        }
+    } else {
+        return false;
+    }
+    return true;
+}
+
+function loadQuestions(categoryid) {
+    var content = "";
+    content = ContentRequest("?categoryid="+categoryid);
+    if (content) {
+        clear();
+        document.getElementById("yan-question").innerHTML = content;
+        return false;
+    }
+    return true;
+}
+
+function loadQuestion(categoryid, questionid) {
+    var content = "";
+    if (!document.getElementById("answerdiv")) {
+        content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid);
+        if (content) {
+            clear();
+            document.getElementById("yan-question").innerHTML = content;
+            return loadAnswers(categoryid, questionid);
+        }
+    } else {
+        return false;
+    }
+    return true;
+}
+
+function loadAnswers(categoryid, questionid) {
+    var content = "";
+    if (!document.getElementById("yan-anwers")) {
+        content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid+"&answers=1");
+        if (content) {
+            document.getElementById("yan-content").innerHTML += content;
+            return false;
         }
     } else {
         return false;

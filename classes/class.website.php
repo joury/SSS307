@@ -277,11 +277,11 @@ Class website {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($_GET && isset($_GET['categoryid']) && $fields['id'] == $_GET['categoryid']) {
                     $categories .= '<li class="current">';
-                    $categories .= '<a class="current" href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
+                    $categories .= '<a class="current" href="?categoryid=' . $fields['id'] . '" onclick="return loadQuestions(' . $fields['id'] . ');">' . $fields['naam'] . '</a>';
                     $categories .= '</li>';
                 } else {
                     $categories .= '<li>';
-                    $categories .= '<a href="?categoryid=' . $fields['id'] . '">' . $fields['naam'] . '</a>';
+                    $categories .= '<a href="?categoryid=' . $fields['id'] . '" onclick="return loadQuestions(' . $fields['id'] . ');">' . $fields['naam'] . '</a>';
                     $categories .= "</li>";
                 }
             }
@@ -416,19 +416,19 @@ Class website {
         return $tabcode;
     }
 
-    function showCurrentCategory($id) {
-        $categoryname = $this->getCategoryName($id);
+    function showCurrentCategory($categoryid) {
+        $categoryname = $this->getCategoryName($categoryid);
         if ($categoryname) {
-            echo "
+            echo '
                 <li>
-                    <a href=?categoryid=" . $id . ">" . $categoryname . "</a> &gt
-                </li>"
-            ;
+                    <a href="?categoryid=' . $categoryid . '" onclick="return loadQuestions(' . $categoryid . ');">' . $categoryname . '</a> &gt
+                </li>
+            ';
         }
     }
 
-    function getCategoryName($id) {
-        $result = mysql_query("SELECT `naam` FROM `talen` WHERE `id` = '" . $id . "';");
+    function getCategoryName($categoryid) {
+        $result = mysql_query("SELECT `naam` FROM `talen` WHERE `id` = '" . $categoryid . "';");
         if (mysql_num_rows($result) == 1) {
             return mysql_result($result, 0);
         } else {
@@ -436,11 +436,16 @@ Class website {
         }
     }
 
-    function showCurrentQuestion($categoryid, $questionid) {
+    function showQuestion($categoryid, $questionid) {
+        echo $this->getQuestion($categoryid, $questionid);
+    }
+
+    function getQuestion($categoryid, $questionid) {
+        $question = "";
         $result = mysql_query("SELECT * FROM `vragen` WHERE `id` = '" . $questionid . "' AND `taalid` = '" . $categoryid . "';");
         if (mysql_num_rows($result) == 1) {
             $fields = mysql_fetch_assoc($result);
-            echo '
+            $question .= '
                 <div id="profile" class="profile vcard">
                     <a href="index.php?userid=' . $fields['gebruikerid'] . '" onclick="return loadProfile(' . $fields['gebruikerid'] . ');" class="avatar">
                         <img class="photo" src="' . $this->GetImage($fields['gebruikerid']) . '" width="50">
@@ -468,7 +473,7 @@ Class website {
                     </ul>
             ';
             if ($this->getCurrentUser()) {
-                echo '
+                $question .= '
                     <p class="cta">
                         <a href="?categoryid=' . $categoryid . '&questionid=' . $questionid . '&answer=1" onclick="return loadAnswerPoster(' . $categoryid . ', ' . $questionid . ');">
                             <span>
@@ -484,10 +489,11 @@ Class website {
                     </p>
                 ';
             }
-            echo '
+            $question .= '
                 </div>
             ';
         }
+        return $question;
     }
 
     public function StringTimeDifference($date1) {
@@ -552,26 +558,26 @@ Class website {
         }
     }
 
-    function showQuestions($id = "") {
-        echo $this->getQuestions($id);
+    function showQuestions($categoryid = "") {
+        echo $this->getQuestions($categoryid);
     }
 
-    function getQuestions($id = "") {
+    function getQuestions($categoryid = "") {
         $questions = "";
-        if ($id == "") {
+        if ($categoryid == "") {
             $result = mysql_query("SELECT * FROM `vragen`;");
         } else {
-            $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $id . "';");
+            $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "';");
         }
         if (mysql_num_rows($result) > 0) {
             while ($fields = mysql_fetch_assoc($result)) {
-                $questions .= '<li><a href="?categoryid=' . $fields['taalid'] . '&questionid=' . $fields['id'] . '">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
+                $questions .= '<li><a href="?categoryid=' . $fields['taalid'] . '&questionid=' . $fields['id'] . '" onclick="return loadQuestion(' . $fields['taalid'] . ', ' . $fields['id'] . ');">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
             }
         } else {
             $questions .= "No questions yet!";
         }
 
-        $questions .= $this->getNewQuestionButton($id);
+        $questions .= $this->getNewQuestionButton($categoryid);
         return $questions;
     }
 
@@ -683,21 +689,25 @@ Class website {
     }
 
     function showAnswers($categoryid, $questionid) {
+        echo $this->getAnswerDiv($categoryid, $questionid);
+    }
+
+    function getAnswerDiv($categoryid, $questionid) {
         echo '
             <div id="yan-answers" class="mod">
-            <div class="hd">
-                <h3>
-                    <strong>Answers</strong> (' . $this->getAmountOfAnswers($categoryid, $questionid) . ')
-                </h3>
+                <div class="hd">
+                    <h3>
+                        <strong>Answers</strong> (' . $this->getAmountOfAnswers($categoryid, $questionid) . ')
+                    </h3>
+                </div>
+                <div class="bd">
+                    <ul class="shown">
+                        <li>
+                            ' . $this->getAnswers($categoryid, $questionid) . '
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="bd">
-                <ul class="shown">
-                    <li>
-                        ' . $this->getAnswers($categoryid, $questionid) . '
-                    </li>
-                </ul>
-            </div>
-        </div>
         ';
     }
 
@@ -719,7 +729,7 @@ Class website {
 
     function getAnswers($categoryid, $questionid) {
         $result = mysql_query("SELECT * FROM `antwoorden` a WHERE a.taalid = '" . $categoryid . "' AND a.vraagid = '" . $questionid . "' ORDER BY (SELECT SUM(v.positive) - SUM(v.negative) FROM `votes` v WHERE v.antwoordid = a.id) DESC;");
-        $answers = "";
+        $answers = '';
         if (mysql_num_rows($result) > 0) {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {

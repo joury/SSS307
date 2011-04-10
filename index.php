@@ -27,11 +27,7 @@
         <script type="text/javascript" src="./scripts/navigation.js"></script>
         <script type="text/javascript" src="./scripts/checkfields.js"></script>
         <script type="text/javascript" src="./scripts/vote.js"></script>
-        <?php
-            if (isset($_GET['answer'])) {
-                echo '<script type="text/javascript" src="./scripts/bbcode.js"></script>';
-            }
-        ?>
+        <script type="text/javascript" src="./scripts/bbcode.js"></script>
     </head>
     <body class="c-std wide question-index new-header js">
         <div id="yan">
@@ -60,7 +56,7 @@
                             if ($_GET && !$_POST) {
                                 if (isset($_GET['categoryid'])) {
                                     if (isset($_GET['questionid'])) {
-                                        $website->showCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
+                                        $website->showQuestion($_GET['categoryid'], $_GET['questionid']);
                                     } else {
                                         $website->showQuestions($_GET['categoryid']);
                                     }
@@ -83,7 +79,7 @@
                                     } else if (isset($_POST['Answer'])) {
                                         $website->SubmitPost($_POST);
                                         if (isset($_POST['questionid'])) {
-                                            $website->showCurrentQuestion($_POST['categoryid'], $_POST['questionid']);
+                                            $website->showQuestion($_POST['categoryid'], $_POST['questionid']);
                                         } else {
                                             $website->showQuestions();
                                         }
@@ -103,7 +99,7 @@
                                 if (isset($_GET['answer'])) {
                                     $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
                                 }
-                                $website->showAnswers($_REQUEST['categoryid'], $_REQUEST['questionid']);
+                                $website->showAnswers($_GET['categoryid'], $_GET['questionid']);
                             } else if (isset($_GET['categoryid']) && isset($_GET['answer'])) {
                                 $website->showAnswerPoster("", $_GET['categoryid'], "");
                             } else if (isset($_GET['answer'])) {
