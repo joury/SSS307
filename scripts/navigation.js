@@ -4,8 +4,13 @@ function loadHome() {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
-    document.getElementById("yan-question").innerHTML = ContentRequest("?homepage=1");
-    return false;
+    var content = ContentRequest("?homepage=1");
+    if (content) {
+        document.getElementById("yan-question").innerHTML = content;
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function loadProfile(id) {
@@ -14,8 +19,13 @@ function loadProfile(id) {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="current menu";
     }
-    document.getElementById("yan-question").innerHTML = ContentRequest("?profile="+id);
-    return false;
+    var content = ContentRequest("?profile="+id);
+    if (content) {
+        document.getElementById("yan-question").innerHTML = content;
+        return false;
+    } else {
+        return true;
+    }
 }
 
 function loadCategories() {
@@ -24,12 +34,16 @@ function loadCategories() {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
-    document.getElementById("yan-question").innerHTML = ContentRequest("?categories=1");
-    return false;
+    var content = ContentRequest("?categories=1");
+    if (content) {
+        document.getElementById("yan-question").innerHTML = content;
+        return false;
+    } else {
+        return true;
+    }
 }
 
-function ContentRequest(GET) {
-    var url = "checker.php" + GET;
+function getXMLHttp() {
     var xmlHttp;
     try {
         xmlHttp = new XMLHttpRequest();
@@ -40,11 +54,21 @@ function ContentRequest(GET) {
             try {
                 xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
             } catch (e) {
-                return true;
+                return false;
             }
         }
     }
-    xmlHttp.open("GET", url, false);
-    xmlHttp.send(null);
-    return xmlHttp.responseText;
+    return xmlHttp;
+}
+
+function ContentRequest(GET) {
+    var url = "checker.php" + GET;
+    var xmlHttp = getXMLHttp();
+    if (xmlHttp) {
+        xmlHttp.open("GET", url, false);
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+    } else {
+        return false;
+    }
 }

@@ -13,18 +13,13 @@ Class website {
         $this->getCurrentUser();
     }
 
-    function fillRegisterPost($_POST) {
+    function showRegister($_POST, $error = "") {
         if (!isset($_POST['confirmpassword'])) {
             $_POST['confirmpassword'] = $_POST['password'];
         }
         if (!isset($_POST['email'])) {
             $_POST['email'] = "";
         }
-        return $_POST;
-    }
-
-    function showRegister($_POST, $error = "") {
-        $_POST = $this->fillRegisterPost($_POST);
 
         echo '
             <table>
