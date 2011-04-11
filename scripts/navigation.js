@@ -8,6 +8,13 @@ function clear() {
     if (document.getElementById("yan-answers")) {
         document.getElementById("yan-content").removeChild(document.getElementById("yan-answers"));
     }
+    document.getElementById("yan-breadcrumbs").innerHTML = '<li><a href="index.php" onclick="return loadHome();">Home</a> &gt;</li>';
+    var nodes = document.getElementsByTagName("a");
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].className == "current") {
+            nodes[i].className = "";
+        }
+    }
 }
 
 function loadHome() {
@@ -16,6 +23,7 @@ function loadHome() {
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
+    clear();
     var content = ContentRequest("?homepage=1");
     if (content) {
         document.getElementById("yan-question").innerHTML = content;
@@ -92,8 +100,17 @@ function loadQuestions(categoryid) {
     content = ContentRequest("?categoryid="+categoryid);
     if (content) {
         clear();
+        document.getElementById("category_"+categoryid).className="current";
         document.getElementById("yan-question").innerHTML = content;
-        return false;
+        content = ContentRequest("?categoryid="+categoryid+"&categoryname=1");
+        if (content) {
+            if (document.getElementById("categoryindex")) {
+                document.getElementById("categoryindex").innerHTML = content;
+            } else {
+                document.getElementById("yan-breadcrumbs").innerHTML += content;
+            }
+            return false;
+        }
     }
     return true;
 }
@@ -104,8 +121,18 @@ function loadQuestion(categoryid, questionid) {
         content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid);
         if (content) {
             clear();
+            document.getElementById("category_"+categoryid).className="current";
             document.getElementById("yan-question").innerHTML = content;
-            return loadAnswers(categoryid, questionid);
+            content = ContentRequest("?categoryid="+categoryid+"&categoryname=1");
+            if (content) {
+                if (document.getElementById("categoryindex")) {
+                    document.getElementById("categoryindex").innerHTML = content;
+                } else {
+                    document.getElementById("yan-breadcrumbs").innerHTML += content;
+                }
+                document.getElementById("yan-breadcrumbs").innerHTML += document.getElementById("subject").innerHTML;
+                return loadAnswers(categoryid, questionid);
+            }
         }
     } else {
         return false;

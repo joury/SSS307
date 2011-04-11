@@ -277,11 +277,11 @@ Class website {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($_GET && isset($_GET['categoryid']) && $fields['id'] == $_GET['categoryid']) {
                     $categories .= '<li class="current">';
-                    $categories .= '<a class="current" href="?categoryid=' . $fields['id'] . '" onclick="return loadQuestions(' . $fields['id'] . ');">' . $fields['naam'] . '</a>';
+                    $categories .= '<a class="current" id="category_' . $fields['id'] . '" href="?categoryid=' . $fields['id'] . '" onclick="return loadQuestions(' . $fields['id'] . ');">' . $fields['naam'] . '</a>';
                     $categories .= '</li>';
                 } else {
                     $categories .= '<li>';
-                    $categories .= '<a href="?categoryid=' . $fields['id'] . '" onclick="return loadQuestions(' . $fields['id'] . ');">' . $fields['naam'] . '</a>';
+                    $categories .= '<a id="category_' . $fields['id'] . '" href="?categoryid=' . $fields['id'] . '" onclick="return loadQuestions(' . $fields['id'] . ');">' . $fields['naam'] . '</a>';
                     $categories .= "</li>";
                 }
             }
@@ -417,14 +417,20 @@ Class website {
     }
 
     function showCurrentCategory($categoryid) {
+        echo $this->getCurrentCategory($categoryid);
+    }
+
+    function getCurrentCategory($categoryid) {
+        $categorycode = "";
         $categoryname = $this->getCategoryName($categoryid);
         if ($categoryname) {
-            echo '
-                <li>
+            $categorycode .= '
+                <li id="categoryindex">
                     <a href="?categoryid=' . $categoryid . '" onclick="return loadQuestions(' . $categoryid . ');">' . $categoryname . '</a> &gt
                 </li>
             ';
         }
+        return $categorycode;
     }
 
     function getCategoryName($categoryid) {
@@ -462,7 +468,7 @@ Class website {
                     <div class="hd">
                         <h2>Open Question</h2>
                     </div>
-                    <h1 class="subject">' . $fields['vraag'] . '</h1>
+                    <h1 id="subject" class="subject">' . $fields['vraag'] . '</h1>
                     <div class="content">
                         ' . $fields['aanvulling'] . '
                     </div>

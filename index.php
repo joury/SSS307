@@ -37,7 +37,7 @@
             <div id="yan-wrap">
                 <ol id="yan-breadcrumbs">
                     <li>
-                        <a href="index.php">Home</a> &gt;
+                        <a href="index.php" onclick="return loadHome();">Home</a> &gt;
                     </li>
                     <?php
                         if (isset($_GET['categoryid'])) {
