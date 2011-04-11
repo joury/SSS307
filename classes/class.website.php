@@ -212,10 +212,12 @@ Class website {
         echo '
             <li class="me1">
                 <form action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" name="login" method="POST">
-                    <input type="text" name="username">
-                    <input type="password" name="password">
-                    <input type="submit" name="btnLogin" value="Log in">
-                    <input type="submit" name="btnRegister" value="Register">
+                    <div>
+                        <input type="text" name="username">
+                        <input type="password" name="password">
+                        <input type="submit" name="btnLogin" value="Log in">
+                        <input type="submit" name="btnRegister" value="Register">
+                    </div>
         ';
         if ($this->correctLogin == false) {
             echo '<font color="red">' . $this->Translate("LoginFailed") . '</font>';
