@@ -210,8 +210,8 @@ Class website {
 
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
-            <form action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" name="login" method="POST">
-                <li class="me1">
+            <li class="me1">
+                <form action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" name="login" method="POST">
                     <input type="text" name="username">
                     <input type="password" name="password">
                     <input type="submit" name="btnLogin" value="Log in">
@@ -221,8 +221,8 @@ Class website {
             echo '<font color="red">' . $this->Translate("LoginFailed") . '</font>';
         }
         echo '
-                </li>
-            </form>
+                </form>
+            </li>
         ';
     }
 
@@ -303,7 +303,6 @@ Class website {
     function showBanner($_GET) {
         echo '
             <div id="hd">
-                <link type="text/css" rel="stylesheet" href="./css/answers.css">
                 <div id="ygma">
                     <div id="ygmaheader">
                         <div class="bd sp">
@@ -322,9 +321,7 @@ Class website {
                             </div>
                             <div id="yahoo" class="ygmaclr">
                                 <div id="ygmabot">
-                                    <a href="index.php" id="ygmalogo" target="_top">
-                                        <img id="ygmalogoimg" src="./images/logo.png" alt="CodeDump!" height="26" width="257">
-                                    </a>
+                                    <img id="ygmalogoimg" src="./images/logo.png" alt="CodeDump!" height="26" width="257">
                                 </div>
                             </div>
                         </div>
@@ -481,7 +478,7 @@ Class website {
             if ($this->getCurrentUser()) {
                 $question .= '
                     <p class="cta">
-                        <a href="?categoryid=' . $categoryid . '&questionid=' . $questionid . '&answer=1" onclick="return loadAnswerPoster(' . $categoryid . ', ' . $questionid . ');">
+                        <a href="?categoryid=' . $categoryid . '&amp;questionid=' . $questionid . '&amp;answer=1" onclick="return loadAnswerPoster(' . $categoryid . ', ' . $questionid . ');">
                             <span>
                                 <span>
                                     <span>
@@ -576,9 +573,11 @@ Class website {
             $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "';");
         }
         if (mysql_num_rows($result) > 0) {
+            $questions .= "<ul>";
             while ($fields = mysql_fetch_assoc($result)) {
-                $questions .= '<li><a href="?categoryid=' . $fields['taalid'] . '&questionid=' . $fields['id'] . '" onclick="return loadQuestion(' . $fields['taalid'] . ', ' . $fields['id'] . ');">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
+                $questions .= '<li><a href="?categoryid=' . $fields['taalid'] . '&amp;questionid=' . $fields['id'] . '" onclick="return loadQuestion(' . $fields['taalid'] . ', ' . $fields['id'] . ');">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
             }
+            $questions .="</ul>";
         } else {
             $questions .= "No questions yet!";
         }
@@ -596,7 +595,7 @@ Class website {
         if ($id == "") {
             $link = '<a href="?answer=1" onclick="return loadAnswerPoster(null, null);">';
         } else {
-            $link = '<a href="?categoryid=' . $id . '&answer=1" onclick="return loadAnswerPoster(' . $id . ', null);">';
+            $link = '<a href="?categoryid=' . $id . '&amp;answer=1" onclick="return loadAnswerPoster(' . $id . ', null);">';
         }
         $button = "";
         if ($this->getCurrentUser()) {
@@ -839,7 +838,7 @@ Class website {
                     <div id="yan-question">
                         <div class="qa-container">
                             <center>
-                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&answer=1", "", $this->GetQueryString($_SERVER["QUERY_STRING"])) . '">
+                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&amp;answer=1", "", $this->GetQueryString($_SERVER["QUERY_STRING"])) . '">
                                     <table>
             ';
             if ($categoryid == "" || $questionid == "") {
