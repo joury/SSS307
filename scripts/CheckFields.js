@@ -6,8 +6,14 @@ function CheckRegister(form) {
 function CheckProfileEdit(form) {
     var correct = "";
     if (form.password.value == "" && form.confirmpassword.value == "") {
+        if (IsEmpty(form.oldpassword)) {
+            alert("You should enter your old password.");
+        }
         correct = CheckEmail(form.email, true, false) && !IsEmpty(form.oldpassword);
     } else {
+        if (IsEmpty(form.oldpassword)) {
+            alert("You should enter your old password.");
+        }
         correct = CheckPass(form, true) && CheckEmail(form.email, true, false) && !IsEmpty(form.oldpassword);
     }
     return correct;

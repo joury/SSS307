@@ -231,8 +231,8 @@ Class website {
     function Login($username, $password) {  // Check if the variables sent are correct and set the cookie
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
-        $username = mysql_real_escape_string($username);
-        $password = $this->EncryptPassword(mysql_real_escape_string($password));
+        $username = stripslashes(mysql_real_escape_string($username));
+        $password = $this->EncryptPassword(stripslashes(mysql_real_escape_string($password)));
         $passwordInDB = "";
         $query = mysql_query("SELECT `wachtwoord` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Get the password from the DB that's associated with this account name
         if (mysql_num_rows($query) != 0) {   // If the account exists
@@ -781,6 +781,8 @@ Class website {
                                     <tr id="votebuttons_' . $fields['id'] . '">
                                         <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return Vote(this, this.vote.value);">
                                             <input type="hidden" name="answerid" id="answerid" value="' . $fields['id'] . '">
+                                            <input type="hidden" name="questionid" id="questionid" value="' . $fields['vraagid'] . '">
+                                            <input type="hidden" name="categoryid" id="categoryid" value="' . $fields['taalid'] . '">
                                             <input type="hidden" name="userid" id="userid" value="' . $user->id . '">
                                             <input type="hidden" name="vote" id="vote" value="">
                                             <td><input type="image" id="submit" name="submit" value="1" style="width:30px;" src="images/vote_up.gif" onClick="this.form.vote.value=1;"></td>
@@ -921,7 +923,7 @@ Class website {
             if (!function_exists("bb2html")) {
                 require "class.bbparser.php";
             }
-            $_POST['text'] = mysql_real_escape_string(bb2html($_POST['text']));
+            $_POST['text'] = stripslashes(mysql_real_escape_string(bb2html($_POST['text'])));
 
             if (isset($_POST['categoryid'])) {
                 if (isset($_POST['questionid']) && $_POST['questionid'] != "") {

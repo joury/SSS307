@@ -9,22 +9,10 @@ function Vote(form, vote) {
         positiveField.innerHTML = oldPositive + 1;
     }
     var url = "checker.php?answerid=" + form.answerid.value + "&userid=" + form.userid.value + "&vote=" + vote;
-    var xmlHttp;
-    try {
-        xmlHttp = new XMLHttpRequest();
-    } catch (e) {
-        try {
-            xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            try {
-                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {
-                return true;
-            }
-        }
-    }
+    var xmlHttp = getXMLHttp();
     xmlHttp.open("GET", url, false);
     xmlHttp.send(null);
     document.getElementById('votebuttons_' + form.answerid.value).style.visibility = 'hidden';
+    loadAnswers(form.categoryid.value, form.questionid.value);
     return false;
 }

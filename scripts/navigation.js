@@ -142,13 +142,12 @@ function loadQuestion(categoryid, questionid) {
 
 function loadAnswers(categoryid, questionid) {
     var content = "";
-    if (!document.getElementById("yan-anwers")) {
-        content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid+"&answers=1");
-        if (content) {
-            document.getElementById("yan-content").innerHTML += content;
-            return false;
-        }
-    } else {
+    if (document.getElementById("yan-anwers")) {
+        document.getElementById("yan-content").removeChild(document.getElementById("yan-answers"));
+    }
+    content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid+"&answers=1");
+    if (content) {
+        document.getElementById("yan-content").innerHTML += content;
         return false;
     }
     return true;
