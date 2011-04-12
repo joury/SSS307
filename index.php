@@ -93,29 +93,47 @@
                             ?>
                         </div>
                     </div>
-                    <?php
-                            if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
-                                $website->showTools();
-                                if (isset($_GET['answer'])) {
-                                    $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
+                    <div id="bottom_content">
+                        <div id="toolbar">
+                            <?php
+                                if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                                    $website->showTools();
                                 }
-                                $website->showAnswers($_GET['categoryid'], $_GET['questionid']);
-                            } else if (isset($_GET['categoryid']) && isset($_GET['answer'])) {
-                                $website->showAnswerPoster("", $_GET['categoryid'], "");
-                            } else if (isset($_GET['answer'])) {
-                                if (!isset($_GET['question'])) {
-                                    $_GET['question'] = "";
-                                }
-                                $website->showAnswerPoster($_GET['question']);
-                            }
-                    ?>
+                            ?>
                         </div>
-                        <div id="yan-related">
-                            <div id="yan-categories" class="mod">
-                                <h2 class="hd">Categories</h2>
-                                <ul class="bd">
-                                    <li class="expanded">
-                                        <ul>
+                        <div id="answerposter">
+                            <?php
+                                if (isset($_GET['answer'])) {
+                                    if (isset($_GET['categoryid'])) {
+                                        if (isset($_GET['questionid'])) {
+                                            $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
+                                        } else {
+                                            $website->showAnswerPoster("", $_GET['categoryid'], "");
+                                        }
+                                    } else {
+                                        if (!isset($_GET['question'])) {
+                                            $_GET['question'] = "";
+                                        }
+                                        $website->showAnswerPoster($_GET['question']);
+                                    }
+                                }
+                            ?>
+                        </div>
+                        <div id="answerdiv">
+                            <?php
+                            if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                                $website->showAnswers($_GET['categoryid'], $_GET['questionid']);
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div id="yan-related">
+                    <div id="yan-categories" class="mod">
+                        <h2 class="hd">Categories</h2>
+                        <ul class="bd">
+                            <li class="expanded">
+                                <ul>
                                     <?php
                                     $website->showCategories($_GET);
                                     ?>

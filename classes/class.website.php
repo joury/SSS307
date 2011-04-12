@@ -837,7 +837,6 @@ Class website {
         $answerposter = "";
         if ($this->getCurrentUser()) {
             $answerposter .= '
-                <div id="answerposter">
                 <div id="yan-main">
                     <div id="yan-question">
                         <div class="qa-container">
@@ -910,7 +909,7 @@ Class website {
                             </center>
                         </div>
                     </div>
-                </div></div>
+                </div>
             ';
         } else {
             $answerposter .= '<script type="text/javascript">window.location = "index.php";</script>';

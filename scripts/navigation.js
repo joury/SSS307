@@ -3,7 +3,7 @@ function clear() {
         document.getElementById("yan-answers").innerHTML = "";
     }
     if (document.getElementById("answerposter")) {
-        document.getElementById("yan-content").removeChild(document.getElementById("answerposter"));
+        document.getElementById("answerposter").innerHTML = "";
     }
     if (document.getElementById("yan-answers")) {
         document.getElementById("yan-content").removeChild(document.getElementById("yan-answers"));
@@ -18,6 +18,7 @@ function clear() {
 }
 
 function loadHome() {
+    return true;
     document.getElementById("yan-nav-home").className="current menu";
     document.getElementById("yan-nav-browse").className="menu";
     if (document.getElementById("yan-nav-about")) {
@@ -34,6 +35,7 @@ function loadHome() {
 }
 
 function loadProfile(id) {
+    return true;
     document.getElementById("yan-nav-home").className="menu";
     document.getElementById("yan-nav-browse").className="menu";
     if (document.getElementById("yan-nav-about")) {
@@ -50,6 +52,7 @@ function loadProfile(id) {
 }
 
 function loadCategories() {
+    return true;
     document.getElementById("yan-nav-home").className="menu";
     document.getElementById("yan-nav-browse").className="current menu";
     if (document.getElementById("yan-nav-about")) {
@@ -66,6 +69,7 @@ function loadCategories() {
 }
 
 function loadAnswerPoster(categoryid, questionid) {
+    return true;
     var content = "";
     if (!document.getElementById("answerposter")) {
         if (categoryid == null || questionid == null) {
@@ -85,7 +89,7 @@ function loadAnswerPoster(categoryid, questionid) {
         } else {
             content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid+"&answer=1");
             if (content) {
-                document.getElementById("yan-content").insertbefore(content, document.getElementById("yan-question-tools"));
+                document.getElementById("answerposter").innerHTML = content;
                 return false;
             }
         }
@@ -96,6 +100,7 @@ function loadAnswerPoster(categoryid, questionid) {
 }
 
 function loadQuestions(categoryid) {
+    return true;
     var content = "";
     content = ContentRequest("?categoryid="+categoryid);
     if (content) {
@@ -116,6 +121,7 @@ function loadQuestions(categoryid) {
 }
 
 function loadQuestion(categoryid, questionid) {
+    return true;
     var content = "";
     if (!document.getElementById("answerdiv")) {
         content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid);
