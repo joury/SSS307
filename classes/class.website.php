@@ -31,19 +31,43 @@ Class website {
         echo '
                 <form name="Register" id="RegistrationForm" onSubmit="return CheckFields(this);" action="index.php" method="POST">
                 <tr>
-                    <td>Username:</td> <td><input type="text" name="username" id="username" value="' . $_POST['username'] . '" onKeyup="return CheckUsername(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="usernameImage"></img></td>
+                    <td>Username:</td>
+                    <td>
+                        <input type="text" name="username" id="username" value="' . $_POST['username'] . '" onKeyup="return CheckUsername(this, false);">
+                        <font color="RED">*</font>
+                        <img src="images/ffffff.gif" id="usernameImage"></img>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Password:</td> <td><input type="password" name="password" id="password" value="' . $_POST['password'] . '" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
+                    <td>Password:</td>
+                    <td>
+                        <input type="password" name="password" id="password" value="' . $_POST['password'] . '" onKeyup="return CheckPass(this.form, false);">
+                        <font color="RED">*</font>
+                        <img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Confirm password:</td> <td><input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+                    <td>Confirm password:</td>
+                    <td>
+                        <input type="password" name="confirmpassword" id="confirmpassword" value="' . $_POST['confirmpassword'] . '" onKeyup="return CheckPass(this.form, false);">
+                        <font color="RED">*</font>
+                        <img src="images/ffffff.gif" id="confirmpasswordImage"></img>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Email:</td> <td><input type="text" name="email" id="email" value="' . $_POST['email'] . '" onKeyup="return CheckEmail(this, false, true);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
+                    <td>Email:</td>
+                    <td>
+                        <input type="text" name="email" id="email" value="' . $_POST['email'] . '" onKeyup="return CheckEmail(this, false, true);">
+                        <font color="RED">*</font>
+                        <img src="images/ffffff.gif" id="emailImage"></img>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Job:</td> <td><input type="hidden" name="job" value="0"><input type="checkbox" name="job" value="1"> Yes, i have a job</td>
+                    <td>Job:</td>
+                    <td>
+                        <input type="hidden" name="job" value="0">
+                        <input type="checkbox" name="job" value="1"> Yes, i have a job
+                    </td>
                 </tr>
                 <tr>
                     <td>Site language:</td>
@@ -75,10 +99,9 @@ Class website {
 
     function Translate($string) {
         require $this->MainConfigFile;
-        if ($this->User != "") {
-            $languagefile = $LanguageDir . $this->User->language . ".php";
-        } else {
-            $languagefile = "";
+        $languagefile = "";
+        if ($this->getCurrentUser()) {
+            $languagefile = $LanguageDir . $this->getCurrentUser()->language . ".php";
         }
 
         if (is_file($languagefile)) {
@@ -266,10 +289,6 @@ Class website {
         ';
     }
 
-    function showCategories($_GET = "") {
-        echo $this->getCategories($_GET);
-    }
-
     function getCategories($_GET = "") {
         $categories = "";
         $result = mysql_query("SELECT * FROM `talen`;");
@@ -401,6 +420,7 @@ Class website {
                 </li>
            ';
         }
+        //  Code voor het "selecteren" van de tabs, vervangt de neutrale tabcode met een tab met class=current menu, css regelt de rest
         if (isset($_GET['categories']) || isset($_GET['categoryid'])) {
             $tabcode = str_replace('<li class="menu" id="yan-nav-browse">', '<li class="current menu" id="yan-nav-browse">', $tabcode);
         } else if ($this->getCurrentUser() && isset($_GET['userid']) && $this->getCurrentUser()->id == $_GET['userid']) {
@@ -413,10 +433,6 @@ Class website {
             </div>
         ';
         return $tabcode;
-    }
-
-    function showCurrentCategory($categoryid) {
-        echo $this->getCurrentCategory($categoryid);
     }
 
     function getCurrentCategory($categoryid) {
@@ -439,10 +455,6 @@ Class website {
         } else {
             return false;
         }
-    }
-
-    function showQuestion($categoryid, $questionid) {
-        echo $this->getQuestion($categoryid, $questionid);
     }
 
     function getQuestion($categoryid, $questionid) {
@@ -563,10 +575,6 @@ Class website {
         }
     }
 
-    function showQuestions($categoryid = "") {
-        echo $this->getQuestions($categoryid);
-    }
-
     function getQuestions($categoryid = "") {
         $questions = "";
         if ($categoryid == "") {
@@ -577,7 +585,13 @@ Class website {
         if (mysql_num_rows($result) > 0) {
             $questions .= "<ul>";
             while ($fields = mysql_fetch_assoc($result)) {
-                $questions .= '<li><a href="?categoryid=' . $fields['taalid'] . '&amp;questionid=' . $fields['id'] . '" onclick="return loadQuestion(' . $fields['taalid'] . ', ' . $fields['id'] . ');">' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '</a></li>';
+                $questions .= '
+                    <li>
+                        <a href="?categoryid=' . $fields['taalid'] . '&amp;questionid=' . $fields['id'] . '" onclick="return loadQuestion(' . $fields['taalid'] . ', ' . $fields['id'] . ');">
+                            ' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '
+                        </a>
+                   </li>
+               ';
             }
             $questions .="</ul>";
         } else {
@@ -586,10 +600,6 @@ Class website {
 
         $questions .= $this->getNewQuestionButton($categoryid);
         return $questions;
-    }
-
-    function showNewQuestionButton($id = "") {
-        echo $this->getNewQuestionButton($id);
     }
 
     function getNewQuestionButton($id = "") {
@@ -695,12 +705,8 @@ Class website {
         return $languages;
     }
 
-    function showAnswers($categoryid, $questionid) {
-        echo $this->getAnswerDiv($categoryid, $questionid);
-    }
-
     function getAnswerDiv($categoryid, $questionid) {
-        echo '
+        return '
             <div id="yan-answers" class="mod">
                 <div class="hd">
                     <h3>
@@ -827,10 +833,6 @@ Class website {
             $positive = 1;
         }
         mysql_query("INSERT INTO `votes` VALUES ('" . $answerid . "', '" . $userid . "', '" . $positive . "', '" . $negative . "');");
-    }
-
-    function showAnswerPoster($title = "", $categoryid = "", $questionid = "") {
-        echo $this->getAnswerPoster($title, $categoryid, $questionid);
     }
 
     function getAnswerPoster($title = "", $categoryid = "", $questionid = "") {
@@ -989,25 +991,34 @@ Class website {
         if (!isset($_POST['day']) || !isset($_POST['month']) || !isset($_POST['year'])) {
             $errors .= "One of the birthdate fields are empty";
         }
-        if ($errors == "") {
-            return true;
-        } else {
-            $this->getUserInfo($this->getCurrentUser()->id, $_POST, $errors);
+        if ($_POST['day'] > 31 || $_POST['day'] < 1) {
+            $errors .= "The day field value is inccorect";
         }
+        if ($_POST['month'] > 12 || $_POST['month'] < 1) {
+            $errors .= "The month field value is incorrect";
+        }
+        if ($_POST['year'] > (Date("Y") - 8) || $_POST['year'] < (Date("Y") - 100)) {
+            $errors .= "The year field value is incorrect";
+        }
+        if ($errors == "") {
+            $birthdate = $_POST['year'] . "-" . $_POST['month'] . "-" . $_POST['day'];
+            $query = "UPDATE `gebruikers` SET `voornaam` = '" . $_POST['firstname'] . "', `tussenvoegsel` = '" . $_POST['insertion'] . "', `achternaam` = '" . $_POST['lastname'] . "', `geslacht` = '" . $_POST['gender'] . "', `geboortedatum` = '" . $birthdate . "';";
+            mysql_query($query);
+        }
+        $this->getUserInfo($this->getCurrentUser()->id, $_POST, $errors);
     }
 
     function submitEdit($_POST) {
-        if ($_POST['country'] != "") {
-            if ($_POST['city'] == "") {
+        if ($_POST['country'] != "") {  // Als we wel een land hebben ingesteld
+            if ($_POST['city'] == "") { // Dan moeten we ook een stad kiezen
                 $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
             }
-        } else {
-            if ($this->getCurrentUser() && $this->EncryptPassword($_POST['oldpassword']) == $this->getCurrentUser()->password) {
-                if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {
+            if ($this->getCurrentUser() && $this->EncryptPassword($_POST['oldpassword']) == $this->getCurrentUser()->password) {    // Als we een gebruiker hebben en zijn ingevulde wachtwoord klopt
+                if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {    //  Als beide password velden zijn ingevuld
                     if ($_POST['password'] != "" && $_POST['confirmpassword'] != "") {
-                        if ($_POST['password'] == $_POST['confirmpassword']) {
-                            if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&
-                                    preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) {
+                        if ($_POST['password'] == $_POST['confirmpassword']) {  // Als ze gelijk zijn
+                            if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&  // Email bestaat uit karakters a-z, A-Z, 0-9, _, en - | Het moet een punt en een @ bevatten
+                                    preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) { // Wachtwoord bestaat uit A-Z, a-z, 0-9 en het minimum karakters is 6
                                 if (!isset($_POST['msn'])) {
                                     $_POST['msn'] = "";
                                 }
@@ -1019,10 +1030,10 @@ Class website {
                                     `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
                                         WHERE `id` = '" . $this->getCurrentUser()->id . "';";
                                 mysql_query($query);
-                                $this->saveImage($_FILES);
-                                $this->showQuestions();
+                                $this->saveImage($_FILES);  // Stuur de $_FILES variabele door naar de functie die het plaatje gaat verwerken
+                                $this->showQuestions(); // Toen daarna de homepage
                             } else {
-                                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');
+                                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');  // Stuur de gebruiker terug naar de Profielpagina en stuur de error mee
                             }
                         } else {
                             $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
@@ -1056,26 +1067,19 @@ Class website {
         if ($this->getCurrentUser() && $this->getCurrentUser()->id != "") {
             if ($_FILES["imageFile"]["name"] != "") {
                 require $this->MainConfigFile;
-                $FileType = $_FILES["imageFile"]["type"];
-                $FileName = $_FILES["imageFile"]["name"];
                 $FileSize = round($_FILES["imageFile"]["size"] / 1024 / 1024, 2);
-                $FileError = $_FILES["imageFile"]["error"];
                 if (!is_dir($SaveDir)) {
                     mkdir($SaveDir);
                 }
-
-                if ($FileSize <= $MaxFileSize) {
-                    if (in_array($FileType, $AllowedFileTypes)) {
-                        if (!($FileError > 0)) {
+                if ($FileSize <= $MaxFileSize) {    // Als het bestand niet groter is dan toegestaan
+                    if (in_array($_FILES["imageFile"]["type"], $AllowedFileTypes)) {    // Als de bestandsextensie in de lijst met toegestane extensies staat
+                        if ($_FILES["imageFile"]["error"] == 0) {
+                            $FileNamePieces = explode(".", $_FILES["imageFile"]["name"]);
+                            $FileName = $this->getCurrentUser()->id . "." . $FileNamePieces[1];
                             if (file_exists($SaveDir . $FileName)) {
                                 unlink($SaveDir . $FileName);
                             }
-
-                            $FileNamePieces = explode(".", $FileName);
-                            $FileName = $this->getCurrentUser()->id . "." . $FileNamePieces[1];
-                            $Moved = @move_uploaded_file($_FILES["imageFile"]["tmp_name"], $SaveDir . $FileName);
-
-                            if ($Moved) {
+                            if (@move_uploaded_file($_FILES["imageFile"]["tmp_name"], $SaveDir . $FileName)) {
                                 $Dimensions = explode("x", $MaxAvatarDimension);
                                 $toWidth = $Dimensions[0];
                                 $toHeight = $Dimensions[1];
@@ -1090,6 +1094,7 @@ Class website {
                                     $toWidth = round($width * (1 / $xscale));
                                     $toHeight = round($height * (1 / $xscale));
                                 }
+                                //  Plaatje resizen tot de maximaal toegestane grootte met behoud van verhoudingen... zo min mogelijk kwaliteitsverlies
                                 $imageTmp = imagecreatefromJPEG($SaveDir . $FileName);
                                 $imageResized = imagecreatetruecolor($toWidth, $toHeight);
                                 imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $toWidth, $toHeight, $width, $height);
@@ -1098,13 +1103,13 @@ Class website {
                                 $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('SaveError') . '</font>');
                             }
                         } else {
-                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $FileError . '</font>');
+                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"] . '</font>');
                         }
                     } else {
-                        $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $FileType . '</font>');
+                        $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $_FILES["imageFile"]["type"] . '</font>');
                     }
                 } else {
-                    $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB" . $this->Translate('FileSize') . " MB</font>");
+                    $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB " . $this->Translate('FileSize') . $MaxFileSize . " MB</font>");
                 }
             }
         }
@@ -1130,8 +1135,186 @@ Class website {
         return $SaveDir . $File;
     }
 
-    function showUserInfo($id, $_POST = "", $errors = "") {
-        echo $this->getUserInfo($id, $_POST, $errors);
+    function getAdditionalInfoForm($_POST, $user) {
+        if (!isset($_POST['firstname'])) {
+            $_POST['firstname'] = $this->getCurrentUser()->firstname;
+        }
+        if (!isset($_POST['insertion'])) {
+            $_POST['insertion'] = $this->getCurrentUser()->insertion;
+        }
+        if (!isset($_POST['lastname'])) {
+            $_POST['lastname'] = $this->getCurrentUser()->lastname;
+        }
+        if (!isset($_POST['day'])) {
+            $_POST['day'] = "";
+        }
+        if (!isset($_POST['month'])) {
+            $_POST['month'] = "";
+        }
+        if (!isset($_POST['year'])) {
+            $_POST['year'] = "";
+        }
+        return '
+            <form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">
+            <tr>
+                <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
+            </tr>
+            <tr>
+                <td>Insertion:</td> <td><input type="text" value="' . $_POST['insertion'] . '" name="insertion"></td>
+            </tr>
+            <tr>
+                <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onKeyup="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
+            </tr>
+            <tr>
+                <td>Gender:</td>
+                <td>
+                    <select name="gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Birthdate:</td>
+                <td>
+                    <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                        -
+                    <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                        -
+                    <input type="text" id="year" value="' . $_POST['year'] . '" name="year" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:30px;" maxlength="4">
+                    <font color="RED">*</font>
+                    <img src="images/ffffff.gif" id="birthdateImage"></img>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="submit" name="btnAdditionalInfo" value="Save"></td>
+            </tr>
+            </form>
+        ';
+    }
+
+    function getProfileEditForm($_POST, $user) {
+        if (isset($_POST['country'])) {
+            $country = $_POST['country'];
+        } else {
+            $country = $this->getCurrentUser()->country;
+        }
+        if (isset($_POST['state'])) {
+            $state = $_POST['state'];
+        } else {
+            $state = $this->getCurrentUser()->state;
+        }
+        if (isset($_POST['city'])) {
+            $city = $_POST['city'];
+        } else {
+            $city = $this->getCurrentUser()->city;
+        }
+        if (!isset($_POST['oldpassword'])) {
+            $_POST['oldpassword'] = "";
+        }
+        if (!isset($_POST['password'])) {
+            $_POST['password'] = "";
+        }
+        if (!isset($_POST['confirmpassword'])) {
+            $_POST['confirmpassword'] = "";
+        }
+        if (!isset($_POST['msn'])) {
+            $_POST['msn'] = $user->msn;
+        }
+        if (!isset($_POST['skype'])) {
+            $_POST['skype'] = $user->skype;
+        }
+        return '
+            <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckProfileEdit(this);">
+            <tr>
+                <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
+            </tr>
+            <tr>
+                <td>Password:</td> <td><input type="password" value="' . $_POST['password'] . '" id="password" name="password" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
+            </tr>
+            <tr>
+                <td>Confirm password:</td> <td><input type="password" value="' . $_POST['confirmpassword'] . '" id="confirmpassword" name="confirmpassword" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
+            </tr>
+            <tr>
+                <td>Email:</td> <td><input type="text" id="email" name="email" value="' . $user->email . '" onKeyup="return CheckEmail(this, false, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td>
+                    <select id="country" name="country" onChange="this.form.submit();">
+                        ' . $this->getCountries($country) . '
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>State/Province:</td>
+                <td>
+                    <select id="state" name="state" onChange="this.form.submit();">
+                        ' . $this->getStates($country, $state) . '
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>City:</td>
+                <td>
+                    <select id="city" name="city">
+                        ' . $this->getCities($state, $city) . '
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>MSN:</td> <td><input type="text" name="msn" value="' . $_POST['msn'] . '"></td>
+            </tr>
+            <tr>
+                <td>Skype:</td> <td><input type="text" name="skype" value="' . $_POST['skype'] . '"></td>
+            </tr>
+            <tr>
+                <td>Job:</td> <td><input type="hidden" name="job" value="0"><input type="checkbox" name="job" value="' . $user->job . '"> Yes, i have a job</td>
+            </tr>
+            <tr>
+                <td>Image:</td> <td><input type="hidden" name="MAX_FILE_SIZE" value="2000000"><input type="file" name="imageFile">Maximum filesize is 2MB</td>
+            </tr>
+            <tr>
+                <td><input type="hidden" name="btnProfileEdit" value="1"><input type="submit" name="btnProfileEdit" value="Save"></td>
+            </tr>
+            <script type="text/javascript">
+                CheckPass(document.getElementById(\'ProfileEdit\'), false);
+                CheckEmail(document.getElementById(\'email\'), false, false);
+            </script>
+            </form>
+        ';
+    }
+
+    function getStaticUserInfo($user) {
+        return '
+            <tr>
+                <td>Username:</td> <td>' . $user->username . '</td>
+            </tr>
+            <tr>
+                <td>Full name:</td> <td>' . $user->firstname . " " . $user->insertion . " " . $user->lastname . '</td>
+            </tr>
+            <tr>
+                <td>Email:</td> <td>' . $user->email . '</td>
+            </tr>
+            <tr>
+                <td>Country: </td> <td>' . $user->country . '</td>
+            </tr>
+            <tr>
+                <td>State: </td> <td>' . $user->state . '</td>
+            </tr>
+            <tr>
+                <td>City: </td> <td>' . $user->city . '</td>
+            </tr>
+            <tr>
+                <td>MSN: </td> <td>' . $user->msn . '</td>
+            </tr>
+            <tr>
+                <td>Skype: </td> <td>' . $user->skype . '</td>
+            </tr>
+            <tr>
+                <td>Job: </td> <td>' . $user->job . '</td>
+            </tr>
+        ';
     }
 
     function getUserInfo($id, $_POST = "", $errors = "") {
@@ -1149,191 +1332,10 @@ Class website {
             <table>
         ';
         if ($owned) {
-            if ($this->getCurrentUser()->firstname == "") {
-                if (!isset($_POST['firstname'])) {
-                    $_POST['firstname'] = "";
-                }
-                if (!isset($_POST['insertion'])) {
-                    $_POST['insertion'] = "";
-                }
-                if (!isset($_POST['lastname'])) {
-                    $_POST['lastname'] = "";
-                }
-                if (!isset($_POST['day'])) {
-                    $_POST['day'] = "";
-                }
-                if (!isset($_POST['month'])) {
-                    $_POST['month'] = "";
-                }
-                if (!isset($_POST['year'])) {
-                    $_POST['year'] = "";
-                }
-                $userinfo .= '
-                    <form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="index.php" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">
-                    <tr>
-                        <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
-                    </tr>
-                    <tr>
-                        <td>Insertion:</td> <td><input type="text" value="' . $_POST['insertion'] . '" name="insertion"></td>
-                    </tr>
-                    <tr>
-                        <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onKeyup="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
-                    </tr>
-                    <tr>
-                        <td>Gender:</td>
-                        <td>
-                            <select name="gender">
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Birthdate:</td>
-                        <td>
-                            <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
-                                -
-                            <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
-                                -
-                            <input type="text" id="year" value="' . $_POST['lastname'] . '" name="year" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:30px;" maxlength="4">
-                            <font color="RED">*</font>
-                            <img src="images/ffffff.gif" id="birthdateImage"></img>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="submit" name="btnAdditionalInfo" value="Save"></td>
-                    </tr>
-                    </form>
-                    <tr>
-                        <td><hr></td> <td><hr></td>
-                    </hr>
-                ';
-            }
-            $country = "";
-            $state = "";
-            $city = "";
-            if (isset($_POST['country'])) {
-                $country = $_POST['country'];
-            } else {
-                $country = $this->getCurrentUser()->country;
-            }
-            if (isset($_POST['state'])) {
-                $state = $_POST['state'];
-            } else {
-                $state = $this->getCurrentUser()->state;
-            }
-            if (isset($_POST['city'])) {
-                $city = $_POST['city'];
-            } else {
-                $city = $this->getCurrentUser()->city;
-            }
-            if (!isset($_POST['oldpassword'])) {
-                $_POST['oldpassword'] = "";
-            }
-            if (!isset($_POST['password'])) {
-                $_POST['password'] = "";
-            }
-            if (!isset($_POST['confirmpassword'])) {
-                $_POST['confirmpassword'] = "";
-            }
-            if (!isset($_POST['msn'])) {
-                $_POST['msn'] = $user->msn;
-            }
-            if (!isset($_POST['skype'])) {
-                $_POST['skype'] = $user->skype;
-            }
-            $countries = $this->getCountries($country);
-            $states = $this->getStates($country, $state);
-            $cities = $this->getCities($state, $city);
-            $userinfo .= '
-                <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckProfileEdit(this);">
-                <tr>
-                    <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
-                </tr>
-                <tr>
-                    <td>Password:</td> <td><input type="password" value="' . $_POST['password'] . '" id="password" name="password" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/info.gif" id="passwordImage" title="Must contain 6 characters or more of which 2 numbers or more"></img></td>
-                </tr>
-                <tr>
-                    <td>Confirm password:</td> <td><input type="password" value="' . $_POST['confirmpassword'] . '" id="confirmpassword" name="confirmpassword" onKeyup="return CheckPass(this.form, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="confirmpasswordImage"></img></td>
-                </tr>
-                <tr>
-                    <td>Email:</td> <td><input type="text" id="email" name="email" value="' . $user->email . '" onKeyup="return CheckEmail(this, false, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="emailImage"></img></td>
-                </tr>
-                <tr>
-                    <td>Country:</td>
-                    <td>
-                        <select id="country" name="country" onChange="this.form.submit();">
-                            ' . $countries . '
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>State/Province:</td>
-                    <td>
-                        <select id="state" name="state" onChange="this.form.submit();">
-                            ' . $states . '
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>City:</td>
-                    <td>
-                        <select id="city" name="city">
-                            ' . $cities . '
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>MSN:</td> <td><input type="text" name="msn" value="' . $_POST['msn'] . '"></td>
-                </tr>
-                <tr>
-                    <td>Skype:</td> <td><input type="text" name="skype" value="' . $_POST['skype'] . '"></td>
-                </tr>
-                <tr>
-                    <td>Job:</td> <td><input type="hidden" name="job" value="0"><input type="checkbox" name="job" value="' . $user->job . '"> Yes, i have a job</td>
-                </tr>
-                <tr>
-                    <td>Image:</td> <td><input type="hidden" name="MAX_FILE_SIZE" value="2000000"><input type="file" name="imageFile">Maximum filesize is 2MB</td>
-                </tr>
-                <tr>
-                    <td><input type="hidden" name="btnProfileEdit" value="1"><input type="submit" name="btnProfileEdit" value="Save"></td>
-                </tr>
-                <script type="text/javascript">
-                    CheckPass(document.getElementById(\'ProfileEdit\'), false);
-                    CheckEmail(document.getElementById(\'email\'), false, false);
-                </script>
-                </form>
-            ';
+            $userinfo .= $this->getAdditionalInfoForm($_POST, $user);
+            $userinfo .= $this->getProfileEditForm($_POST, $user);
         } else {
-            $userinfo .= '
-                <tr>
-                    <td>Username:</td> <td>' . $user->username . '</td>
-                </tr>
-                <tr>
-                    <td>Full name:</td> <td>' . $user->firstname . " " . $user->insertion . " " . $user->lastname . '</td>
-                </tr>
-                <tr>
-                    <td>Email:</td> <td>' . $user->email . '</td>
-                </tr>
-                <tr>
-                    <td>Country: </td> <td>' . $user->country . '</td>
-                </tr>
-                <tr>
-                    <td>State: </td> <td>' . $user->state . '</td>
-                </tr>
-                <tr>
-                    <td>City: </td> <td>' . $user->city . '</td>
-                </tr>
-                <tr>
-                    <td>MSN: </td> <td>' . $user->msn . '</td>
-                </tr>
-                <tr>
-                    <td>Skype: </td> <td>' . $user->skype . '</td>
-                </tr>
-                <tr>
-                    <td>Job: </td> <td>' . $user->job . '</td>
-                </tr>
-            ';
+            $userinfo .= $this->getStaticUserInfo($user);
         }
         $userinfo .= '
             </table>
@@ -1341,8 +1343,8 @@ Class website {
         return $userinfo;
     }
 
-    function showTools() {
-        echo '
+    function getTools() {
+        return '
             <ul id="yan-question-tools">
                 <li class="menu" id="yan-save-question">
                     <a href="" title="">

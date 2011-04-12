@@ -41,8 +41,7 @@
                     </li>
                     <?php
                         if (isset($_GET['categoryid'])) {
-                            $website->showCurrentCategory($_GET['categoryid']);
-
+                            echo $website->getCurrentCategory($_GET['categoryid']);
                             if (isset($_GET['questionid'])) {
                                 echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
                             }
@@ -56,17 +55,17 @@
                             if ($_GET && !$_POST) {
                                 if (isset($_GET['categoryid'])) {
                                     if (isset($_GET['questionid'])) {
-                                        $website->showQuestion($_GET['categoryid'], $_GET['questionid']);
+                                        echo $website->getQuestion($_GET['categoryid'], $_GET['questionid']);
                                     } else {
-                                        $website->showQuestions($_GET['categoryid']);
+                                        echo $website->getQuestions($_GET['categoryid']);
                                     }
                                 } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
-                                    $website->showUserInfo($_GET['userid']);
+                                    echo $website->getUserInfo($_GET['userid']);
                                 } else if (isset($_GET['categories'])) {
-                                    $website->showCategories();
-                                    $website->showNewQuestionButton();
+                                    echo $website->getCategories();
+                                    echo $website->getNewQuestionButton();
                                 } else {
-                                    $website->showQuestions();
+                                    echo $website->getQuestions();
                                 }
                             } else {
                                 if ($_POST) {
@@ -79,15 +78,15 @@
                                     } else if (isset($_POST['Answer'])) {
                                         $website->SubmitPost($_POST);
                                         if (isset($_POST['questionid'])) {
-                                            $website->showQuestion($_POST['categoryid'], $_POST['questionid']);
+                                            echo $website->getQuestion($_POST['categoryid'], $_POST['questionid']);
                                         } else {
-                                            $website->showQuestions();
+                                            echo $website->getQuestions();
                                         }
                                     } else if (isset($_POST['answerid']) && isset($_POST['userid'])) {
                                         $website->submitVote($_POST['answerid'], $_POST['userid'], $_POST['submit']);
                                     }
                                 } else {
-                                    $website->showQuestions();
+                                    echo $website->getQuestions();
                                 }
                             }
                             ?>
@@ -97,7 +96,7 @@
                         <div id="toolbar">
                             <?php
                                 if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
-                                    $website->showTools();
+                                    echo $website->getTools();
                                 }
                             ?>
                         </div>
@@ -106,15 +105,15 @@
                                 if (isset($_GET['answer'])) {
                                     if (isset($_GET['categoryid'])) {
                                         if (isset($_GET['questionid'])) {
-                                            $website->showAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
+                                            echo $website->getAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
                                         } else {
-                                            $website->showAnswerPoster("", $_GET['categoryid'], "");
+                                            echo $website->getAnswerPoster("", $_GET['categoryid'], "");
                                         }
                                     } else {
                                         if (!isset($_GET['question'])) {
                                             $_GET['question'] = "";
                                         }
-                                        $website->showAnswerPoster($_GET['question']);
+                                        echo $website->getAnswerPoster($_GET['question']);
                                     }
                                 }
                             ?>
@@ -122,7 +121,7 @@
                         <div id="answerdiv">
                             <?php
                             if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
-                                $website->showAnswers($_GET['categoryid'], $_GET['questionid']);
+                                echo $website->getAnswerDiv($_GET['categoryid'], $_GET['questionid']);
                             }
                             ?>
                         </div>
@@ -135,7 +134,7 @@
                             <li class="expanded">
                                 <ul>
                                     <?php
-                                    $website->showCategories($_GET);
+                                    echo $website->getCategories($_GET);
                                     ?>
                                 </ul>
                             </li>

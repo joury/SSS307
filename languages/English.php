@@ -14,7 +14,7 @@ $Language = array(
 
     // File handling
     "FileBig" => "File is too big, file is",
-    "FileSize" => " but is allowed to be",
+    "FileSize" => "but is allowed to be",
     "FileType" => "Invalid filetype",
     "SaveError" => "File could not be saved due to unknown reason...",
 
