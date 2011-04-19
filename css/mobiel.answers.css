@@ -1,4 +1,4 @@
-/*mobiel.answer.css*/
+/*answer.css*/
 
 /*algemeen*/
 html{
@@ -43,6 +43,7 @@ input,textarea,select{
 .wide #yan{
 	width:680px;
 	border:0;
+	margin-left: 5px;
 }
 
 
@@ -249,7 +250,7 @@ yan-nav li a{
 /*Ask balk*/
 .wide #yan-banner .short #yan-banner-ask{
 	margin-top: 15px;
-	width:250px;
+	width:230px;
 }
 
 body #yan-banner .short #yan-banner-ask,body #yan-banner .short #yan-banner-answer,body #yan-banner .short #yan-banner-discover{
@@ -263,6 +264,21 @@ body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-b
 	padding-top:8px;
 }
 
+#yan-banner .short #yan-banner-ask #banner-ask{
+	width:150px;
+	vertical-align:middle;
+}
+
+#yan-banner #banner-ask{
+	width:90%;
+	margin:7px 0 3px;
+	border:1px solid #ccc;
+	position:relative;
+	z-index:1;
+	padding:2px;
+}
+
+
 /*Search balk*/
 #yan-banner li{
 	float:left;
@@ -272,4 +288,18 @@ body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-b
 	position:relative;
 }
 
+.wide #yan-banner .short #yan-banner-answer{
+	margin-left: 20px;
+	width:250px;
+}
 
+/*Beneden banner*/
+.wide #yan-header{
+	text-align:center;
+}
+
+#yan-header{
+	padding:15px;
+	border-bottom:1px dotted #ccc;
+	background:url(../images/carousel-bg-top.gif) repeat-x;
+}
