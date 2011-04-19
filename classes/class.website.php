@@ -2,14 +2,14 @@
 
 Class website {
 
-    var $DB;
     var $MainConfigFile = "configs/config.php";
     var $LanguageDir = "languages/";
     var $User = "";
     var $correctLogin = true;
+    var $db = "";
 
-    function __construct($db) {
-        $this->DB = $db;
+    function __construct($database) {
+        $this->db = $database;
         $this->getCurrentUser();
     }
 
@@ -159,23 +159,19 @@ Class website {
     }
 
     function NameInUse($username) {
-        $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");
-        if (mysql_num_rows($check) == 0) {
+        if ($this->db->doQuery("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';") == false) {
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     function EmailInUse($email) {
-        $check = mysql_query("SELECT `id` FROM `gebruikers` WHERE `email` = '" . $email . "';");
-        if (mysql_num_rows($check) == 0) {
+        if ($this->db->doQuery("SELECT `id` FROM `gebruikers` WHERE `email` = '" . $email . "';") == false) {
             return false;
+        } else {
+            return true;
         }
-        return true;
-    }
-
-    function EncryptPassword($password) {
-        return sha1($password);
     }
 
     function checkFields($_POST) {
@@ -218,10 +214,10 @@ Class website {
             if ($this->DB->MakeConnection()) {
                 $username = stripslashes(mysql_real_escape_string($_POST['username']));  // Make sure there are no weird tokens in the variables
                 $password = stripslashes(mysql_real_escape_string($_POST['password']));
-                $encryptedPass = $this->EncryptPassword($password);
+                $encryptedPass = sha1($password);
                 $email = stripslashes(mysql_real_escape_string($_POST['email']));
                 $raw_account_query = "INSERT INTO `gebruikers` (`gebruikersnaam`, `wachtwoord`, `email`, `taal`, `baan`) VALUES ('" . $username . "', '" . $encryptedPass . "', '" . $email . "', '" . $_POST['language'] . "', '" . $_POST['job'] . "');";
-                $account_query = mysql_query($raw_account_query); // Insert the account info
+                $this->db->doQuery($raw_account_query); // Insert the account info
                 $this->Login($username, $password);     // Log in to the account
             } else {
                 die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
@@ -255,20 +251,17 @@ Class website {
         require $this->MainConfigFile;
         $this->DB->MakeConnection();
         $username = stripslashes(mysql_real_escape_string($username));
-        $password = $this->EncryptPassword(stripslashes(mysql_real_escape_string($password)));
-        $passwordInDB = "";
-        $query = mysql_query("SELECT `wachtwoord` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");  // Get the password from the DB that's associated with this account name
-        if (mysql_num_rows($query) != 0) {   // If the account exists
-            $passwordInDB = mysql_result($query, 0);  // Get the password of the user with $username
-        } else {
+        $password = sha1(stripslashes(mysql_real_escape_string($password)));
+        $passwordInDB = $this->db->doQuery("SELECT `wachtwoord` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");
+        if ($passwordInDB == false) {
             $this->correctLogin = false;
-        }
-
-        if ($passwordInDB == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
-            $cookie = setcookie($cookiename, $username . "," . $password, time() + ($cookietime * 60));  // Set a cookie with "name,password" that is legit for the following 5 minutes
-            echo '<meta http-equiv="refresh" content="0">';
         } else {
-            $this->correctLogin = false;
+            if (mysql_result($passwordInDB, 0) == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
+                $cookie = setcookie($cookiename, $username . "," . $password, time() + ($cookietime * 60));  // Set a cookie with "name,password" that is legit for the following 5 minutes
+                echo '<script type="text/javascript" language="JavaScript">location.reload(true);</script>';
+            } else {
+                $this->correctLogin = false;
+            }
         }
     }
 
@@ -291,8 +284,8 @@ Class website {
 
     function getCategories($_GET = "") {
         $categories = "";
-        $result = mysql_query("SELECT * FROM `talen`;");
-        if (mysql_num_rows($result) == 0) {
+        $result = $this->db->doQuery("SELECT * FROM `talen`;");
+        if ($result == false) {
             $categories .= "Query error when loading languages";
         } else {
             while ($fields = mysql_fetch_assoc($result)) {
@@ -312,8 +305,8 @@ Class website {
 
     function getCategoriesAsOption() {
         $categories = "";
-        $result = mysql_query("SELECT * FROM `talen`;");
-        if (mysql_num_rows($result) > 0) {
+        $result = $this->db->doQuery("SELECT * FROM `talen`;");
+        if ($result != false) {
             while ($fields = mysql_fetch_assoc($result)) {
                 $categories .= '<option value="' . $fields['id'] . '">' . $fields['naam'] . '</option>';
             }
@@ -449,8 +442,8 @@ Class website {
     }
 
     function getCategoryName($categoryid) {
-        $result = mysql_query("SELECT `naam` FROM `talen` WHERE `id` = '" . $categoryid . "';");
-        if (mysql_num_rows($result) == 1) {
+        $result = $this->db->doQuery("SELECT `naam` FROM `talen` WHERE `id` = '" . $categoryid . "';");
+        if ($result != false) {
             return mysql_result($result, 0);
         } else {
             return false;
@@ -459,8 +452,8 @@ Class website {
 
     function getQuestion($categoryid, $questionid) {
         $question = "";
-        $result = mysql_query("SELECT * FROM `vragen` WHERE `id` = '" . $questionid . "' AND `taalid` = '" . $categoryid . "';");
-        if (mysql_num_rows($result) == 1) {
+        $result = $this->db->doQuery("SELECT * FROM `vragen` WHERE `id` = '" . $questionid . "' AND `taalid` = '" . $categoryid . "';");
+        if ($result != false) {
             $fields = mysql_fetch_assoc($result);
             $question .= '
                 <div id="profile" class="profile vcard">
@@ -567,8 +560,8 @@ Class website {
     }
 
     function getCurrentQuestion($categoryid, $questionid) {
-        $result = mysql_query("SELECT `vraag` FROM `vragen` WHERE `id` = '" . $questionid . "' AND `taalid` = '" . $categoryid . "';");
-        if (mysql_num_rows($result) == 1) {
+        $result = $this->db->doQuery("SELECT `vraag` FROM `vragen` WHERE `id` = '" . $questionid . "' AND `taalid` = '" . $categoryid . "';");
+        if ($result != false) {
             return mysql_result($result, 0);
         } else {
             return false;
@@ -578,9 +571,9 @@ Class website {
     function getQuestions($categoryid = "") {
         $questions = "";
         if ($categoryid == "") {
-            $result = mysql_query("SELECT * FROM `vragen`;");
+            $result = $this->db->doQuery("SELECT * FROM `vragen`;");
         } else {
-            $result = mysql_query("SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "';");
+            $result = $this->db->doQuery("SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "';");
         }
         if (mysql_num_rows($result) > 0) {
             $questions .= "<ul>";
@@ -649,8 +642,8 @@ Class website {
 
     function getCountries($country) {
         $countries = '<option value=""></option>';
-        $result = mysql_query("SELECT * FROM `landen` ORDER BY `name`;");
-        if (mysql_num_rows($result) > 0) {
+        $result = $this->db->doQuery("SELECT * FROM `landen` ORDER BY `name`;");
+        if ($result != false) {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($fields['name'] == $country) {
                     $countries .= '<option value="' . $fields['name'] . '" selected>' . $fields['name'] . '</option>';
@@ -664,8 +657,8 @@ Class website {
 
     function getStates($country, $state) {
         $states = '<option value="" selected></option>';
-        $result = mysql_query("SELECT `name` FROM `provincies` WHERE `country_id` = (SELECT `country_id` FROM `landen` WHERE `name` = '" . $country . "') ORDER BY `name`;");
-        if (mysql_num_rows($result) > 0) {
+        $result = $this->db->doQuery("SELECT `name` FROM `provincies` WHERE `country_id` = (SELECT `country_id` FROM `landen` WHERE `name` = '" . $country . "') ORDER BY `name`;");
+        if ($result != false) {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($fields['name'] == $state) {
                     $states .= '<option value="' . $fields['name'] . '" selected>' . $fields['name'] . '</option>';
@@ -679,8 +672,8 @@ Class website {
 
     function getCities($state, $city) {
         $states = '<option value="" selected></option>';
-        $result = mysql_query("SELECT `name` FROM `plaatsen` WHERE `state_id` = (SELECT `state_id` FROM `provincies` WHERE `name` = '" . $state . "') ORDER BY `name`;");
-        if (mysql_num_rows($result) > 0) {
+        $result = $this->db->doQuery("SELECT `name` FROM `plaatsen` WHERE `state_id` = (SELECT `state_id` FROM `provincies` WHERE `name` = '" . $state . "') ORDER BY `name`;");
+        if ($result != false) {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($fields['name'] == $city) {
                     $states .= '<option value="' . $fields['name'] . '" selected>' . $fields['name'] . '</option>';
@@ -694,8 +687,8 @@ Class website {
 
     function getLanguages() {
         $languages = "";
-        $result = mysql_query("SELECT * FROM `spreektalen` ORDER BY `name`;");
-        if (mysql_num_rows($result) > 0) {
+        $result = $this->db->doQuery("SELECT * FROM `spreektalen` ORDER BY `name`;");
+        if ($result != false) {
             while ($fields = mysql_fetch_assoc($result)) {
                 $languages .= '<option value=' . $fields['name'] . '>' . $fields['name'] . '</option>';
             }
@@ -725,14 +718,13 @@ Class website {
     }
 
     function getAmountOfAnswers($categoryid, $questionid) {
-        $result = mysql_query("SELECT * FROM `antwoorden` WHERE `taalid` = '" . $categoryid . "' AND `vraagid` = '" . $questionid . "';");
-        return mysql_num_rows($result);
+        return $this->db->getRowCount("SELECT * FROM `antwoorden` WHERE `taalid` = '" . $categoryid . "' AND `vraagid` = '" . $questionid . "';");
     }
 
     function getBadges($id) {
         $badges = "";
-        $result = mysql_query("SELECT * FROM `skills` WHERE `id` = '" . $id . "';");
-        if (mysql_num_rows($result) > 0) {      // Een of meerdere talen waar hij/zij goed in is
+        $result = $this->db->doQuery("SELECT * FROM `skills` WHERE `id` = '" . $id . "';");
+        if ($result != false) {      // Een of meerdere talen waar hij/zij goed in is
             while ($fields = mysql_fetch_assoc($result)) {
                 $badges .= $fields['taalid'] . "_" . ( (int) ($fields['taalniveau'] / 25 ) ) . ".jpg";
             }
@@ -741,9 +733,9 @@ Class website {
     }
 
     function getAnswers($categoryid, $questionid) {
-        $result = mysql_query("SELECT * FROM `antwoorden` a WHERE a.taalid = '" . $categoryid . "' AND a.vraagid = '" . $questionid . "' ORDER BY (SELECT SUM(v.positive) - SUM(v.negative) FROM `votes` v WHERE v.antwoordid = a.id) DESC;");
+        $result = $this->db->doQuery("SELECT * FROM `antwoorden` a WHERE a.taalid = '" . $categoryid . "' AND a.vraagid = '" . $questionid . "' ORDER BY (SELECT SUM(v.positive) - SUM(v.negative) FROM `votes` v WHERE v.antwoordid = a.id) DESC;");
         $answers = '';
-        if (mysql_num_rows($result) > 0) {
+        if ($result != false) {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
                 $user = $this->getUser($fields['gebruikersid']);
@@ -942,14 +934,14 @@ Class website {
         $query = "INSERT INTO `vragen` (`taalid`, `gebruikerid`, `vraag`, `aanvulling`, `beantwoord`, `posttijd`)
             VALUES ('" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['title'] . "', '" . $_POST['text'] . "', '0', now());
         ";
-        mysql_query($query);
+        $this->db->doQuery($query);
     }
 
     function submitAnswer($_POST) {
         $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `posttijd`)
             VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', now());
         ";
-        mysql_query($query);
+        $this->db->doQuery($query);
     }
 
     function getUser($id) {
@@ -1003,7 +995,7 @@ Class website {
         if ($errors == "") {
             $birthdate = $_POST['year'] . "-" . $_POST['month'] . "-" . $_POST['day'];
             $query = "UPDATE `gebruikers` SET `voornaam` = '" . $_POST['firstname'] . "', `tussenvoegsel` = '" . $_POST['insertion'] . "', `achternaam` = '" . $_POST['lastname'] . "', `geslacht` = '" . $_POST['gender'] . "', `geboortedatum` = '" . $birthdate . "';";
-            mysql_query($query);
+            $this->db->doQuery($query);
         }
         $this->getUserInfo($this->getCurrentUser()->id, $_POST, $errors);
     }
@@ -1013,11 +1005,11 @@ Class website {
             if ($_POST['city'] == "") { // Dan moeten we ook een stad kiezen
                 $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
             }
-            if ($this->getCurrentUser() && $this->EncryptPassword($_POST['oldpassword']) == $this->getCurrentUser()->password) {    // Als we een gebruiker hebben en zijn ingevulde wachtwoord klopt
+            if ($this->getCurrentUser() && sha1($_POST['oldpassword']) == $this->getCurrentUser()->password) {    // Als we een gebruiker hebben en zijn ingevulde wachtwoord klopt
                 if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {    //  Als beide password velden zijn ingevuld
                     if ($_POST['password'] != "" && $_POST['confirmpassword'] != "") {
                         if ($_POST['password'] == $_POST['confirmpassword']) {  // Als ze gelijk zijn
-                            if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) &&  // Email bestaat uit karakters a-z, A-Z, 0-9, _, en - | Het moet een punt en een @ bevatten
+                            if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) && // Email bestaat uit karakters a-z, A-Z, 0-9, _, en - | Het moet een punt en een @ bevatten
                                     preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) { // Wachtwoord bestaat uit A-Z, a-z, 0-9 en het minimum karakters is 6
                                 if (!isset($_POST['msn'])) {
                                     $_POST['msn'] = "";
@@ -1025,11 +1017,11 @@ Class website {
                                 if (!isset($_POST['skype'])) {
                                     $_POST['skype'] = "";
                                 }
-                                $query = "UPDATE `gebruikers` SET `wachtwoord` = '" . $this->EncryptPassword($_POST['password']) . "',
+                                $query = "UPDATE `gebruikers` SET `wachtwoord` = '" . sha1($_POST['password']) . "',
                                 `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
                                     `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
                                         WHERE `id` = '" . $this->getCurrentUser()->id . "';";
-                                mysql_query($query);
+                                $this->db->doQuery($query);
                                 $this->saveImage($_FILES);  // Stuur de $_FILES variabele door naar de functie die het plaatje gaat verwerken
                                 $this->showQuestions(); // Toen daarna de homepage
                             } else {
@@ -1051,7 +1043,7 @@ Class website {
                             $query = "UPDATE `gebruikers` SET  `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
                                     `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
                                         WHERE `id` = '" . $this->getCurrentUser()->id . "';";
-                            mysql_query($query);
+                            $this->db->doQuery($query);
                             $this->saveImage($_FILES, $_POST);
                             $this->showQuestions();
                         }
