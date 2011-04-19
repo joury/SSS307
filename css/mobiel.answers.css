@@ -1,0 +1,275 @@
+/*mobiel.answer.css*/
+
+/*algemeen*/
+html{
+	/*text*/
+	color:#000;
+	/*Achtergrondkleur*/
+	background:#FFF;
+}
+
+li{
+	list-style:none;
+}
+
+body{
+	font:13px/1.231 arial,helvetica,clean,sans-serif;
+	*font-size:small;
+	*font:x-small;
+}
+
+
+body{
+	color:#333;
+	background:transparent;
+}
+
+/*Link kleur*/
+a{
+	color:#069;
+	text-decoration:none;
+}
+
+/*invoerveld*/
+select,input,button,textarea{
+	font:99% arial,helvetica,clean,sans-serif;
+}
+
+input,textarea,select{
+	*font-size:100%;
+}
+
+/*Paginabreedte*/
+.wide #yan{
+	width:680px;
+	border:0;
+}
+
+
+/*Marge pagina*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{
+	margin:0;
+	padding:0;
+}
+
+/*Inlogbalk*/
+
+#ygma .sp{
+    background-image:url(../images/answers-1.0.4.png);
+}
+
+#pa-nav li,#pa2-nav li,#mepanel-nav li{
+	list-style-type:none;
+	float:left;
+	background-repeat:no-repeat;
+}
+
+#ygma form{
+    margin:0;
+    text-align:left;
+    display:block;
+    font-size:100%;
+    padding:.3em .3em .3em .4em;
+    *border:none!important;
+}
+
+#ygma #mepanel{
+	margin-left:10px;
+	margin-top:9px;
+	_margin-left:5px;
+	float:left;
+}
+
+#ygma #yahoo,#ygma #ymenu{
+	width:100%;
+}
+
+/*Inlogbalk + Logo*/
+#ygma{
+    border-top:none;
+    font:12px/1.231 arial,sans-serif;
+    text-align:center;
+    margin:0;
+    padding:0;
+    color:#000;
+    *font:x-small;
+}
+
+/*
+#ygma .ygmaclr:after{
+	content:"";
+	clear:both;
+	display:block;
+}
+*/
+
+/*Logo*/
+
+#ygma #yahoo{
+	
+	padding-top:15px;
+}
+
+#ygmabot{
+	float:right;
+	padding-left:15px;
+	display:block;
+	text-align:right;
+}
+
+/*Home+Categories+Profiles Tab*/
+
+#yan-nav{
+	margin-left:10px;
+	margin-top:50px;
+}
+
+#yan-nav li.current,#yan-nav li:hover,#yan-nav li.hover{
+	border-color:#0D7A05;
+}
+
+#yan-nav li.current{
+	margin-bottom:-2px;
+	padding-bottom:7px;
+}
+
+#yan-nav li{
+	padding-left:0;
+	zoom:1;
+}
+
+.tabs li,#yan-nav li{
+	float:left;
+	margin-right:0.5em;
+	padding-left:1em;
+	position:relative;
+	font-weight:bold;
+	border:1px solid #3BAE08;
+	background-color:#f3f9eb;
+	border-bottom:0;
+}
+
+#yan-nav li{
+	text-transform:uppercase;
+	position:static;
+}
+
+/*Tab kleur*/
+.tabs li.current,#yan-nav li.current a,#yan-nav li:hover,#yan-nav li.hover,#yan-nav li:hover a,#yan-nav li.hover a{
+	color:#fff;
+	background-color:#3BAE08;
+	background-position:0 0;
+
+}
+
+.tabs li,.tabs li a,.tabs li span,#yan-nav li.current a,#yan-nav li:hover a,#yan-nav li.hover a{
+	-webkit-border-top-left-radius:6px;
+	-webkit-border-top-right-radius:6px;
+	-moz-border-radius-topleft:6px;
+	-moz-border-radius-topright:6px;
+	-ms-border-top-left-radius:6px;
+	-ms-border-top-right-radius:6px;
+	border-top-left-radius:6px;
+	border-top-right-radius:6px;
+}
+
+
+.tabs li,#yan-nav li{
+	float:left;
+	margin-right:0.5em;
+	padding-left:0;
+	position:relative;
+	font-weight:bold;
+	border:1px solid #3BAE08;
+	background-color:#f3f9eb;
+	border-bottom:0;
+}
+
+
+#yan-nav li.current a,#yan-nav li:hover a,#yan-nav li.hover a{
+	border:1px solid #82C844;
+	border-bottom:0;
+	margin-bottom:-2px;
+	padding-bottom:0px;
+}
+
+#yan-nav li a{
+	padding-left:1em;
+}
+
+yan-nav li a{
+	padding-top:20px;
+}
+
+#yan-nav li a{
+	text-decoration:none;
+}
+
+.tabs li a,.tabs li span{
+	float:left;
+	padding:7px 1em 6px 0;
+	color:#666;
+}
+
+#yan-nav li a{
+	padding-left:1em;
+	border:1px solid #f3f9eb;
+	border-bottom:0;
+	color:#333;
+}
+
+.tabs{
+	margin-right:1em;
+	line-height:1;
+	zoom:1;
+}
+
+/*Groene banner*/
+#yan-banner{
+	background:#148D0B url(../images/gradient_header.png) repeat-x 0 0;
+	color:#fff;
+	border:1px solid #0D7A05;
+	border-width:1px 0;
+	padding:0 0 6px;
+	margin-top:77px;
+}
+
+#yan-banner .short{
+	line-height:43px;
+}
+
+#yan-banner ul{
+	overflow:hidden;
+	zoom:1;
+	padding:0 10px 0;
+	border-top:1px solid #81C844;
+	position:relative;
+}
+
+/*Ask balk*/
+.wide #yan-banner .short #yan-banner-ask{
+	margin-top: 15px;
+	width:250px;
+}
+
+body #yan-banner .short #yan-banner-ask,body #yan-banner .short #yan-banner-answer,body #yan-banner .short #yan-banner-discover{
+	background:url(../images/header2.png) no-repeat;
+	min-height:47px;
+	_height:47px;
+}
+
+body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-banner #yan-banner-discover{
+	background:url(../images/header-large2.png) no-repeat;
+	padding-top:8px;
+}
+
+/*Search balk*/
+#yan-banner li{
+	float:left;
+	width:250px;
+	padding-left:56px;
+	margin-top:15px;
+	position:relative;
+}
+
+
