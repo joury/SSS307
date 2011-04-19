@@ -249,7 +249,6 @@ Class website {
 
     function Login($username, $password) {  // Check if the variables sent are correct and set the cookie
         require $this->MainConfigFile;
-        $this->DB->MakeConnection();
         $username = stripslashes(mysql_real_escape_string($username));
         $password = sha1(stripslashes(mysql_real_escape_string($password)));
         $passwordInDB = $this->db->doQuery("SELECT `wachtwoord` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");
@@ -258,7 +257,7 @@ Class website {
         } else {
             if (mysql_result($passwordInDB, 0) == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
                 $cookie = setcookie($cookiename, $username . "," . $password, time() + ($cookietime * 60));  // Set a cookie with "name,password" that is legit for the following 5 minutes
-                echo '<script type="text/javascript" language="JavaScript">location.reload(true);</script>';
+                echo '<meta http-equiv="refresh" content="0">';
             } else {
                 $this->correctLogin = false;
             }
@@ -575,7 +574,7 @@ Class website {
         } else {
             $result = $this->db->doQuery("SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "';");
         }
-        if (mysql_num_rows($result) > 0) {
+        if ($result != false) {
             $questions .= "<ul>";
             while ($fields = mysql_fetch_assoc($result)) {
                 $questions .= '
@@ -739,8 +738,8 @@ Class website {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
                 $user = $this->getUser($fields['gebruikersid']);
-                $positive = mysql_result(mysql_query("SELECT SUM(`positive`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
-                $negative = mysql_result(mysql_query("SELECT SUM(`negative`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
+                $positive = mysql_result($this->db->doQuery("SELECT SUM(`positive`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
+                $negative = mysql_result($this->db->doQuery("SELECT SUM(`negative`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
                 if ($positive == "") {
                     $positive = 0;
                 }
@@ -809,11 +808,8 @@ Class website {
     }
 
     function hasVotedOnAnswer($answerid) {
-        $result = mysql_query("SELECT * FROM `votes` WHERE `antwoordid` = '" . $answerid . "' AND `gebruikersid`= '" . $this->getCurrentUser()->id . "';");
-        if (mysql_num_rows($result) == 1) {
-            return true;
-        }
-        return false;
+        $result = $this->db->doQuery("SELECT * FROM `votes` WHERE `antwoordid` = '" . $answerid . "' AND `gebruikersid`= '" . $this->getCurrentUser()->id . "';");
+        return ($result != false);
     }
 
     function submitVote($answerid, $userid, $vote) {
@@ -824,7 +820,7 @@ Class website {
         } else {
             $positive = 1;
         }
-        mysql_query("INSERT INTO `votes` VALUES ('" . $answerid . "', '" . $userid . "', '" . $positive . "', '" . $negative . "');");
+        $this->db->doQuery("INSERT INTO `votes` VALUES ('" . $answerid . "', '" . $userid . "', '" . $positive . "', '" . $negative . "');");
     }
 
     function getAnswerPoster($title = "", $categoryid = "", $questionid = "") {
@@ -948,7 +944,7 @@ Class website {
         if (!class_exists('user')) {
             require "class.user.php";
         }
-        return new user($id, "", "");
+        return new user($id, "", "", $this->db);
     }
 
     function getCurrentUser() {
@@ -961,7 +957,7 @@ Class website {
                 if (!class_exists('user')) {
                     require "class.user.php";
                 }
-                $this->User = new user("", $parts[0], $parts[1]);
+                $this->User = new user("", $parts[0], $parts[1], $this->db);
                 if ($this->User == "") {
                     return false;
                 }

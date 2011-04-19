@@ -29,18 +29,18 @@ class user {
     var $skype;
     var $job;
 
-    function __construct($id = "", $username = "", $password = "") {
+    function __construct($id = "", $username = "", $password = "", $db) {
         if ($id != "" || ($username != "" && $password != "")) {
-            $result = "";
             if ($id != "") {
-                $result = mysql_query("SELECT * FROM `gebruikers` WHERE `id` = '" . $id . "';");
+                $query = "SELECT * FROM `gebruikers` WHERE `id` = '" . $id . "';";
             } else if ($username != "" && $password != "") {
-                $result = mysql_query("SELECT * FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' AND `wachtwoord` = '" . $password . "';");
+                $query = "SELECT * FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "' AND `wachtwoord` = '" . $password . "';";
             }
 
-            if ($result != "") {
-                if (mysql_num_rows($result) == 1) {   // Als we 1 gebruiker hebben met dit ID (Databases kunnen fouten bevatten zoals meerdere personen met hetzelfde ID...gewoon er zeker van te zijn dus)
-                    $this->getVars($result);
+            $amount = $db->getRowCount($query);
+            if ($amount != false) {
+                if ($amount == 1) {   // Als we 1 gebruiker hebben met dit ID (Databases kunnen fouten bevatten zoals meerdere personen met hetzelfde ID...gewoon er zeker van te zijn dus)
+                    $this->getVars($db->doQuery($query));
                 } else {
                     return false;
                 }
