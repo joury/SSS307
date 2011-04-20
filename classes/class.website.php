@@ -927,14 +927,18 @@ Class website {
     }
 
     function submitQuestion($_POST) {
-        $query = "INSERT INTO `vragen` (`taalid`, `gebruikerid`, `vraag`, `aanvulling`, `beantwoord`, `posttijd`)
+        $query = "
+            SET `time_zone` = '+02:00';
+            INSERT INTO `vragen` (`taalid`, `gebruikerid`, `vraag`, `aanvulling`, `beantwoord`, `posttijd`)
             VALUES ('" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['title'] . "', '" . $_POST['text'] . "', '0', now());
         ";
         $this->db->doQuery($query);
     }
 
     function submitAnswer($_POST) {
-        $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `posttijd`)
+        $query = "
+            SET `time_zone` = '+02:00';
+            INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `posttijd`)
             VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', now());
         ";
         $this->db->doQuery($query);
