@@ -188,3 +188,24 @@ function ContentRequest(GET) {
         return false;
     }
 }
+
+function handleSearch(form) {
+    var content = "";
+    if (form.query.value.length >= 4) {
+        content = ContentRequest("?search=" + form.query.value);
+        if (content) {
+            clear();
+            document.getElementById("yan-question").innerHTML = content;
+            return false;
+        }
+        return true;
+    } else {
+        content = ContentRequest("?homepage=1");
+        if (content) {
+            clear();
+            document.getElementById("yan-question").innerHTML = content;
+            return false;
+        }
+        return true;
+    }
+}

@@ -57,7 +57,7 @@
                                     if (isset($_GET['questionid'])) {
                                         echo $website->getQuestion($_GET['categoryid'], $_GET['questionid']);
                                     } else {
-                                        echo $website->getQuestions($_GET['categoryid']);
+                                        echo $website->getQuestionsMenu($_GET['categoryid']);
                                     }
                                 } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
                                     echo $website->getUserInfo($_GET['userid']);
@@ -65,7 +65,7 @@
                                     echo $website->getCategories();
                                     echo $website->getNewQuestionButton();
                                 } else {
-                                    echo $website->getQuestions();
+                                    echo $website->getQuestionsMenu();
                                 }
                             } else {
                                 if ($_POST) {
@@ -80,13 +80,13 @@
                                         if (isset($_POST['questionid'])) {
                                             echo $website->getQuestion($_POST['categoryid'], $_POST['questionid']);
                                         } else {
-                                            echo $website->getQuestions();
+                                            echo $website->getQuestionsMenu();
                                         }
                                     } else if (isset($_POST['answerid']) && isset($_POST['userid'])) {
                                         $website->submitVote($_POST['answerid'], $_POST['userid'], $_POST['submit']);
                                     }
                                 } else {
-                                    echo $website->getQuestions();
+                                    echo $website->getQuestionsMenu();
                                 }
                             }
                             ?>

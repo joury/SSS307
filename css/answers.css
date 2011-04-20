@@ -326,12 +326,8 @@ input.default,textarea.default{
 	width:260px;
 }
 
-.wide #yan-banner .short #yan-banner-ask{
+.wide #yan-banner .short #yan-banner-ask, .wide #yan-banner .short #yan-banner-answer{
 	width:350px;
-}
-
-.wide #yan-banner .short #yan-banner-answer{
-	width:450px;
 }
 
 #yan-banner .short{
@@ -342,12 +338,7 @@ input.default,textarea.default{
 	display:inline;
 }
 
-#yan-banner .short #yan-banner-ask #banner-ask{
-	width:190px;
-	vertical-align:middle;
-}
-
-#yan-banner .short #yan-banner-answer #banner-answer{
+#yan-banner .short #yan-banner-ask #banner-ask, #yan-banner .short #yan-banner-answer #banner-answer{
 	width:190px;
 	vertical-align:middle;
 }
@@ -389,7 +380,7 @@ input.default,textarea.default{
 	visibility:hidden;
 }
 
-#yan-banner #banner-ask{
+#yan-banner #banner-ask, #yan-banner #banner-answer{
 	width:90%;
 	margin:7px 0 3px;
 	border:1px solid #ccc;
@@ -397,6 +388,8 @@ input.default,textarea.default{
 	z-index:1;
 	padding:2px;
 }
+
+
 
 body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-banner #yan-banner-discover{
 	background:url(../images/header-large2.png) no-repeat;

@@ -29,9 +29,10 @@ Class database {
     function doQuery($sql) {
         if ($this->makeConnection(false)) {
             $result = mysql_query($sql);
-            if ($result && mysql_num_rows($result) > 0) {
+            if ($result && @mysql_num_rows($result) > 0) {
                 return $result;
             } else {
+                mysql_query($sql) or die (mysql_error());
                 return false;
             }
         } else {

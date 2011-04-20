@@ -24,7 +24,7 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
 } else if (isset($_GET['profile'])) {
     echo $website->getUserInfo($_GET['profile']);
 } else if (isset($_GET['homepage'])) {
-    echo $website->getQuestions();
+    echo $website->getQuestionsMenu();
 } else if (isset($_GET['categories'])) {
     echo $website->getCategories();
     echo $website->getNewQuestionButton();
@@ -50,5 +50,7 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
             echo $website->getQuestions($_GET['categoryid']);
         }
     }
+} else if (isset($_GET['search'])) {
+    echo $website->getQuestionsMenu("", $_GET['search']);
 }
 ?>

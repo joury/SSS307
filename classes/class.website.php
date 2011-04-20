@@ -368,18 +368,7 @@ Class website {
                             <form action="' . $_SERVER['PHP_SELF'] . '" method="GET" name="Search">
                                 <div>
                                     <div>
-                                        <input class="default" maxlength="110" id="banner-answer" name="query" type="text">
-                                        <span class="cta">
-                                            <button value="Continue" class="cta-button">
-                                                <span>
-                                                    <span>
-                                                        <span>
-                                                            <span>Search!</span>
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </button>
-                                        </span>
+                                        <input style="position:absolute;top:5px;" class="default" maxlength="110" id="banner-answer" name="query" type="text" onkeyup="handleSearch(this.form);">
                                     </div>
                                 </div>
                             </form>
@@ -567,13 +556,26 @@ Class website {
         }
     }
 
-    function getQuestions($categoryid = "") {
-        $questions = "";
-        if ($categoryid == "") {
-            $result = $this->db->doQuery("SELECT * FROM `vragen`;");
+    function getQuestions($categoryid = "", $regexp = "") {
+        if ($regexp == "") {
+            if ($categoryid == "") {
+                $query = "SELECT * FROM `vragen`;";
+            } else {
+                $query = "SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "';";
+            }
         } else {
-            $result = $this->db->doQuery("SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "';");
+            if ($categoryid == "") {
+                $query = "SELECT * FROM `vragen` WHERE `vraag` REGEXP '" . $regexp . "';";
+            } else {
+                $query = "SELECT * FROM `vragen` WHERE `taalid` = '" . $categoryid . "' AND `vraag` REGEXP '" . $regexp . "';";
+            }
         }
+        return $this->db->doQuery($query);
+    }
+
+    function getQuestionsMenu($categoryid = "", $regexp = "") {
+        $questions = "";
+        $result = $this->getQuestions($categoryid, $regexp);
         if ($result != false) {
             $questions .= "<ul>";
             while ($fields = mysql_fetch_assoc($result)) {
@@ -927,18 +929,18 @@ Class website {
     }
 
     function submitQuestion($_POST) {
-        $query = "
-            SET `time_zone` = '+02:00';
-            INSERT INTO `vragen` (`taalid`, `gebruikerid`, `vraag`, `aanvulling`, `beantwoord`, `posttijd`)
+        $query = "SET `time_zone` = '+02:00';";
+        $this->db->doQuery($query);
+        $query = "INSERT INTO `vragen` (`taalid`, `gebruikerid`, `vraag`, `aanvulling`, `beantwoord`, `posttijd`)
             VALUES ('" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['title'] . "', '" . $_POST['text'] . "', '0', now());
         ";
         $this->db->doQuery($query);
     }
 
     function submitAnswer($_POST) {
-        $query = "
-            SET `time_zone` = '+02:00';
-            INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `posttijd`)
+        $query = "SET `time_zone` = '+02:00';";
+        $this->db->doQuery($query);
+        $query = "INSERT INTO `antwoorden` (`vraagid`, `taalid`, `gebruikersid`, `antwoord`, `posttijd`)
             VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', now());
         ";
         $this->db->doQuery($query);
