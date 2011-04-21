@@ -281,11 +281,15 @@ Class website {
         ';
     }
 
-    function getCategories($_GET = "") {
+    function getCategories($_GET = "", $regexp = "") {
         $categories = "";
-        $result = $this->db->doQuery("SELECT * FROM `talen`;");
+        if ($regexp == "") {
+            $result = $this->db->doQuery("SELECT * FROM `talen`;");
+        } else {
+            $result = $this->db->doQuery("SELECT * FROM `talen` WHERE `naam` REGEXP '" . $regexp . "';");
+        }
         if ($result == false) {
-            $categories .= "Query error when loading languages";
+            $categories .= "<li>No results!</li>";
         } else {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($_GET && isset($_GET['categoryid']) && $fields['id'] == $_GET['categoryid']) {
@@ -584,12 +588,12 @@ Class website {
                         <a href="?categoryid=' . $fields['taalid'] . '&amp;questionid=' . $fields['id'] . '" onclick="return loadQuestion(' . $fields['taalid'] . ', ' . $fields['id'] . ');">
                             ' . $this->getCategoryName($fields['taalid']) . " - " . $fields['vraag'] . '
                         </a>
-                   </li>
-               ';
+                    </li>
+                ';
             }
             $questions .="</ul>";
         } else {
-            $questions .= "No questions yet!";
+            $questions .= "<li>No results!</li>";
         }
 
         $questions .= $this->getNewQuestionButton($categoryid);
@@ -944,6 +948,28 @@ Class website {
             VALUES ('" . $_POST['questionid'] . "', '" . $_POST['categoryid'] . "', '" . $this->getCurrentUser()->id . "', '" . $_POST['text'] . "', now());
         ";
         $this->db->doQuery($query);
+    }
+
+    function getUsers($regexp = "") {
+        if ($regexp == "") {
+            $query = "SELECT * FROM `gebruikers`;";
+        } else {
+            $query = "SELECT * FROM `gebruikers` WHERE `gebruikersnaam` REGEXP '" . $regexp . "';";
+        }
+        $result = $this->db->doQuery($query);
+        if ($result != false) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                return '
+                    <li>
+                        <a href="index.php?userid=' . $fields['id'] . '">
+                            ' . ucfirst($fields['gebruikersnaam']) . '
+                        </a>
+                    </li>
+                ';
+            }
+        } else {
+            return "<li>None.</li>";
+        }
     }
 
     function getUser($id) {

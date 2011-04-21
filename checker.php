@@ -51,6 +51,14 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
         }
     }
 } else if (isset($_GET['search'])) {
-    echo $website->getQuestionsMenu("", $_GET['search']);
+    $regexp = $_GET['search'];
+    echo "<b>Categories that match your query:</b><br><br>";
+    echo $website->getCategories("", $regexp);
+    echo "<br><hr><br>";
+    echo "<b>Questions that match your query:</b><br><br>";
+    echo $website->getQuestionsMenu("", $regexp);
+    echo "<br><hr><br>";
+    echo "<b>Users that match your query:</b><br><br>";
+    echo $website->getUsers($regexp);
 }
 ?>
