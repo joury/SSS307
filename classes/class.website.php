@@ -645,7 +645,7 @@ Class website {
         }
     }
 
-    function getCountries($country) {
+    function getCountries($country = "") {
         $countries = '<option value=""></option>';
         $result = $this->db->doQuery("SELECT * FROM `landen` ORDER BY `name`;");
         if ($result != false) {
@@ -660,7 +660,7 @@ Class website {
         return $countries;
     }
 
-    function getStates($country, $state) {
+    function getStates($country, $state = "") {
         $states = '<option value="" selected></option>';
         $result = $this->db->doQuery("SELECT `name` FROM `provincies` WHERE `country_id` = (SELECT `country_id` FROM `landen` WHERE `name` = '" . $country . "') ORDER BY `name`;");
         if ($result != false) {
@@ -675,7 +675,7 @@ Class website {
         return $states;
     }
 
-    function getCities($state, $city) {
+    function getCities($country, $state, $city = "") {
         $states = '<option value="" selected></option>';
         $result = $this->db->doQuery("SELECT `name` FROM `plaatsen` WHERE `state_id` = (SELECT `state_id` FROM `provincies` WHERE `name` = '" . $state . "') ORDER BY `name`;");
         if ($result != false) {
@@ -1174,43 +1174,64 @@ Class website {
         if (!isset($_POST['year'])) {
             $_POST['year'] = "";
         }
-        return '
-            <form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">
-            <tr>
-                <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
-            </tr>
-            <tr>
-                <td>Insertion:</td> <td><input type="text" value="' . $_POST['insertion'] . '" name="insertion"></td>
-            </tr>
-            <tr>
-                <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onKeyup="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
-            </tr>
-            <tr>
-                <td>Gender:</td>
-                <td>
-                    <select name="gender">
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Birthdate:</td>
-                <td>
-                    <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
-                        -
-                    <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
-                        -
-                    <input type="text" id="year" value="' . $_POST['year'] . '" name="year" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:30px;" maxlength="4">
-                    <font color="RED">*</font>
-                    <img src="images/ffffff.gif" id="birthdateImage"></img>
-                </td>
-            </tr>
+        $additionalInfoForm = '<form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">';
+        if ($_POST['firstname'] == "") {
+            $additionalInfoForm .= '
+                <tr>
+                    <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
+                </tr>
+            ';
+        }
+        if ($_POST['insertion'] == "" && ($_POST['firstname'] != "" && $_POST['lastname'] != "")) {
+            $additionalInfoForm .= '
+                <tr>
+                    <td>Insertion:</td> <td><input type="text" value="' . $_POST['insertion'] . '" name="insertion"></td>
+                </tr>
+            ';
+        }
+        if ($_POST['lastname'] == "") {
+            $additionalInfoForm .= '
+                <tr>
+                    <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onKeyup="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
+                </tr>
+            ';
+        }
+        if ($this->getCurrentUser()->gender == "") {
+            $additionalInfoForm .= '
+                <tr>
+                    <td>Gender:</td>
+                    <td>
+                        <select name="gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </td>
+                </tr>
+            ';
+        }
+        if ($_POST['day'] == "" || $_POST['month'] == "" || $_POST['year'] == "") {
+            $additionalInfoForm .= '
+                <tr>
+                    <td>Birthdate:</td>
+                    <td>
+                        <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                            -
+                        <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                            -
+                        <input type="text" id="year" value="' . $_POST['year'] . '" name="year" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:30px;" maxlength="4">
+                        <font color="RED">*</font>
+                        <img src="images/ffffff.gif" id="birthdateImage"></img>
+                    </td>
+                </tr>
+            ';
+        }
+        $additionalInfoForm .= '
             <tr>
                 <td><input type="submit" name="btnAdditionalInfo" value="Save"></td>
             </tr>
             </form>
         ';
+        return $additionalInfoForm;
     }
 
     function getProfileEditForm($_POST, $user) {
@@ -1261,7 +1282,7 @@ Class website {
             <tr>
                 <td>Country:</td>
                 <td>
-                    <select id="country" name="country" onChange="this.form.submit();">
+                    <select id="country" name="country" onChange="handleCountryChange(this.form);">
                         ' . $this->getCountries($country) . '
                     </select>
                 </td>
@@ -1269,7 +1290,7 @@ Class website {
             <tr>
                 <td>State/Province:</td>
                 <td>
-                    <select id="state" name="state" onChange="this.form.submit();">
+                    <select id="state" name="state" onChange="handleStateChange(this.form);">
                         ' . $this->getStates($country, $state) . '
                     </select>
                 </td>
@@ -1278,7 +1299,7 @@ Class website {
                 <td>City:</td>
                 <td>
                     <select id="city" name="city">
-                        ' . $this->getCities($state, $city) . '
+                        ' . $this->getCities($country, $state, $city) . '
                     </select>
                 </td>
             </tr>

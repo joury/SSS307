@@ -166,3 +166,42 @@ function CheckBirthdate(form, currentyear) {
     }
     return correct;
 }
+
+function handleCountryChange(form) {
+    for (var j = 0; j < form.state.length; j++) {
+        form.state.remove(0);
+    }
+    for (var k = 0; k < form.city.length; j++) {
+        form.city.remove(0);
+    }
+    var content = ContentRequest("?country=" + form.country.options[form.country.selectedIndex].value);
+    if (content) {
+        var options = content.split("<br>");
+        for (var i = 0; i < options.length; i++) {
+            if (options[i] == "") {
+                continue;
+            }
+            var option = document.createElement("option");
+            option.text = options[i];
+            form.state.options.add(option);
+        }
+    }
+}
+
+function handleStateChange(form) {
+    for (var j = 0; j < form.city.length; j++) {
+        form.city.remove(0);
+    }
+    var content = ContentRequest("?country=" + form.country.options[form.country.selectedIndex].value + "&state=" + form.state.options[form.state.selectedIndex].value);
+    if (content) {
+        var options = content.split("<br>");
+        for (var i = 0; i < options.length; i++) {
+            if (options[i] == "") {
+                continue;
+            }
+            var option = document.createElement("option");
+            option.text = options[i];
+            form.city.options.add(option);
+        }
+    }
+}

@@ -60,5 +60,29 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
     echo "<br><hr><br>";
     echo "<b>Users that match your query:</b><br><br>";
     echo $website->getUsers($regexp);
+} else if (isset($_GET['country'])) {
+    if (!isset($_GET['state'])) {
+        $countries = "";
+        $pieces = explode("</option>", $website->getStates($_GET['country']));
+        foreach ($pieces as $piece) {
+            $piece = htmlentities(preg_replace('/<option.*.>/', "", $piece));
+            $piece .= "<br>";
+            if ($piece != "") {
+                $countries .= $piece;
+            }
+        }
+        echo $countries;
+    } else {
+        $countries = "";
+        $pieces = explode("</option>", $website->getCities($_GET['country'], $_GET['state']));
+        foreach ($pieces as $piece) {
+            $piece = htmlentities(preg_replace('/<option.*.>/', "", $piece));
+            $piece .= "<br>";
+            if ($piece != "") {
+                $countries .= $piece;
+            }
+        }
+        echo $countries;
+    }
 }
 ?>
