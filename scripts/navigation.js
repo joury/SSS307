@@ -191,7 +191,7 @@ function ContentRequest(GET) {
 
 function handleSearch(form) {
     var content = "";
-    if (form.query.value.length >= 4) {
+    if (form.query.value.length >= 3) {
         content = ContentRequest("?search=" + form.query.value);
         if (content) {
             clear();

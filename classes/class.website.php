@@ -286,7 +286,7 @@ Class website {
         if ($regexp == "") {
             $result = $this->db->doQuery("SELECT * FROM `talen`;");
         } else {
-            $result = $this->db->doQuery("SELECT * FROM `talen` WHERE `naam` REGEXP '" . $regexp . "';");
+            $result = $this->db->doQuery("SELECT * FROM `talen` WHERE `naam` REGEXP '[" . $regexp . "]';");
         }
         if ($result == false) {
             $categories .= "<li>No results!</li>";
