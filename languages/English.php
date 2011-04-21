@@ -4,6 +4,7 @@ $Language = array(
     "NoDB" => "No Database connection available.",
     "ErrorOccured" => "The following error(s) occured:",
     "FieldEmpty" => "field is empty",
+    "UnknownError" => "An unknown error occured.",
 
     // Simple Words
     "Login" => "Login",

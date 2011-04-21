@@ -70,7 +70,7 @@
                             } else {
                                 if ($_POST) {
                                     if (isset($_POST['btnProfileEdit'])) {
-                                        $website->submitEdit($_POST);
+                                        $website->submitProfileEdit($_POST);
                                     } else if (isset($_POST['btnAdditionalInfo'])) {
                                         $website->submitAdditional($_POST);
                                     } else if (isset($_POST['btnRegister'])) {

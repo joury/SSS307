@@ -677,7 +677,10 @@ Class website {
 
     function getCities($country, $state, $city = "") {
         $states = '<option value="" selected></option>';
-        $result = $this->db->doQuery("SELECT `name` FROM `plaatsen` WHERE `state_id` = (SELECT `state_id` FROM `provincies` WHERE `name` = '" . $state . "') ORDER BY `name`;");
+        $result = $this->db->doQuery("SELECT `name` FROM `plaatsen` WHERE `state_id` = 
+            (SELECT `state_id` FROM `provincies` WHERE `name` = '" . $state . "' AND `country_id` =
+                (SELECT `country_id` FROM `landen` WHERE `name` = '".$country."')
+             ) ORDER BY `name`;");
         if ($result != false) {
             while ($fields = mysql_fetch_assoc($result)) {
                 if ($fields['name'] == $city) {
@@ -1028,59 +1031,64 @@ Class website {
         $this->getUserInfo($this->getCurrentUser()->id, $_POST, $errors);
     }
 
-    function submitEdit($_POST) {
+    function submitProfileEdit($_POST) {
         if ($_POST['country'] != "") {  // Als we wel een land hebben ingesteld
-            if ($_POST['city'] == "") { // Dan moeten we ook een stad kiezen
-                $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
-            }
-            if ($this->getCurrentUser() && sha1($_POST['oldpassword']) == $this->getCurrentUser()->password) {    // Als we een gebruiker hebben en zijn ingevulde wachtwoord klopt
-                if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {    //  Als beide password velden zijn ingevuld
-                    if ($_POST['password'] != "" && $_POST['confirmpassword'] != "") {
-                        if ($_POST['password'] == $_POST['confirmpassword']) {  // Als ze gelijk zijn
-                            if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) && // Email bestaat uit karakters a-z, A-Z, 0-9, _, en - | Het moet een punt en een @ bevatten
-                                    preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) { // Wachtwoord bestaat uit A-Z, a-z, 0-9 en het minimum karakters is 6
-                                if (!isset($_POST['msn'])) {
-                                    $_POST['msn'] = "";
+            if ($_POST['city'] != "") { // Dan moeten we ook een stad kiezen
+                if ($this->getCurrentUser() && sha1($_POST['oldpassword']) == $this->getCurrentUser()->password) {    // Als we een gebruiker hebben en zijn ingevulde wachtwoord klopt
+                    if (isset($_POST['password']) && isset($_POST['confirmpassword'])) {    //  Als beide password velden zijn ingevuld
+                        if ($_POST['password'] != "" && $_POST['confirmpassword'] != "") {
+                            if ($_POST['password'] == $_POST['confirmpassword']) {  // Als ze gelijk zijn
+                                if (preg_match('/^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z0-9]{2,4})+$/', $_POST['email']) && // Email bestaat uit karakters a-z, A-Z, 0-9, _, en - | Het moet een punt en een @ bevatten
+                                        preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) { // Wachtwoord bestaat uit A-Z, a-z, 0-9 en het minimum karakters is 6
+                                    $this->doProfileEdit($_POST);
+                                } else {
+                                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');  // Stuur de gebruiker terug naar de Profielpagina en stuur de error mee
                                 }
-                                if (!isset($_POST['skype'])) {
-                                    $_POST['skype'] = "";
-                                }
-                                $query = "UPDATE `gebruikers` SET `wachtwoord` = '" . sha1($_POST['password']) . "',
-                                `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
-                                    `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
-                                        WHERE `id` = '" . $this->getCurrentUser()->id . "';";
-                                $this->db->doQuery($query);
-                                $this->saveImage($_FILES);  // Stuur de $_FILES variabele door naar de functie die het plaatje gaat verwerken
-                                $this->showQuestions(); // Toen daarna de homepage
                             } else {
-                                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');  // Stuur de gebruiker terug naar de Profielpagina en stuur de error mee
+                                echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
                             }
                         } else {
-                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
+                            $this->doProfileEdit($_POST);
                         }
                     } else {
-                        if ($_POST['password'] != "" || $_POST['confirmpassword'] != "") {
-                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordEmpty") . '</font>');
-                        } else {
-                            if (!isset($_POST['msn'])) {
-                                $_POST['msn'] = "";
-                            }
-                            if (!isset($_POST['skype'])) {
-                                $_POST['skype'] = "";
-                            }
-                            $query = "UPDATE `gebruikers` SET  `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
-                                    `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
-                                        WHERE `id` = '" . $this->getCurrentUser()->id . "';";
-                            $this->db->doQuery($query);
-                            $this->saveImage($_FILES, $_POST);
-                            $this->showQuestions();
-                        }
+                        echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("UnknownError") . '</font>');
                     }
+                } else {
+                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PassChangeMatch") . '</font>');
                 }
             } else {
-                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PassChangeMatch") . '</font>');
+                echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
+            }
+        } else {
+            $this->doProfileEdit($_POST);
+        }
+    }
+
+    function doProfileEdit($_POST) {
+        if (!isset($_POST['msn'])) {
+            $_POST['msn'] = "";
+        }
+        if (!isset($_POST['skype'])) {
+            $_POST['skype'] = "";
+        }
+        if (isset($_POST['password'])) {
+            $query = "UPDATE `gebruikers` SET `wachtwoord` = '" . sha1($_POST['password']) . "',
+                        `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
+                            `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
+                                WHERE `id` = '" . $this->getCurrentUser()->id . "';";
+        } else {
+            if (isset($_POST['country'])) {
+                $query = "UPDATE `gebruikers` SET  `email` = '" . $_POST['email'] . "', `land` = '" . $_POST['country'] . "', `provincie` = '" . $_POST['state'] . "',
+                            `stad` = '" . $_POST['city'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
+                                WHERE `id` = '" . $this->getCurrentUser()->id . "';";
+            } else {
+                $query = "UPDATE `gebruikers` SET  `email` = '" . $_POST['email'] . "', `baan` = '" . $_POST['job'] . "', `msn` = '" . $_POST['msn'] . "', `skype` = '" . $_POST['skype'] . "'
+                                WHERE `id` = '" . $this->getCurrentUser()->id . "';";
             }
         }
+        $this->db->doQuery($query);
+        $this->saveImage($_FILES);  // Stuur de $_FILES variabele door naar de functie die het plaatje gaat verwerken
+        echo $this->getUserInfo($this->getCurrentUser()->id, "", "Succesfully updated."); // Toen daarna de homepage
     }
 
     function saveImage($_FILES, $_POST = "") {
@@ -1120,16 +1128,16 @@ Class website {
                                 imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $toWidth, $toHeight, $width, $height);
                                 imagejpeg($imageResized, $SaveDir . $FileName, 100);
                             } else {
-                                $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('SaveError') . '</font>');
+                                echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('SaveError') . '</font>');
                             }
                         } else {
-                            $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"] . '</font>');
+                            echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"] . '</font>');
                         }
                     } else {
-                        $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $_FILES["imageFile"]["type"] . '</font>');
+                        echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $_FILES["imageFile"]["type"] . '</font>');
                     }
                 } else {
-                    $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB " . $this->Translate('FileSize') . $MaxFileSize . " MB</font>");
+                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB " . $this->Translate('FileSize') . $MaxFileSize . " MB</font>");
                 }
             }
         }
