@@ -76,7 +76,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 
 #ygma #mepanel{
 	margin-left:10px;
-	margin-top:9px;
+	margin-top:15px;
 	_margin-left:5px;
 	float:left;
 }
@@ -96,19 +96,16 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
     *font:x-small;
 }
 
-/*
 #ygma .ygmaclr:after{
 	content:"";
 	clear:both;
 	display:block;
 }
-*/
 
 /*Logo*/
 
 #ygma #yahoo{
-	
-	padding-top:15px;
+	margin-top:-23px;
 }
 
 #ygmabot{
@@ -122,7 +119,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 
 #yan-nav{
 	margin-left:10px;
-	margin-top:50px;
+	margin-top:30px;
 }
 
 #yan-nav li.current,#yan-nav li:hover,#yan-nav li.hover{
@@ -232,7 +229,7 @@ yan-nav li a{
 	border:1px solid #0D7A05;
 	border-width:1px 0;
 	padding:0 0 6px;
-	margin-top:77px;
+	margin-top:58px;
 }
 
 #yan-banner .short{
@@ -247,10 +244,15 @@ yan-nav li a{
 	position:relative;
 }
 
+#yan-banner .short li{
+	padding-left:48px;
+}
+
+
 /*Ask balk*/
 .wide #yan-banner .short #yan-banner-ask{
 	margin-top: 15px;
-	width:230px;
+	width:290px;
 }
 
 body #yan-banner .short #yan-banner-ask,body #yan-banner .short #yan-banner-answer,body #yan-banner .short #yan-banner-discover{
@@ -261,11 +263,11 @@ body #yan-banner .short #yan-banner-ask,body #yan-banner .short #yan-banner-answ
 
 body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-banner #yan-banner-discover{
 	background:url(../images/header-large2.png) no-repeat;
-	padding-top:8px;
+	padding-top:1px;
 }
 
 #yan-banner .short #yan-banner-ask #banner-ask{
-	width:150px;
+	width:200px;
 	vertical-align:middle;
 }
 
@@ -278,6 +280,15 @@ body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-b
 	padding:2px;
 }
 
+#yan-banner form div{
+	padding:0;
+}
+
+
+/*Ask knop*/
+.cta button,.cta input,.cta a{
+	vertical-align:middle;
+}
 
 /*Search balk*/
 #yan-banner li{
@@ -293,6 +304,35 @@ body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-b
 	width:250px;
 }
 
+body #hd #yan-banner #yan-banner-answer{
+	background-position:-550px 0;
+}
+
+#yan-banner form{
+	padding:0 10px 8px;
+	margin-right:10px;
+	background:url(../images/header-large2.png) no-repeat -56px 100%;
+	position:relative;
+	zoom:1;
+}
+
+#yan-banner .short form{
+	padding:0 0 0 10px;
+	margin:0 10px 0 0;
+	background:url(../images/header2.png) no-repeat -48px 100%;
+	min-height:47px;
+	_height:47px;
+}
+
+#yan-banner #banner-answer{
+	width:90%;
+	margin:7px 0 3px;
+	border:1px solid #ccc;
+	position:relative;
+	z-index:1;
+	padding:2px;
+}
+
 /*Beneden banner*/
 .wide #yan-header{
 	text-align:center;
@@ -302,4 +342,31 @@ body #yan-banner #yan-banner-ask,body #yan-banner #yan-banner-answer,body #yan-b
 	padding:15px;
 	border-bottom:1px dotted #ccc;
 	background:url(../images/carousel-bg-top.gif) repeat-x;
+}
+
+/*Alles onder banner*/
+.wide #yan-wrap{
+	padding:0 9px;
+}
+
+/*Breadcrumbs (huidige locatie)*/
+
+#yan-breadcrumbs li{
+	display:inline;
+	margin:0;
+	font-size:93%;
+	line-height:2.5;
+	color:#666;
+	list-style:none;
+}
+
+/*Content*/
+.c-std #yan-content{
+	float:left;
+	width:650px;
+}
+
+/*Openingspost*/
+.question-index #yan-main{
+	border:1px solid #ccc;
 }
