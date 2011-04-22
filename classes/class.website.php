@@ -1103,7 +1103,7 @@ Class website {
         $this->db->doQuery($query);
         $result = $this->saveImage($_FILES);  // Stuur de $_FILES variabele door naar de functie die het plaatje gaat verwerken
         if ($result == true) {
-            echo $this->getUserInfo($this->getCurrentUser()->id, "", "Succesfully updated."); // Toen daarna de homepage
+            echo $this->getUserInfo($this->getCurrentUser()->id, "", true);
         } else {
             echo $this->getUserInfo($this->getCurrentUser()->id, "", '<font color="red">' . $result . '</font>');
         }
@@ -1406,10 +1406,15 @@ Class website {
         $user = $this->getUser($id);
         $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         if ($errors != "") {
-            $userinfo .= $this->Translate("ErrorOccured");
-            $userinfo .= "<br>";
-            $userinfo .= $errors;
-            $userinfo .= "<br>";
+            if ($errors == true) {
+                $userinfo .= $this->Translate("SuccesfullyUpdated");
+                $userinfo .= "<br>";
+            } else {
+                $userinfo .= $this->Translate("ErrorOccured");
+                $userinfo .= "<br>";
+                $userinfo .= $errors;
+                $userinfo .= "<br>";
+            }
         }
         $userinfo .= '
             <b>' . $this->Translate("ProfileInfo") . ':</b>
