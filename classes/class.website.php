@@ -979,7 +979,7 @@ Class website {
         if (!class_exists('user')) {
             require "class.user.php";
         }
-        return new user($id, "", "", $this->db);
+        return new user($this->db, $id, "", "");
     }
 
     function getCurrentUser() {
@@ -992,7 +992,7 @@ Class website {
                 if (!class_exists('user')) {
                     require "class.user.php";
                 }
-                $this->User = new user("", $parts[0], $parts[1], $this->db);
+                $this->User = new user($this->db, "", $parts[0], $parts[1]);
                 if ($this->User == "") {
                     return false;
                 }

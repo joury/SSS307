@@ -29,7 +29,7 @@ class user {
     var $skype;
     var $job;
 
-    function __construct($id = "", $username = "", $password = "", $db) {
+    function __construct($db, $id = "", $username = "", $password = "") {
         if ($id != "" || ($username != "" && $password != "")) {
             if ($id != "") {
                 $query = "SELECT * FROM `gebruikers` WHERE `id` = '" . $id . "';";
