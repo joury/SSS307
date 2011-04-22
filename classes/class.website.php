@@ -679,7 +679,7 @@ Class website {
         $states = '<option value="" selected></option>';
         $result = $this->db->doQuery("SELECT `name` FROM `plaatsen` WHERE `state_id` = 
             (SELECT `state_id` FROM `provincies` WHERE `name` = '" . $state . "' AND `country_id` =
-                (SELECT `country_id` FROM `landen` WHERE `name` = '".$country."')
+                (SELECT `country_id` FROM `landen` WHERE `name` = '" . $country . "')
              ) ORDER BY `name`;");
         if ($result != false) {
             while ($fields = mysql_fetch_assoc($result)) {
@@ -1004,31 +1004,45 @@ Class website {
     }
 
     function submitAdditional($_POST) {
-        $errors = "";
-        if (!isset($_POST['firstname'])) {
-            $errors .= "Firstname field is empty.<br>";
-        }
-        if (!isset($_POST['lastname'])) {
-            $errors .= "Lastname field is empty.<br>";
-        }
-        if (!isset($_POST['day']) || !isset($_POST['month']) || !isset($_POST['year'])) {
-            $errors .= "One of the birthdate fields are empty";
-        }
-        if ($_POST['day'] > 31 || $_POST['day'] < 1) {
-            $errors .= "The day field value is inccorect";
-        }
-        if ($_POST['month'] > 12 || $_POST['month'] < 1) {
-            $errors .= "The month field value is incorrect";
-        }
-        if ($_POST['year'] > (Date("Y") - 8) || $_POST['year'] < (Date("Y") - 100)) {
-            $errors .= "The year field value is incorrect";
-        }
-        if ($errors == "") {
+        $birthdate = "";
+        if (isset($_POST['year']) && isset($_POST['month']) && $_POST['day']) {
+            $currentyear = Date("Y");
+            if ($_POST['year'] == "") {
+                $_POST['year'] = "0000";
+            }
+            if ($_POST['month'] == "") {
+                $_POST['month'] = "00";
+            }
+            if ($_POST['day'] == "") {
+                $_POST['day'] = "00";
+            }
             $birthdate = $_POST['year'] . "-" . $_POST['month'] . "-" . $_POST['day'];
-            $query = "UPDATE `gebruikers` SET `voornaam` = '" . $_POST['firstname'] . "', `tussenvoegsel` = '" . $_POST['insertion'] . "', `achternaam` = '" . $_POST['lastname'] . "', `geslacht` = '" . $_POST['gender'] . "', `geboortedatum` = '" . $birthdate . "';";
+            if ($_POST['year'] < $currentyear - 100 || $_POST['year'] > $currentyear - 8) {
+                echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">You can\'t be born in ' . $birthdate . '</font>');
+            }
+        }
+        $query = "UPDATE `gebruikers` SET ";
+        if (isset($_POST['firstname'])) {
+            $query .= "`voornaam` = '" . $_POST['firstname'] . "', ";
+        }
+        if (isset($_POST['insertion'])) {
+            $query .= "`tussenvoegsel` = '" . $_POST['insertion'] . "', ";
+        }
+        if (isset($_POST['lastname'])) {
+            $query .= "`achternaam` = '" . $_POST['lastname'] . "', ";
+        }
+        if (isset($_POST['gender'])) {
+            $query .= "`geslacht` = '" . $_POST['gender'] . "', ";
+        }
+        if ($birthdate != "") {
+            $query .= "`geboortedatum` = '" . $birthdate . "', ";
+        }
+
+        if (strlen($query) > 24) {
+            $query = substr($query, 0, strlen($query) - 2) . ";";
             $this->db->doQuery($query);
         }
-        $this->getUserInfo($this->getCurrentUser()->id, $_POST, $errors);
+        echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
     }
 
     function submitProfileEdit($_POST) {
@@ -1087,11 +1101,15 @@ Class website {
             }
         }
         $this->db->doQuery($query);
-        $this->saveImage($_FILES);  // Stuur de $_FILES variabele door naar de functie die het plaatje gaat verwerken
-        echo $this->getUserInfo($this->getCurrentUser()->id, "", "Succesfully updated."); // Toen daarna de homepage
+        $result = $this->saveImage($_FILES);  // Stuur de $_FILES variabele door naar de functie die het plaatje gaat verwerken
+        if ($result == true) {
+            echo $this->getUserInfo($this->getCurrentUser()->id, "", "Succesfully updated."); // Toen daarna de homepage
+        } else {
+            echo $this->getUserInfo($this->getCurrentUser()->id, "", '<font color="red">' . $result . '</font>');
+        }
     }
 
-    function saveImage($_FILES, $_POST = "") {
+    function saveImage($_FILES) {
         if ($this->getCurrentUser() && $this->getCurrentUser()->id != "") {
             if ($_FILES["imageFile"]["name"] != "") {
                 require $this->MainConfigFile;
@@ -1127,19 +1145,24 @@ Class website {
                                 $imageResized = imagecreatetruecolor($toWidth, $toHeight);
                                 imagecopyresampled($imageResized, $imageTmp, 0, 0, 0, 0, $toWidth, $toHeight, $width, $height);
                                 imagejpeg($imageResized, $SaveDir . $FileName, 100);
+                                return true;
                             } else {
-                                echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('SaveError') . '</font>');
+                                return $this->Translate('SaveError');
                             }
                         } else {
-                            echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"] . '</font>');
+                            return $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"];
                         }
                     } else {
-                        echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileType') . ": " . $_FILES["imageFile"]["type"] . '</font>');
+                        return $this->Translate('FileType') . ": " . $_FILES["imageFile"]["type"];
                     }
                 } else {
-                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate('FileBig') . $FileSize . " MB " . $this->Translate('FileSize') . $MaxFileSize . " MB</font>");
+                    return $this->Translate('FileBig') . $FileSize . " MB " . $this->Translate('FileSize') . $MaxFileSize . " MB";
                 }
+            } else {
+                return true;
             }
+        } else {
+            return $this->Translate('UserLost');
         }
     }
 
@@ -1174,23 +1197,24 @@ Class website {
             $_POST['lastname'] = $this->getCurrentUser()->lastname;
         }
         if (!isset($_POST['day'])) {
-            $_POST['day'] = "";
+            $_POST['day'] = $this->getCurrentUser()->getDay();
         }
         if (!isset($_POST['month'])) {
-            $_POST['month'] = "";
+            $_POST['month'] = $this->getCurrentUser()->getMonth();
         }
         if (!isset($_POST['year'])) {
-            $_POST['year'] = "";
+            $_POST['year'] = $this->getCurrentUser()->getYear();
         }
-        $additionalInfoForm = '<form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">';
+        $formStart = '<form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">';
+        $additionalInfoForm = "";
         if ($_POST['firstname'] == "") {
             $additionalInfoForm .= '
                 <tr>
-                    <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="firstnameImage"></img></td>
+                    <td>Firstname:</td> <td><input type="text" value="' . $_POST['firstname'] . '" name="firstname" id="firstname" onKeyup="return CheckFirstname(this, false);"><img src="images/ffffff.gif" id="firstnameImage"></img></td>
                 </tr>
             ';
         }
-        if ($_POST['insertion'] == "" && ($_POST['firstname'] != "" && $_POST['lastname'] != "")) {
+        if ($_POST['insertion'] == "" && ($_POST['firstname'] == "" || $_POST['lastname'] == "")) {
             $additionalInfoForm .= '
                 <tr>
                     <td>Insertion:</td> <td><input type="text" value="' . $_POST['insertion'] . '" name="insertion"></td>
@@ -1200,7 +1224,7 @@ Class website {
         if ($_POST['lastname'] == "") {
             $additionalInfoForm .= '
                 <tr>
-                    <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onKeyup="return CheckLastname(this, false);"><font color="RED">*</font><img src="images/ffffff.gif" id="lastnameImage"></img></td>
+                    <td>Lastname:</td> <td><input type="text" value="' . $_POST['lastname'] . '" name="lastname" id="lastname" onKeyup="return CheckLastname(this, false);"><img src="images/ffffff.gif" id="lastnameImage"></img></td>
                 </tr>
             ';
         }
@@ -1222,24 +1246,35 @@ Class website {
                 <tr>
                     <td>Birthdate:</td>
                     <td>
-                        <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                        <input type="text" id="day" value="' . $_POST['day'] . '" name="day" onkeyup="CheckBirthdate(this.form, ' . Date("Y") . ', false);" style="width:15px;" maxlength="2">
                             -
-                        <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:15px;" maxlength="2">
+                        <input type="text" id="month" value="' . $_POST['month'] . '" name="month" onkeyup="CheckBirthdate(this.form, ' . Date("Y") . ', false);" style="width:15px;" maxlength="2">
                             -
-                        <input type="text" id="year" value="' . $_POST['year'] . '" name="year" onChange="CheckBirthdate(this.form, ' . Date("Y") . ');" style="width:30px;" maxlength="4">
-                        <font color="RED">*</font>
+                        <input type="text" id="year" value="' . $_POST['year'] . '" name="year" onkeyup="CheckBirthdate(this.form, ' . Date("Y") . ', false);" style="width:30px;" maxlength="4">
                         <img src="images/ffffff.gif" id="birthdateImage"></img>
                     </td>
                 </tr>
             ';
         }
-        $additionalInfoForm .= '
+        $formEnd = '
             <tr>
                 <td><input type="submit" name="btnAdditionalInfo" value="Save"></td>
             </tr>
             </form>
+            <tr>
+                <td>
+                    <hr>
+                </td>
+                <td>
+                    <hr>
+                </td>
+            </tr>
         ';
-        return $additionalInfoForm;
+        if ($additionalInfoForm == "") {
+            return "";
+        } else {
+            return $formStart . $additionalInfoForm . $formEnd;
+        }
     }
 
     function getProfileEditForm($_POST, $user) {

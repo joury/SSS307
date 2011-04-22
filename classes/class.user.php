@@ -71,6 +71,18 @@ class user {
         }
     }
 
+    function getDay() {
+        return substr($this->birthdate, 6, 8);
+    }
+
+    function getMonth() {
+        return substr($this->birthdate, 4, 6);
+    }
+
+    function getYear() {
+        return substr($this->birthdate, 0, 4);
+    }
+
 }
 
 ?>

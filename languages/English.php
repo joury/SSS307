@@ -5,6 +5,7 @@ $Language = array(
     "ErrorOccured" => "The following error(s) occured:",
     "FieldEmpty" => "field is empty",
     "UnknownError" => "An unknown error occured.",
+    "UserLost" => "The user information is not retrievable, please try logging in again (Cookie expired).",
 
     // Simple Words
     "Login" => "Login",
