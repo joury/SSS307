@@ -1,6 +1,7 @@
 /*answer.css*/
 
 /*algemeen*/
+
 html{
 	/*text*/
 	color:#000;
@@ -94,6 +95,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
     padding:0;
     color:#000;
     *font:x-small;
+	border: 1px solid #FFF;
 }
 
 #ygma .ygmaclr:after{
@@ -105,7 +107,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 /*Logo*/
 
 #ygma #yahoo{
-	margin-top:-23px;
+	margin-top:0px;
 }
 
 #ygmabot{
@@ -113,6 +115,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 	padding-left:15px;
 	display:block;
 	text-align:right;
+	margin-top:-23px;
 }
 
 /*Home+Categories+Profiles Tab*/
