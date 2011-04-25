@@ -139,11 +139,12 @@ Class website {
         }
     }
 
-    function GetQueryString($raw = "") {
+    function GetQueryString() {
+        $raw = $_SERVER['QUERY_STRING'];
         if ($raw != "") {
-            $raw = '?' . $raw;
+            return '?' . $raw;
         }
-        return $raw;
+        return false;
     }
 
     function AccountExists($username = "", $email = "") {
@@ -230,7 +231,7 @@ Class website {
     function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
             <li class="me1">
-                <form action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" name="login" method="POST">
+                <form action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" name="login" method="POST">
                     <div>
                         <input type="text" name="username">
                         <input type="password" name="password">
@@ -275,7 +276,7 @@ Class website {
 
     function ShowLogout() {    // Show the logout button
         echo '
-            <form name="LogOut" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER["QUERY_STRING"]) . '" method="POST">
+            <form name="LogOut" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" method="POST">
                 <input type="submit" name="LogOut" value="Log out">
             </form>
         ';
@@ -730,6 +731,12 @@ Class website {
         ';
     }
 
+    function removeAnswer($answerid) {
+        if ($this->getCurrentUser()) {
+            $this->db->doQuery("DELETE FROM `antwoorden` WHERE `id` = '" . $answerid . "' AND `gebruikersid` = '" . $this->getCurrentUser()->id . "';");
+        }
+    }
+
     function getAmountOfAnswers($categoryid, $questionid) {
         return $this->db->getRowCount("SELECT * FROM `antwoorden` WHERE `taalid` = '" . $categoryid . "' AND `vraagid` = '" . $questionid . "';");
     }
@@ -809,26 +816,38 @@ Class website {
                         
                         <div class="qa-container">
                             <div style="text-align:center;float:right;">
-                                <table style="width:60px;">
-                                    <tr>
-                                        <td style="width:30px;"><center><font color="green"><b><div id="positive_' . $fields['id'] . '">' . $positive . '</div></b></font></center></td>
-                                        <td><center><font color="red"><b><div id="negative_' . $fields['id'] . '">' . $negative . '</div></b></font></center></td>
-                                    </tr>
                 ';
-                if ($this->getCurrentUser() && $this->getCurrentUser()->id != $user->id && !$this->hasVotedOnAnswer($fields['id'])) {
+                if ($this->getCurrentUser() && $this->getCurrentUser()->id == $user->id) {
                     $answers .= '
-                                    <tr id="votebuttons_' . $fields['id'] . '">
-                                        <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return Vote(this, this.vote.value);">
-                                            <input type="hidden" name="answerid" id="answerid" value="' . $fields['id'] . '">
-                                            <input type="hidden" name="questionid" id="questionid" value="' . $fields['vraagid'] . '">
-                                            <input type="hidden" name="categoryid" id="categoryid" value="' . $fields['taalid'] . '">
-                                            <input type="hidden" name="userid" id="userid" value="' . $user->id . '">
-                                            <input type="hidden" name="vote" id="vote" value="">
-                                            <td><input type="image" id="submit" name="submit" value="1" style="width:30px;" src="images/vote_up.gif" onClick="this.form.vote.value=1;"></td>
-                                            <td><input type="image" id="submit" name="submit" value="-1" style="width:30px;" src="images/vote_down.gif" onClick="this.form.vote.value=-1;"></td>
-                                        </form>
-                                    </tr>
+                        <div style="float:right;">
+                            <a href="' . $this->GetQueryString() . '&edit=' . $fields['id'] . '"><img src="images/edit.gif"></a>
+                            <a href="' . $this->GetQueryString() . '&remove=' . $fields['id'] . '"><img src="images/incorrect.gif"></a>
+                        </div>
                     ';
+                }
+                $answers .= '
+                    <table style="width:60px;">
+                        <tr>
+                            <td style="width:30px;"><center><font color="green"><b><div id="positive_' . $fields['id'] . '">' . $positive . '</div></b></font></center></td>
+                            <td><center><font color="red"><b><div id="negative_' . $fields['id'] . '">' . $negative . '</div></b></font></center></td>
+                        </tr>
+                ';
+                if ($this->getCurrentUser() && $this->getCurrentUser()->id != $user->id) {
+                    if (!$this->hasVotedOnAnswer($fields['id'])) {
+                        $answers .= '
+                            <tr id="votebuttons_' . $fields['id'] . '">
+                                <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" onSubmit="return Vote(this, this.vote.value);">
+                                    <input type="hidden" name="answerid" id="answerid" value="' . $fields['id'] . '">
+                                    <input type="hidden" name="questionid" id="questionid" value="' . $fields['vraagid'] . '">
+                                    <input type="hidden" name="categoryid" id="categoryid" value="' . $fields['taalid'] . '">
+                                    <input type="hidden" name="userid" id="userid" value="' . $user->id . '">
+                                    <input type="hidden" name="vote" id="vote" value="">
+                                    <td><input type="image" id="submit" name="submit" value="1" style="width:30px;" src="images/vote_up.gif" onClick="this.form.vote.value=1;"></td>
+                                    <td><input type="image" id="submit" name="submit" value="-1" style="width:30px;" src="images/vote_down.gif" onClick="this.form.vote.value=-1;"></td>
+                                </form>
+                            </tr>
+                        ';
+                    }
                 }
                 $answers .= '
                                 </table>
@@ -873,7 +892,7 @@ Class website {
                     <div id="yan-question">
                         <div class="qa-container">
                             <center>
-                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&amp;answer=1", "", $this->GetQueryString($_SERVER["QUERY_STRING"])) . '">
+                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&amp;answer=1", "", $this->GetQueryString()) . '">
                                     <table>
             ';
             if ($categoryid == "" || $questionid == "") {
@@ -1238,7 +1257,7 @@ Class website {
         if (!isset($_POST['year'])) {
             $_POST['year'] = $this->getCurrentUser()->getYear();
         }
-        $formStart = '<form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">';
+        $formStart = '<form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">';
         $additionalInfoForm = "";
         if ($_POST['firstname'] == "") {
             $additionalInfoForm .= '
@@ -1342,7 +1361,7 @@ Class website {
             $_POST['skype'] = $user->skype;
         }
         return '
-            <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString($_SERVER['QUERY_STRING']) . '" onSubmit="return CheckProfileEdit(this);">
+            <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" onSubmit="return CheckProfileEdit(this);">
             <tr>
                 <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
             </tr>

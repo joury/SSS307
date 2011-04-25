@@ -126,6 +126,9 @@
                         <div id="answerdiv">
                             <?php
                             if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                                if (isset($_GET['remove'])) {
+                                    $website->removeAnswer($_GET['remove']);
+                                }
                                 echo $website->getAnswerDiv($_GET['categoryid'], $_GET['questionid']);
                             }
                             ?>
