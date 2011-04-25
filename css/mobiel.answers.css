@@ -1,6 +1,7 @@
 /*answer.css*/
 
 /*algemeen*/
+
 html{
 	/*text*/
 	color:#000;
@@ -94,6 +95,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
     padding:0;
     color:#000;
     *font:x-small;
+	border: 1px solid #FFF;
 }
 
 #ygma .ygmaclr:after{
@@ -105,7 +107,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 /*Logo*/
 
 #ygma #yahoo{
-	margin-top:-23px;
+	margin-top:0px;
 }
 
 #ygmabot{
@@ -113,6 +115,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 	padding-left:15px;
 	display:block;
 	text-align:right;
+	margin-top:-23px;
 }
 
 /*Home+Categories+Profiles Tab*/
@@ -370,3 +373,165 @@ body #hd #yan-banner #yan-banner-answer{
 .question-index #yan-main{
 	border:1px solid #ccc;
 }
+
+#yan-question{
+	background:url(../images/question-bg-top.gif) repeat-x 0 0;
+	padding:20px 20px 20px 12px;
+	zoom:1;
+}
+
+.question-index .qa-container{
+	clear:right;
+	overflow:hidden;
+	zoom:1;
+	background:none;
+	_margin-right:-13px;
+}
+
+/*Usericon*/
+.profile{
+	width:74px;
+	margin-right:12px;
+	float:left;
+	text-align:center;
+	display:inline;
+}
+
+/*Postheader*/
+#yan-question .hd{
+	overflow:hidden;
+	padding-bottom:4px;
+	zoom:1;
+}
+
+#yan-question h2{
+	color:#43B607;
+	font-size:123.1%;
+	font-weight:bold;
+	float:left;
+	line-height:1;
+	margin:0;
+	padding-bottom:0.6em;
+}
+
+/*Posttitel*/
+#yan-question .subject{
+	font-size:161.6%;
+	font-weight:bold;
+	color:#000;
+	line-height:1.2;
+	margin:0 0 8px 0;
+	padding:0;
+	border:0;
+}
+
+/*Posttekst*/
+.qa-container .content,.qa-container div.reference{
+	margin-bottom:1em;
+}
+
+/*Postmeta*/
+.qa-container .meta{
+	font-size:85%;
+	color:#666;
+	margin:1em 0 1.2em;
+	float:right;
+}
+
+/*Toolbar onder OP*/
+
+#yan-question-tools{
+	background:#eaeaea url(../images/actionbar-bg.gif) repeat-x 0 0;
+	border:1px solid #ccc;
+	margin-top:-1px;
+	font-size:93%;
+	zoom:1;
+}
+
+body.js #yan-question-tools .menu span{
+	background:url(../images/dropdown-arrow.gif) no-repeat right 10px;
+	display:block;
+	padding-right:12px;
+	visibility:hidden;
+}
+
+/*
+yan-question-tools li{
+	border-left:1px dotted #ccc;
+	float:left;
+}
+
+#yan-question-tools li a{
+	display:block;
+	line-height:26px;
+	padding:0 10px 0 28px;
+	text-decoration:none;
+}
+
+#yan-save-question a{
+	background:url(../images/actionbar.gif) no-repeat 10px -697px;
+}
+
+
+
+#yan-question-tools li a span{
+	line-height:26px;
+}
+*/
+
+/*Antwoorden*/
+#yan-answers{
+	margin:17px 0 19px 0;
+	position:relative;
+	clear:left;
+}
+
+/*Groene Answers*/
+#yan-answers .hd h3 strong{
+	color:#67CE12;
+	font-weight:bold;
+	font-size:124%;
+}
+
+#yan-answers .hd h3{
+	color:#666;
+	float:left;
+}
+
+/*Post*/
+#yan-answers .bd{
+	margin-top:12px;
+}
+
+#yan-answers .collapsed li,#yan-answers .shown li{
+	background:#fff url(../images/border-x-grey.gif) repeat-x 0 0;
+	padding-top:1px;
+	zoom:1;
+}
+
+#yan-main div.best,#yan-answers .answer,#yan-answers-rushmore .answer{
+	padding:12px 20px 14px 13px;
+	zoom:1;
+}
+
+
+#yan-answers .hd{
+	overflow:hidden;
+	position:relative;
+	zoom:1;
+}
+
+#yan-answers .collapsed li li,#yan-answers .shown li li{
+	background:none;
+	padding-top:0;
+	zoom:normal;
+}
+
+/*Categories*/
+#yan-related{
+	visibility:hidden;
+}
+
+
+
+
