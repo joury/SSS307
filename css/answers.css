@@ -935,5 +935,19 @@ body.js #yan-question-tools .menu span{
     background-image:url(../images/answers-1.0.4.png);
 }
 
+.vote-container {
+    text-align:center;
+    float:right;
+}
 
+.answercontrol-container {
+    float:right;
+}
 
+.votepoint-container {
+    width:60px;
+}
+
+.votepoint {
+    width:30px;
+}

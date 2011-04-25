@@ -378,7 +378,7 @@ Class website {
                             <form action="' . $_SERVER['PHP_SELF'] . '" method="GET" name="Search">
                                 <div>
                                     <div>
-                                        <input style="position:absolute;top:5px;" class="default" maxlength="110" id="banner-answer" name="query" type="text" onkeyup="handleSearch(this.form);">
+                                        <input class="default" maxlength="110" id="banner-answer" name="query" type="text" onkeyup="handleSearch(this.form);">
                                     </div>
                                 </div>
                             </form>
@@ -815,21 +815,21 @@ Class website {
                         </div>
                         
                         <div class="qa-container">
-                            <div style="text-align:center;float:right;">
+                            <div class="vote-container">
                 ';
                 if ($this->getCurrentUser() && $this->getCurrentUser()->id == $user->id) {
                     $answers .= '
-                        <div style="float:right;">
+                        <div class="answercontrol-container">
                             <a href="' . $this->GetQueryString() . '&edit=' . $fields['id'] . '"><img src="images/edit.gif"></a>
                             <a href="' . $this->GetQueryString() . '&remove=' . $fields['id'] . '"><img src="images/incorrect.gif"></a>
                         </div>
                     ';
                 }
                 $answers .= '
-                    <table style="width:60px;">
+                    <table class="votepoint-container">
                         <tr>
-                            <td style="width:30px;"><center><font color="green"><b><div id="positive_' . $fields['id'] . '">' . $positive . '</div></b></font></center></td>
-                            <td><center><font color="red"><b><div id="negative_' . $fields['id'] . '">' . $negative . '</div></b></font></center></td>
+                            <td class="votepoint"><center><font color="green"><b><div id="positive_' . $fields['id'] . '">' . $positive . '</div></b></font></center></td>
+                            <td class="votepoint"><center><font color="red"><b><div id="negative_' . $fields['id'] . '">' . $negative . '</div></b></font></center></td>
                         </tr>
                 ';
                 if ($this->getCurrentUser() && $this->getCurrentUser()->id != $user->id) {
