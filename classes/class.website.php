@@ -1421,8 +1421,19 @@ Class website {
             <table>
         ';
         if ($owned) {
-            $userinfo .= $this->getAdditionalInfoForm($_POST, $user);
-            $userinfo .= $this->getProfileEditForm($_POST, $user);
+            if (isset($_GET['edit'])) {
+                $userinfo .= $this->getAdditionalInfoForm($_POST, $user);
+                $userinfo .= $this->getProfileEditForm($_POST, $user);
+            } else {
+                $userinfo .= $this->getStaticUserInfo($user);
+                $userinfo .= '
+                    <tr>
+                        <td>
+                            <a href="?userid=' . $id . '&edit=1">Edit your profile</a>
+                        </td>
+                    </tr>
+                ';
+            }
         } else {
             $userinfo .= $this->getStaticUserInfo($user);
         }

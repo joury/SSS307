@@ -45,6 +45,11 @@
                             if (isset($_GET['questionid'])) {
                                 echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
                             }
+                        } else if (isset($_GET['userid'])) {
+                            echo '<a href="?userid=' . $_GET['userid'] . '">' . $website->getUser($_GET['userid'])->username . '</a> > ';
+                            if (isset($_GET['edit'])) {
+                                echo '<a href="?userid=' . $_GET['userid'] . '&edit=1">Edit</a> >';
+                            }
                         }
                     ?>
                 </ol>
