@@ -267,7 +267,7 @@ Class website {
     function Logout() {
         require $this->MainConfigFile;
         setcookie($cookiename, "1", time() - 3600);  // To delete a cookie, overwrite the cookie with an expiration time of "one hour ago"
-        foreach (get_defined_vars () as $key) {  // Reset all variables (clear the session)
+        foreach (get_defined_vars() as $key) {  // Reset all variables (clear the session)
             unset($key);
         }
         echo '<meta http-equiv="refresh" content="0">';
@@ -281,13 +281,18 @@ Class website {
         ';
     }
 
-    function getCategories($_GET = "", $regexp = "") {
-        $categories = "";
+    function getCategories($regexp = "") {
         if ($regexp == "") {
             $result = $this->db->doQuery("SELECT * FROM `talen`;");
         } else {
             $result = $this->db->doQuery("SELECT * FROM `talen` WHERE `naam` REGEXP '[" . $regexp . "]';");
         }
+        return $result;
+    }
+
+    function getCategoryLinks($_GET = "", $regexp = "") {
+        $categories = "";
+        $result = $this->getCategories($regexp);
         if ($result == false) {
             $categories .= "<li>No results!</li>";
         } else {
@@ -740,6 +745,40 @@ Class website {
         return $badges;
     }
 
+    function getNegativeVotes($userID, $categoryID = "", $answerID = "") {
+        $result = "";
+        if ($categoryID != "") {
+            $query = "SELECT SUM(`negative`) FROM `votes` WHERE `gebruikersid` = '" . $userID . "' AND `antwoordid` IN (SELECT `id` FROM `antwoorden` WHERE `taalid` = '" . $categoryID . "');";
+            $result = mysql_result($this->db->doQuery($query), 0);
+            if ($result == "") {
+                $result = 0;
+            }
+        } else if ($answerID != "") {
+            $result = mysql_result($this->db->doQuery("SELECT SUM(`negative`) FROM `votes` WHERE `antwoordid` = '" . $answerID . "';"), 0);
+            if ($result == "") {
+                $result = 0;
+            }
+        }
+        return $result;
+    }
+
+    function getPositiveVotes($userID, $categoryID = "", $answerID = "") {
+        $result = "";
+        if ($categoryID != "") {
+            $query = "SELECT SUM(`positive`) FROM `votes` WHERE `gebruikersid` = '" . $userID . "' AND `antwoordid` IN (SELECT `id` FROM `antwoorden` WHERE `taalid` = '" . $categoryID . "');";
+            $result = mysql_result($this->db->doQuery($query), 0);
+            if ($result == "") {
+                $result = 0;
+            }
+        } else if ($answerID != "") {
+            $result = mysql_result($this->db->doQuery("SELECT SUM(`positive`) FROM `votes` WHERE `antwoordid` = '" . $answerID . "';"), 0);
+            if ($result == "") {
+                $result = 0;
+            }
+        }
+        return $result;
+    }
+
     function getAnswers($categoryid, $questionid) {
         $result = $this->db->doQuery("SELECT * FROM `antwoorden` a WHERE a.taalid = '" . $categoryid . "' AND a.vraagid = '" . $questionid . "' ORDER BY (SELECT SUM(v.positive) - SUM(v.negative) FROM `votes` v WHERE v.antwoordid = a.id) DESC;");
         $answers = '';
@@ -747,14 +786,8 @@ Class website {
             require $this->MainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
                 $user = $this->getUser($fields['gebruikersid']);
-                $positive = mysql_result($this->db->doQuery("SELECT SUM(`positive`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
-                $negative = mysql_result($this->db->doQuery("SELECT SUM(`negative`) FROM `votes` WHERE `antwoordid` = '" . $fields['id'] . "';"), 0);
-                if ($positive == "") {
-                    $positive = 0;
-                }
-                if ($negative == "") {
-                    $negative = 0;
-                }
+                $positive = $this->getPositiveVotes($user->id, "", $fields['id']);
+                $negative = $this->getNegativeVotes($user->id, "", $fields['id']);
                 $answers .= '
                     <div class="answer">
                         <div class="profile vcard">
@@ -1370,35 +1403,60 @@ Class website {
     }
 
     function getStaticUserInfo($user) {
-        return '
-            <tr>
-                <td>Username:</td> <td>' . $user->username . '</td>
-            </tr>
-            <tr>
-                <td>Full name:</td> <td>' . $user->firstname . " " . $user->insertion . " " . $user->lastname . '</td>
-            </tr>
-            <tr>
-                <td>Email:</td> <td>' . $user->email . '</td>
-            </tr>
-            <tr>
-                <td>Country: </td> <td>' . $user->country . '</td>
-            </tr>
-            <tr>
-                <td>State: </td> <td>' . $user->state . '</td>
-            </tr>
-            <tr>
-                <td>City: </td> <td>' . $user->city . '</td>
-            </tr>
-            <tr>
-                <td>MSN: </td> <td>' . $user->msn . '</td>
-            </tr>
-            <tr>
-                <td>Skype: </td> <td>' . $user->skype . '</td>
-            </tr>
-            <tr>
-                <td>Job: </td> <td>' . $user->job . '</td>
-            </tr>
+        $staticUserInfo = '
+                <tr>
+                    <td>Username:</td> <td>' . $user->username . '</td>
+                </tr>
+                <tr>
+                    <td>Full name:</td> <td>' . $user->firstname . " " . $user->insertion . " " . $user->lastname . '</td>
+                </tr>
+                <tr>
+                    <td>Email:</td> <td>' . $user->email . '</td>
+                </tr>
+                <tr>
+                    <td>Country: </td> <td>' . $user->country . '</td>
+                </tr>
+                <tr>
+                    <td>State: </td> <td>' . $user->state . '</td>
+                </tr>
+                <tr>
+                    <td>City: </td> <td>' . $user->city . '</td>
+                </tr>
+                <tr>
+                    <td>MSN: </td> <td>' . $user->msn . '</td>
+                </tr>
+                <tr>
+                    <td>Skype: </td> <td>' . $user->skype . '</td>
+                </tr>
+                <tr>
+                    <td>Job: </td> <td>' . $user->job . '</td>
+                </tr>
+            </table>
+            <br>
+            <hr>
+            <br>
+            <b>Score per category:</b>
+            <table>
         ';
+        $result = $this->getCategories();
+        if ($result != false) {
+            while ($fields = mysql_fetch_assoc($result)) {
+                $positive = $this->getPositiveVotes($user->id, $fields['id']);
+                $negative = $this->getNegativeVotes($user->id, $fields['id']);
+                $score = $positive - $negative;
+                if ($score > 0) {
+                    $score = '<font color="green">' . $score . '</font>';
+                } else if ($score < 0) {
+                    $score = '<font color="red">' . $score . '</font>';
+                }
+                $staticUserInfo .= '
+                    <tr>
+                        <td>' . $fields['naam'] . '</td> <td><b>' . $score . '</b></td>
+                    </tr>
+                ';
+            }
+        }
+        return $staticUserInfo;
     }
 
     function getUserInfo($id, $_POST = "", $errors = "") {

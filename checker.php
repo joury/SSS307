@@ -26,7 +26,7 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
 } else if (isset($_GET['homepage'])) {
     echo $website->getQuestionsMenu();
 } else if (isset($_GET['categories'])) {
-    echo $website->getCategories();
+    echo $website->getCategoryLinks();
     echo $website->getNewQuestionButton();
 } else if (isset($_GET['answer'])) {
     if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
@@ -53,7 +53,7 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
 } else if (isset($_GET['search'])) {
     $regexp = $_GET['search'];
     echo "<b>Categories that match your query:</b><br><br>";
-    echo $website->getCategories("", $regexp);
+    echo $website->getCategoryLinks("", $regexp);
     echo "<br><hr><br>";
     echo "<b>Questions that match your query:</b><br><br>";
     echo $website->getQuestionsMenu("", $regexp);

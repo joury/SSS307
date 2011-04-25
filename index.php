@@ -67,7 +67,7 @@
                                 } else if (isset($_GET['userid']) && $_GET['userid'] != "") {
                                     echo $website->getUserInfo($_GET['userid']);
                                 } else if (isset($_GET['categories'])) {
-                                    echo $website->getCategories();
+                                    echo $website->getCategoryLinks();
                                     echo $website->getNewQuestionButton();
                                 } else {
                                     echo $website->getQuestionsMenu();
@@ -139,7 +139,7 @@
                             <li class="expanded">
                                 <ul>
                                     <?php
-                                    echo $website->getCategories($_GET);
+                                    echo $website->getCategoryLinks($_GET);
                                     ?>
                                 </ul>
                             </li>
