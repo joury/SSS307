@@ -533,5 +533,25 @@ yan-question-tools li{
 }
 
 
+/*Extra (tabellen)*/
+
+.vote-container {
+    text-align:center;
+    float:right;
+}
+
+.answercontrol-container {
+    float:right;
+}
+
+.votepoint-container {
+    width:60px;
+}
+
+.votepoint {
+    width:30px;
+}
+
+
 
 
