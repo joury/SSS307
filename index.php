@@ -23,7 +23,44 @@
         $website->showHeader($_GET);
         ?>
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
-        <link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">
+        <script type="text/javascript">
+            if (screen.width < 600 || screen.height < 600) {
+                document.write('<link rel="stylesheet" type="text/css" media="screen" href="./css/mobiel.answers.css">');
+                document.write('<meta name="viewport" content="width=680, initial-scale=0.7, user-scalable=yes">');
+            } else {
+                document.write('<link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">');
+            }
+            
+            var supportsOrientationChange = "onorientationchange" in window,
+                orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
+
+            window.addEventListener(orientationEvent, function() {
+                var newContent = "";
+                var xScale = screen.width / 680;
+                var yScale = screen.height / 680;
+                switch(window.orientation) {
+                    case 0: {   // Landscape
+                        newContent = "width=680, initial-scale="+xScale+", user-scalable=yes";
+                        break;
+                    }
+                    case -90: { // Portrait
+                        newContent = "width=680, initial-scale="+yScale+", user-scalable=yes";
+                        break;
+                    }
+                    case 90: {  // Portrait
+                        newContent = "width=680, initial-scale="+yScale+", user-scalable=yes";
+                        break;
+                    }
+                }
+                var metatags = document.getElementsByTagName("meta");
+                for (var i = 0; i < metatags.length; i++) {
+                    if (metatags[i].getAttribute("name") == "viewport") {
+                        metatags[i].setAttribute("content", newContent);
+                    }
+                }
+            }, false);
+
+        </script>
         <script type="text/javascript" src="./scripts/navigation.js"></script>
         <script type="text/javascript" src="./scripts/checkfields.js"></script>
         <script type="text/javascript" src="./scripts/vote.js"></script>

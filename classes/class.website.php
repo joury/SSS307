@@ -212,7 +212,7 @@ Class website {
         $check = $this->checkFields($_POST);
         if (is_bool($check)) {
             require $this->mainConfigFile;        // Get the connection variables for mysql from the config file
-            if ($this->DB->MakeConnection()) {
+            if ($this->DB->makeConnection()) {
                 $username = stripslashes(mysql_real_escape_string($_POST['username']));  // Make sure there are no weird tokens in the variables
                 $password = stripslashes(mysql_real_escape_string($_POST['password']));
                 $encryptedPass = sha1($password);
