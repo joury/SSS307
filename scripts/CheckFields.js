@@ -20,8 +20,7 @@ function CheckProfileEdit(form) {
 }
 
 function CheckAdditional(form, currentyear) {
-    var correct = CheckFirstname(form.firstname, true) && CheckLastname(form.lastname, true) && CheckBirthdate(form, currentyear, true);
-    return correct;
+    return CheckBirthdate(form, currentyear, true);
 }
 
 function AjaxRequest(GET) {

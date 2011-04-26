@@ -248,15 +248,15 @@ Class website {
         $username = stripslashes(mysql_real_escape_string($username));
         $password = sha1(stripslashes(mysql_real_escape_string($password)));
         $passwordInDB = $this->db->doQuery("SELECT `wachtwoord` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';");
-        if ($passwordInDB == false) {
-            $this->correctLogin = false;
-        } else {
+        if ($passwordInDB != false) {
             if (mysql_result($passwordInDB, 0) == $password) {   // If the Sha1 encrypted version of the posted password equals the entry in the database...
                 $cookie = setcookie($cookiename, $username . "," . $password, time() + ($cookietime * 60));  // Set a cookie with "name,password" that is legit for the following 5 minutes
                 echo '<meta http-equiv="refresh" content="0">';
             } else {
                 $this->correctLogin = false;
             }
+        } else {
+            $this->correctLogin = false;
         }
     }
 
@@ -1033,9 +1033,6 @@ Class website {
                     require "class.user.php";
                 }
                 $this->user = new user($this->db, "", $parts[0], $parts[1]);
-                if ($this->user == "") {
-                    return false;
-                }
                 return $this->user;
             } else {
                 return false;
