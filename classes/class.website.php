@@ -1076,7 +1076,8 @@ Class website {
         }
 
         if (strlen($query) > 24) {
-            $query = substr($query, 0, strlen($query) - 2) . ";";
+            $query = substr($query, 0, strlen($query) - 2);
+            $query .= " WHERE `id` = '" . $this->getCurrentUser()->id . "';";
             $this->db->doQuery($query);
         }
         echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
