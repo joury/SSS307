@@ -25,7 +25,7 @@ Class website {
             <table>
         ';
         if ($error != "") {
-            echo '<font color="red">' . $this->Translate("ErrorOccured") . '</font><br>';
+            echo '<font color="red">' . $this->translate("ErrorOccured") . '</font><br>';
             echo $error;
         }
         echo '
@@ -74,7 +74,7 @@ Class website {
                     <td>
                         <select name="language">
         ';
-        foreach ($this->GetLanguageFiles() as $languagefile) {
+        foreach ($this->getLanguageFiles() as $languagefile) {
             echo '<option value="' . $languagefile . '">' . $languagefile . '</option>';
         }
         echo '
@@ -97,7 +97,7 @@ Class website {
         ';
     }
 
-    function Translate($string) {
+    function translate($string) {
         require $this->MainConfigFile;
         $languagefile = "";
         if ($this->getCurrentUser()) {
@@ -116,7 +116,7 @@ Class website {
         return $Language[$string];
     }
 
-    function GetLanguageFiles() {
+    function getLanguageFiles() {
         require $this->MainConfigFile;
         $handle = opendir($LanguageDir);
         if ($handle) {
@@ -132,14 +132,14 @@ Class website {
         return $LanguageFiles;
     }
 
-    function RefreshCookie() {
+    function refreshCookie() {
         require $this->MainConfigFile;
         if ($_COOKIE[$cookiename] != "") {
             setcookie($cookiename, $_COOKIE[$cookiename], time() + ($cookietime * 60));      // Make a new cookie with the same name and same info
         }
     }
 
-    function GetQueryString() {
+    function getQueryString() {
         $raw = $_SERVER['QUERY_STRING'];
         if ($raw != "") {
             return '?' . $raw;
@@ -147,19 +147,19 @@ Class website {
         return false;
     }
 
-    function AccountExists($username = "", $email = "") {
+    function accountExists($username = "", $email = "") {
         if ($username != "" && $email != "") {
-            return ($this->NameInUse($username) && $this->EmailInUse($email));
+            return ($this->nameInUse($username) && $this->emailInUse($email));
         } else if ($username != "") {
-            return $this->NameInUse($username);
+            return $this->nameInUse($username);
         } else if ($email != "") {
-            return $this->EmailInUse($email);
+            return $this->emailInUse($email);
         } else {
-            return $this->Translate("ErrorOccured") . "Both the username and the email parameters are empty!";
+            return $this->translate("ErrorOccured") . "Both the username and the email parameters are empty!";
         }
     }
 
-    function NameInUse($username) {
+    function nameInUse($username) {
         if ($this->db->doQuery("SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` = '" . $username . "';") == false) {
             return false;
         } else {
@@ -167,7 +167,7 @@ Class website {
         }
     }
 
-    function EmailInUse($email) {
+    function emailInUse($email) {
         if ($this->db->doQuery("SELECT `id` FROM `gebruikers` WHERE `email` = '" . $email . "';") == false) {
             return false;
         } else {
@@ -178,28 +178,28 @@ Class website {
     function checkFields($_POST) {
         $good = "";
         if ($_POST['username'] == "") {
-            $good .= $this->Translate("Username") . " " . $this->Translate("FieldEmpty");
+            $good .= $this->translate("Username") . " " . $this->translate("FieldEmpty");
         }
         if ($_POST['password'] == "") {
-            $good .= $this->Translate("Password") . " " . $this->Translate("FieldEmpty");
+            $good .= $this->translate("Password") . " " . $this->translate("FieldEmpty");
         }
         if ($_POST['confirmpassword'] == "") {
-            $good .= $this->Translate("ConfirmPassword") . " " . $this->Translate("FieldEmpty");
+            $good .= $this->translate("ConfirmPassword") . " " . $this->translate("FieldEmpty");
         }
         if ($_POST['confirmpassword'] != $_POST['password']) {
-            $good .= $this->Translate("PasswordMatch");
+            $good .= $this->translate("PasswordMatch");
         }
         if (!preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) {
-            $good .= $this->Translate("PasswordRules");
+            $good .= $this->translate("PasswordRules");
         }
         if ($_POST['email'] == "") {
-            $good .= "Email " . $this->Translate("FieldEmpty");
+            $good .= "Email " . $this->translate("FieldEmpty");
         }
         if (!preg_match('/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/', $_POST['email'])) {
-            $good .= $this->Translate("EmailInvalid");
+            $good .= $this->translate("EmailInvalid");
         }
-        if ($this->AccountExists(stripslashes(mysql_real_escape_string($_POST['username'])), stripslashes(mysql_real_escape_string($_POST['email'])))) {
-            $good .= $this->Translate("AccountEmailUsername");
+        if ($this->accountExists(stripslashes(mysql_real_escape_string($_POST['username'])), stripslashes(mysql_real_escape_string($_POST['email'])))) {
+            $good .= $this->translate("AccountEmailUsername");
         }
         if ($good == "") {
             $good = true;
@@ -208,7 +208,7 @@ Class website {
         return $good;
     }
 
-    function DoRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
+    function doRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
         $check = $this->checkFields($_POST);
         if (is_bool($check)) {
             require $this->MainConfigFile;        // Get the connection variables for mysql from the config file
@@ -219,19 +219,19 @@ Class website {
                 $email = stripslashes(mysql_real_escape_string($_POST['email']));
                 $raw_account_query = "INSERT INTO `gebruikers` (`gebruikersnaam`, `wachtwoord`, `email`, `taal`, `baan`) VALUES ('" . $username . "', '" . $encryptedPass . "', '" . $email . "', '" . $_POST['language'] . "', '" . $_POST['job'] . "');";
                 $this->db->doQuery($raw_account_query); // Insert the account info
-                $this->Login($username, $password);     // Log in to the account
+                $this->login($username, $password);     // Log in to the account
             } else {
-                die($this->Translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
+                die($this->translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
             }
         } else {
             $this->showRegister($_POST, $check);
         }
     }
 
-    function ShowLogin() {  // Show the login part (left top of index.php when not logged in)
+    function showLogin() {  // Show the login part (left top of index.php when not logged in)
         echo '
             <li class="me1">
-                <form action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" name="login" method="POST">
+                <form action="' . $_SERVER['PHP_SELF'] . $this->getQueryString() . '" name="login" method="POST">
                     <div>
                         <input type="text" name="username">
                         <input type="password" name="password">
@@ -240,7 +240,7 @@ Class website {
                     </div>
         ';
         if ($this->correctLogin == false) {
-            echo '<font color="red">' . $this->Translate("LoginFailed") . '</font>';
+            echo '<font color="red">' . $this->translate("LoginFailed") . '</font>';
         }
         echo '
                 </form>
@@ -248,7 +248,7 @@ Class website {
         ';
     }
 
-    function Login($username, $password) {  // Check if the variables sent are correct and set the cookie
+    function login($username, $password) {  // Check if the variables sent are correct and set the cookie
         require $this->MainConfigFile;
         $username = stripslashes(mysql_real_escape_string($username));
         $password = sha1(stripslashes(mysql_real_escape_string($password)));
@@ -265,7 +265,7 @@ Class website {
         }
     }
 
-    function Logout() {
+    function logout() {
         require $this->MainConfigFile;
         setcookie($cookiename, "1", time() - 3600);  // To delete a cookie, overwrite the cookie with an expiration time of "one hour ago"
         foreach (get_defined_vars() as $key) {  // Reset all variables (clear the session)
@@ -274,9 +274,9 @@ Class website {
         echo '<meta http-equiv="refresh" content="0">';
     }
 
-    function ShowLogout() {    // Show the logout button
+    function showLogout() {    // Show the logout button
         echo '
-            <form name="LogOut" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" method="POST">
+            <form name="LogOut" action="' . $_SERVER['PHP_SELF'] . $this->getQueryString() . '" method="POST">
                 <input type="submit" name="LogOut" value="Log out">
             </form>
         ';
@@ -334,9 +334,9 @@ Class website {
                                     <ul id="mepanel-nav">
         ';
         if ($this->getCurrentUser()) {
-            $this->ShowLogout();
+            $this->showLogout();
         } else {
-            $this->ShowLogin();
+            $this->showLogin();
         }
         echo '
                                     </ul>
@@ -456,7 +456,7 @@ Class website {
             $question .= '
                 <div id="profile" class="profile vcard">
                     <a href="index.php?userid=' . $fields['gebruikerid'] . '" onclick="return loadProfile(' . $fields['gebruikerid'] . ');" class="avatar">
-                        <img class="photo" src="' . $this->GetImage($fields['gebruikerid']) . '" width="50">
+                        <img class="photo" src="' . $this->getImage($fields['gebruikerid']) . '" width="50">
                     </a>
                     <span class="user">
                         <a class="url" href="index.php?userid=' . $fields['gebruikerid'] . '" onclick="return loadProfile(' . $fields['gebruikerid'] . ');">
@@ -476,7 +476,7 @@ Class website {
                     </div>
                     <ul class="meta">
                         <li>
-                            <abbr title="">' . $this->StringTimeDifference($fields['posttijd']) . '</abbr>
+                            <abbr title="">' . $this->getTimeDifference($fields['posttijd']) . '</abbr>
                         </li>
                     </ul>
             ';
@@ -504,33 +504,10 @@ Class website {
         return $question;
     }
 
-    public function StringTimeDifference($date1) {
-        if ($this->TimeDifference($date1, time())) {
-            $i = array();
-            list($d, $h, $m, $s) = (array) $this->TimeDifference($date1, time());
-
-            if ($d > 0) {
-                $i[] = sprintf('%d Days', $d);
-            }
-            if ($h > 0) {
-                $i[] = sprintf('%d Hours', $h);
-            }
-            if (($d == 0) && ($m > 0)) {
-                $i[] = sprintf('%d Minutes', $m);
-            }
-            if (($h == 0) && ($s > 0)) {
-                $i[] = sprintf('%d Seconds', $s);
-            }
-
-            return count($i) ? implode(' ', $i) . " ago" : 'Just Now';
-        } else {
-            return "Unknown";
-        }
-    }
-
-    public function TimeDifference($date1, $date2) {
+    public function getTimeDifference($date1) {
         $date1 = strtotime($date1);
-
+        $date2 = time();
+        $timeDiff = false;
         if (($date1 !== false) && ($date2 !== false)) {
             if ($date2 >= $date1) {
                 $diff = ($date2 - $date1);
@@ -551,10 +528,31 @@ Class website {
                     $diff %= 60;
                 }
 
-                return array($days, $hours, $minutes, intval($diff));
+                $timeDiff = array($days, $hours, $minutes, intval($diff));
             }
         }
-        return false;
+
+        if ($timeDiff != false) {
+            $i = array();
+            list($d, $h, $m, $s) = (array) $timeDiff;
+
+            if ($d > 0) {
+                $i[] = sprintf('%d Days', $d);
+            }
+            if ($h > 0) {
+                $i[] = sprintf('%d Hours', $h);
+            }
+            if (($d == 0) && ($m > 0)) {
+                $i[] = sprintf('%d Minutes', $m);
+            }
+            if (($h == 0) && ($s > 0)) {
+                $i[] = sprintf('%d Seconds', $s);
+            }
+
+            return count($i) ? implode(' ', $i) . " ago" : 'Just Now';
+        } else {
+            return "Unknown";
+        }
     }
 
     function getCurrentQuestion($categoryid, $questionid) {
@@ -799,7 +797,7 @@ Class website {
                     <div class="answer">
                         <div class="profile vcard">
                             <a href="index.php?userid=' . $user->id . '" class="avatar">
-                                <img class="photo" src="' . $this->GetImage($user->id) . '" width="50">
+                                <img class="photo" src="' . $this->getImage($user->id) . '" width="50">
                             </a>
                             <span class="user">
                                 <a class="url" href="index.php?userid=' . $user->id . '">
@@ -820,8 +818,8 @@ Class website {
                 if ($this->getCurrentUser() && $this->getCurrentUser()->id == $user->id) {
                     $answers .= '
                         <div class="answercontrol-container">
-                            <a href="' . $this->GetQueryString() . '&edit=' . $fields['id'] . '"><img src="images/edit.gif"></a>
-                            <a href="' . $this->GetQueryString() . '&remove=' . $fields['id'] . '"><img src="images/incorrect.gif"></a>
+                            <a href="' . $this->getQueryString() . '&edit=' . $fields['id'] . '"><img src="images/edit.gif"></a>
+                            <a href="' . $this->getQueryString() . '&remove=' . $fields['id'] . '"><img src="images/incorrect.gif"></a>
                         </div>
                     ';
                 }
@@ -836,7 +834,7 @@ Class website {
                     if (!$this->hasVotedOnAnswer($fields['id'])) {
                         $answers .= '
                             <tr id="votebuttons_' . $fields['id'] . '">
-                                <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" onSubmit="return Vote(this, this.vote.value);">
+                                <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->getQueryString() . '" onSubmit="return Vote(this, this.vote.value);">
                                     <input type="hidden" name="answerid" id="answerid" value="' . $fields['id'] . '">
                                     <input type="hidden" name="questionid" id="questionid" value="' . $fields['vraagid'] . '">
                                     <input type="hidden" name="categoryid" id="categoryid" value="' . $fields['taalid'] . '">
@@ -857,7 +855,7 @@ Class website {
                             </div>
                             <ul class="meta">
                                 <li>
-                                    <abbr title="' . $fields['posttijd'] . '">' . $this->StringTimeDifference($fields['posttijd']) . '</abbr>
+                                    <abbr title="' . $fields['posttijd'] . '">' . $this->getTimeDifference($fields['posttijd']) . '</abbr>
                                 </li>
                             </ul>
                         </div>
@@ -892,7 +890,7 @@ Class website {
                     <div id="yan-question">
                         <div class="qa-container">
                             <center>
-                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&amp;answer=1", "", $this->GetQueryString()) . '">
+                                <form name="Answer" id="Answer" method="POST" action="' . $_SERVER['PHP_SELF'] . str_replace("&amp;answer=1", "", $this->getQueryString()) . '">
                                     <table>
             ';
             if ($categoryid == "" || $questionid == "") {
@@ -1108,19 +1106,19 @@ Class website {
                                         preg_match('/^(?=.*\d)(?=.*[A-Z]*[a-z]).{6,}$/', $_POST['password'])) { // Wachtwoord bestaat uit A-Z, a-z, 0-9 en het minimum karakters is 6
                                     $this->doProfileEdit($_POST);
                                 } else {
-                                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordRules") . '</font>');  // Stuur de gebruiker terug naar de Profielpagina en stuur de error mee
+                                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->translate("PasswordRules") . '</font>');  // Stuur de gebruiker terug naar de Profielpagina en stuur de error mee
                                 }
                             } else {
-                                echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PasswordMatch") . '</font>');
+                                echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->translate("PasswordMatch") . '</font>');
                             }
                         } else {
                             $this->doProfileEdit($_POST);
                         }
                     } else {
-                        echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("UnknownError") . '</font>');
+                        echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->translate("UnknownError") . '</font>');
                     }
                 } else {
-                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->Translate("PassChangeMatch") . '</font>');
+                    echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, '<font color="red">' . $this->translate("PassChangeMatch") . '</font>');
                 }
             } else {
                 echo $this->getUserInfo($this->getCurrentUser()->id, $_POST, "");
@@ -1199,26 +1197,26 @@ Class website {
                                 imagejpeg($imageResized, $SaveDir . $FileName, 100);
                                 return true;
                             } else {
-                                return $this->Translate('SaveError');
+                                return $this->translate('SaveError');
                             }
                         } else {
-                            return $this->Translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"];
+                            return $this->translate('ErrorCode') . ": " . $_FILES["imageFile"]["error"];
                         }
                     } else {
-                        return $this->Translate('FileType') . ": " . $_FILES["imageFile"]["type"];
+                        return $this->translate('FileType') . ": " . $_FILES["imageFile"]["type"];
                     }
                 } else {
-                    return $this->Translate('FileBig') . $FileSize . " MB " . $this->Translate('FileSize') . $MaxFileSize . " MB";
+                    return $this->translate('FileBig') . $FileSize . " MB " . $this->translate('FileSize') . $MaxFileSize . " MB";
                 }
             } else {
                 return true;
             }
         } else {
-            return $this->Translate('UserLost');
+            return $this->translate('UserLost');
         }
     }
 
-    function GetImage($id) {
+    function getImage($id) {
         require $this->MainConfigFile;
         $handle = @opendir($SaveDir);
         $File = "";
@@ -1257,7 +1255,7 @@ Class website {
         if (!isset($_POST['year'])) {
             $_POST['year'] = $this->getCurrentUser()->getYear();
         }
-        $formStart = '<form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">';
+        $formStart = '<form method="POST" id="AdditionalInfo" name="AdditionalInfo" action="' . $_SERVER['PHP_SELF'] . $this->getQueryString() . '" onSubmit="return CheckAdditional(this, ' . Date("Y") . ');">';
         $additionalInfoForm = "";
         if ($_POST['firstname'] == "") {
             $additionalInfoForm .= '
@@ -1361,7 +1359,7 @@ Class website {
             $_POST['skype'] = $user->skype;
         }
         return '
-            <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->GetQueryString() . '" onSubmit="return CheckProfileEdit(this);">
+            <form enctype="multipart/form-data" method="POST" id="ProfileEdit" name="ProfileEdit" action="' . $_SERVER['PHP_SELF'] . $this->getQueryString() . '" onSubmit="return CheckProfileEdit(this);">
             <tr>
                 <td>Old password:</td> <td><input type="password" value="' . $_POST['oldpassword'] . '" id="oldpassword" name="oldpassword"><font color="RED">*</font></td>
             </tr>
@@ -1484,17 +1482,17 @@ Class website {
         $owned = ($this->getCurrentUser() && $this->getCurrentUser()->id == $id);
         if ($errors != "") {
             if ($errors == true) {
-                $userinfo .= $this->Translate("SuccesfullyUpdated");
+                $userinfo .= $this->translate("SuccesfullyUpdated");
                 $userinfo .= "<br>";
             } else {
-                $userinfo .= $this->Translate("ErrorOccured");
+                $userinfo .= $this->translate("ErrorOccured");
                 $userinfo .= "<br>";
                 $userinfo .= $errors;
                 $userinfo .= "<br>";
             }
         }
         $userinfo .= '
-            <b>' . $this->Translate("ProfileInfo") . ':</b>
+            <b>' . $this->translate("ProfileInfo") . ':</b>
             <table>
         ';
         if ($owned) {
