@@ -8,13 +8,13 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
     $exists = "false";
     if (isset($_GET['username'])) {
         $username = stripslashes(mysql_real_escape_string($_GET['username']));
-        if ($website->AccountExists($username, "")) {
+        if ($website->accountExists($username, "")) {
             $exists = "true";
         }
     }
     if (isset($_GET['email'])) {
         $email = stripslashes(mysql_real_escape_string($_GET['email']));
-        if ($website->AccountExists("", $email)) {
+        if ($website->accountExists("", $email)) {
             $exists = "true";
         }
     }

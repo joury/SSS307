@@ -6,13 +6,13 @@
     $database = new database();
     $website = new website($database);
     if (isset($_POST['btnLogin'])) {
-        $website->LogIn($_POST['username'], $_POST['password']);
+        $website->login($_POST['username'], $_POST['password']);
     } else if (isset($_POST['LogOut'])) {
-        $website->Logout();
+        $website->logout();
     } else if (isset($_POST['RegistrationForm'])) {
-        $website->DoRegister($_POST);
+        $website->doRegister($_POST);
     } else if ($website->getCurrentUser()) {
-        $website->RefreshCookie();
+        $website->refreshCookie();
     }
     
     ?>
@@ -40,17 +40,17 @@
                         <a href="index.php" onclick="return loadHome();">Home</a> &gt;
                     </li>
                     <?php
-                        if (isset($_GET['categoryid'])) {
-                            echo $website->getCurrentCategory($_GET['categoryid']);
-                            if (isset($_GET['questionid'])) {
-                                echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
-                            }
-                        } else if (isset($_GET['userid'])) {
-                            echo '<a href="?userid=' . $_GET['userid'] . '">' . $website->getUser($_GET['userid'])->username . '</a> > ';
-                            if (isset($_GET['edit'])) {
-                                echo '<a href="?userid=' . $_GET['userid'] . '&edit=1">Edit</a> >';
-                            }
+                    if (isset($_GET['categoryid'])) {
+                        echo $website->getCurrentCategory($_GET['categoryid']);
+                        if (isset($_GET['questionid'])) {
+                            echo $website->getCurrentQuestion($_GET['categoryid'], $_GET['questionid']);
                         }
+                    } else if (isset($_GET['userid'])) {
+                        echo '<a href="?userid=' . $_GET['userid'] . '">' . $website->getUser($_GET['userid'])->username . '</a> > ';
+                        if (isset($_GET['edit'])) {
+                            echo '<a href="?userid=' . $_GET['userid'] . '&edit=1">Edit</a> >';
+                        }
+                    }
                     ?>
                 </ol>
                 <div id="yan-content">
@@ -100,27 +100,27 @@
                     <div id="bottom_content">
                         <div id="toolbar">
                             <?php
-                                if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
-                                    echo $website->getTools();
-                                }
+                            if (isset($_GET['categoryid']) && isset($_GET['questionid'])) {
+                                echo $website->getTools();
+                            }
                             ?>
                         </div>
                         <div id="answerposter">
                             <?php
-                                if (isset($_GET['answer'])) {
-                                    if (isset($_GET['categoryid'])) {
-                                        if (isset($_GET['questionid'])) {
-                                            echo $website->getAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
-                                        } else {
-                                            echo $website->getAnswerPoster("", $_GET['categoryid'], "");
-                                        }
+                            if (isset($_GET['answer'])) {
+                                if (isset($_GET['categoryid'])) {
+                                    if (isset($_GET['questionid'])) {
+                                        echo $website->getAnswerPoster("", $_GET['categoryid'], $_GET['questionid']);
                                     } else {
-                                        if (!isset($_GET['question'])) {
-                                            $_GET['question'] = "";
-                                        }
-                                        echo $website->getAnswerPoster($_GET['question']);
+                                        echo $website->getAnswerPoster("", $_GET['categoryid'], "");
                                     }
+                                } else {
+                                    if (!isset($_GET['question'])) {
+                                        $_GET['question'] = "";
+                                    }
+                                    echo $website->getAnswerPoster($_GET['question']);
                                 }
+                            }
                             ?>
                         </div>
                         <div id="answerdiv">

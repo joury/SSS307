@@ -3,7 +3,7 @@
 Class database {
 
     var $connection;
-    var $selected_db;
+    var $database;
 
     function __construct() {
         $this->makeConnection(true);
@@ -13,8 +13,8 @@ Class database {
         require "configs/config.php";
         $this->connection = @mysql_connect($db_host, $db_username, $db_password, $new);
         if ($this->connection) {
-            $this->selected_db = @mysql_select_db($db_name);
-            if ($this->selected_db) {
+            $this->database = @mysql_select_db($db_name);
+            if ($this->database) {
                 return true;
             } else {
                 echo "<center>" . mysql_error() . "</center><br>";
