@@ -141,22 +141,28 @@ function CheckPass(form, submit) {
 function CheckBirthdate(form, currentyear, submit) {
     var correct = true;
     if (form.day.value == "" || form.day.value < 1 || form.day.value > 31) {
-        if (submit && form.day.value != "") {
-            alert('You can\'t be born on the ' + form.day.value + 'th day.');
+        if (form.day.value != "") {
+            correct = false;
+            if (submit) {
+                alert('You can\'t be born on the ' + form.day.value + 'th day.');
+            }
         }
-        correct = false;
     }
     if (form.month.value == "" || form.month.value < 1 || form.month.value > 12) {
-        if (submit && form.month.value != "") {
-            alert('You can\'t be born on the ' + form.month.value + 'th month.');
+        if (form.month.value != "") {
+            correct = false;
+            if (submit) {
+                alert('You can\'t be born on the ' + form.month.value + 'th month.');
+            }
         }
-        correct = false;
     }
     if (form.year.value == "" || form.year.value < currentyear-100 || form.year.value > currentyear-8) {
         if (submit && form.year.value != "") {
-            alert('You can\'t be born in ' + form.year.value + '.');
+            correct = false;
+            if (submit) {
+                alert('You can\'t be born in ' + form.year.value + '.');
+            }
         }
-        correct = false;
     }
     if (correct) {
         document.getElementById('birthdateImage').src = "images/correct.gif";
