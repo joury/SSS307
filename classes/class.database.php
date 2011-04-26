@@ -32,7 +32,6 @@ Class database {
             if ($result && @mysql_num_rows($result) > 0) {
                 return $result;
             } else {
-                mysql_query($sql) or die (mysql_error());
                 return false;
             }
         } else {

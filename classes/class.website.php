@@ -211,18 +211,13 @@ Class website {
     function doRegister($_POST) {   // Begin the register function, get the $username and $password from the function call in index.php
         $check = $this->checkFields($_POST);
         if (is_bool($check)) {
-            require $this->mainConfigFile;        // Get the connection variables for mysql from the config file
-            if ($this->DB->makeConnection()) {
-                $username = stripslashes(mysql_real_escape_string($_POST['username']));  // Make sure there are no weird tokens in the variables
-                $password = stripslashes(mysql_real_escape_string($_POST['password']));
-                $encryptedPass = sha1($password);
-                $email = stripslashes(mysql_real_escape_string($_POST['email']));
-                $raw_account_query = "INSERT INTO `gebruikers` (`gebruikersnaam`, `wachtwoord`, `email`, `taal`, `baan`) VALUES ('" . $username . "', '" . $encryptedPass . "', '" . $email . "', '" . $_POST['language'] . "', '" . $_POST['job'] . "');";
-                $this->db->doQuery($raw_account_query); // Insert the account info
-                $this->login($username, $password);     // Log in to the account
-            } else {
-                die($this->translate('NoDB'));  // If we had no connection, stop the script with the message "No DB connection"
-            }
+            $username = stripslashes(mysql_real_escape_string($_POST['username']));  // Make sure there are no weird tokens in the variables
+            $password = stripslashes(mysql_real_escape_string($_POST['password']));
+            $encryptedPass = sha1($password);
+            $email = stripslashes(mysql_real_escape_string($_POST['email']));
+            $raw_account_query = "INSERT INTO `gebruikers` (`gebruikersnaam`, `wachtwoord`, `email`, `taal`, `baan`) VALUES ('" . $username . "', '" . $encryptedPass . "', '" . $email . "', '" . $_POST['language'] . "', '" . $_POST['job'] . "');";
+            $this->db->doQuery($raw_account_query); // Insert the account info
+            $this->login($username, $password);     // Log in to the account
         } else {
             $this->showRegister($_POST, $check);
         }
@@ -741,12 +736,7 @@ Class website {
 
     function getBadges($id) {
         $badges = "";
-        $result = $this->db->doQuery("SELECT * FROM `skills` WHERE `id` = '" . $id . "';");
-        if ($result != false) {      // Een of meerdere talen waar hij/zij goed in is
-            while ($fields = mysql_fetch_assoc($result)) {
-                $badges .= $fields['taalid'] . "_" . ( (int) ($fields['taalniveau'] / 25 ) ) . ".jpg";
-            }
-        }
+        // ToDo: Iets doen met de votes per categorie en daarbij een plaatje laden
         return $badges;
     }
 
