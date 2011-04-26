@@ -14,7 +14,6 @@
     } else if ($website->getCurrentUser()) {
         $website->refreshCookie();
     }
-    
     ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -24,42 +23,41 @@
         ?>
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
         <script type="text/javascript">
-            if (screen.width < 600 || screen.height < 600) {
+            if (screen.width < 680 || screen.height < 680) {
                 document.write('<link rel="stylesheet" type="text/css" media="screen" href="./css/mobiel.answers.css">');
                 document.write('<meta name="viewport" content="width=680, initial-scale=0.7, user-scalable=yes">');
+
+                var supportsOrientationChange = "onorientationchange" in window,
+                    orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
+
+                window.addEventListener(orientationEvent, function() {
+                    var newContent = "";
+                    var xScale = screen.width / 680;
+                    var yScale = screen.height / 680;
+                    switch(window.orientation) {
+                        case 0: {   // Landscape
+                                newContent = "width=680, initial-scale="+xScale+", user-scalable=yes";
+                                break;
+                            }
+                        case -90: { // Portrait
+                                newContent = "width=680, initial-scale="+yScale+", user-scalable=yes";
+                                break;
+                            }
+                        case 90: {  // Portrait
+                                newContent = "width=680, initial-scale="+yScale+", user-scalable=yes";
+                                break;
+                            }
+                    }
+                    var metatags = document.getElementsByTagName("meta");
+                    for (var i = 0; i < metatags.length; i++) {
+                        if (metatags[i].getAttribute("name") == "viewport") {
+                            metatags[i].setAttribute("content", newContent);
+                        }
+                    }
+                }, false);
             } else {
                 document.write('<link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">');
             }
-            
-            var supportsOrientationChange = "onorientationchange" in window,
-                orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
-
-            window.addEventListener(orientationEvent, function() {
-                var newContent = "";
-                var xScale = screen.width / 680;
-                var yScale = screen.height / 680;
-                switch(window.orientation) {
-                    case 0: {   // Landscape
-                        newContent = "width=680, initial-scale="+xScale+", user-scalable=yes";
-                        break;
-                    }
-                    case -90: { // Portrait
-                        newContent = "width=680, initial-scale="+yScale+", user-scalable=yes";
-                        break;
-                    }
-                    case 90: {  // Portrait
-                        newContent = "width=680, initial-scale="+yScale+", user-scalable=yes";
-                        break;
-                    }
-                }
-                var metatags = document.getElementsByTagName("meta");
-                for (var i = 0; i < metatags.length; i++) {
-                    if (metatags[i].getAttribute("name") == "viewport") {
-                        metatags[i].setAttribute("content", newContent);
-                    }
-                }
-            }, false);
-
         </script>
         <script type="text/javascript" src="./scripts/navigation.js"></script>
         <script type="text/javascript" src="./scripts/checkfields.js"></script>
