@@ -24,6 +24,7 @@
         <link rel="shortcut icon" href="./images/answers_favicon.ico">
         <script type="text/javascript">
             if (screen.width < 680 || screen.height < 680) {
+                var isMobile = true;
                 document.write('<link rel="stylesheet" type="text/css" media="screen" href="./css/mobiel.answers.css">');
                 document.write('<meta name="viewport" content="width=680, initial-scale=0.7, user-scalable=yes">');
 
@@ -56,12 +57,12 @@
                     }
                 }, false);
             } else {
+                var isMobile = false;
                 document.write('<link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">');
             }
         </script>
         <script type="text/javascript" src="./scripts/navigation.js"></script>
         <script type="text/javascript" src="./scripts/checkfields.js"></script>
-        <script type="text/javascript" src="./scripts/vote.js"></script>
         <script type="text/javascript" src="./scripts/bbcode.js"></script>
     </head>
     <body class="c-std wide question-index new-header js">

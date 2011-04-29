@@ -778,13 +778,15 @@ Class website {
         $result = $this->db->doQuery("SELECT * FROM `antwoorden` a WHERE a.taalid = '" . $categoryid . "' AND a.vraagid = '" . $questionid . "' ORDER BY (SELECT SUM(v.positive) - SUM(v.negative) FROM `votes` v WHERE v.antwoordid = a.id) DESC;");
         $answers = '';
         if ($result != false) {
-            require $this->mainConfigFile;
             while ($fields = mysql_fetch_assoc($result)) {
                 $user = $this->getUser($fields['gebruikersid']);
+                if ($this->getCurrentUser() && $this->getCurrentUser()->id == $user->id && isset($_GET['edit']) && $_GET['edit'] == $fields['id']) {
+                    return $this->getAnswerPoster("", $categoryid, $questionid, $fields['id']);
+                }
                 $positive = $this->getPositiveVotes($user->id, "", $fields['id']);
                 $negative = $this->getNegativeVotes($user->id, "", $fields['id']);
                 $answers .= '
-                    <div class="answer">
+                    <div class="answer" onMouseOver="handleVoteButtons(' . $fields['id'] . ', false);" onMouseOut="handleVoteButtons(' . $fields['id'] . ', true);">
                         <div class="profile vcard">
                             <a href="index.php?userid=' . $user->id . '" class="avatar">
                                 <img class="photo" src="' . $this->getImage($user->id) . '" width="50">
@@ -807,9 +809,10 @@ Class website {
                 ';
                 if ($this->getCurrentUser() && $this->getCurrentUser()->id == $user->id) {
                     $answers .= '
-                        <div class="answercontrol-container">
-                            <a href="' . $this->getQueryString() . '&edit=' . $fields['id'] . '"><img src="images/edit.gif"></a>
-                            <a href="' . $this->getQueryString() . '&remove=' . $fields['id'] . '"><img src="images/incorrect.gif"></a>
+                        <div class="answercontrols" id="answercontrols_' . $fields['id'] . '">
+                            <a href="' . $this->getQueryString() . '&amp;edit=' . $fields['id'] . '"><img src="images/edit.gif"></a>
+                            <a href="' . $this->getQueryString() . '&amp;remove=' . $fields['id'] . '"><img src="images/incorrect.gif"></a>
+                            <script type="text/javascript">if (!isMobile) {document.getElementById("answercontrols_' . $fields['id'] . '").style.visibility = "hidden";}</script>
                         </div>
                     ';
                 }
@@ -824,7 +827,7 @@ Class website {
                     if (!$this->hasVotedOnAnswer($fields['id'])) {
                         $answers .= '
                             <tr id="votebuttons_' . $fields['id'] . '">
-                                <form method="POST" action="' . $_SERVER['PHP_SELF'] . $this->getQueryString() . '" onSubmit="return Vote(this, this.vote.value);">
+                                <form method="POST" action="' . $_SERVER['PHP_SELF'] . preg_replace("/&amp;answer=1/", "", $this->getQueryString()) . '" onSubmit="return vote(this, this.vote.value);">
                                     <input type="hidden" name="answerid" id="answerid" value="' . $fields['id'] . '">
                                     <input type="hidden" name="questionid" id="questionid" value="' . $fields['vraagid'] . '">
                                     <input type="hidden" name="categoryid" id="categoryid" value="' . $fields['taalid'] . '">
@@ -872,7 +875,7 @@ Class website {
         $this->db->doQuery("INSERT INTO `votes` VALUES ('" . $answerid . "', '" . $userid . "', '" . $positive . "', '" . $negative . "');");
     }
 
-    function getAnswerPoster($title = "", $categoryid = "", $questionid = "") {
+    function getAnswerPoster($title = "", $categoryid = "", $questionid = "", $id = "") {
         $answerposter = "";
         if ($this->getCurrentUser()) {
             $answerposter .= '
@@ -908,7 +911,16 @@ Class website {
             $answerposter .= '
                 <tr>
                     <td>
-                        <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none"></textarea>
+                        <textarea name="text" id=' . "'comment'" . ' cols=80 rows=10 style="resize:none">
+            ';
+            if ($id != "") {
+                $result = $this->db->doQuery("SELECT `antwoord` FROM `antwoorden` WHERE `id` = '" . $id . "';");
+                if ($result != false) {
+                    $answerposter .= mysql_result($result, 0);
+                }
+            }
+            $answerposter .= '
+                        </textarea>
                     </td>
                 </tr>
                 <tr>
@@ -953,6 +965,7 @@ Class website {
         } else {
             $answerposter .= '<script type="text/javascript">window.location = "index.php";</script>';
         }
+        $answerposter = preg_replace("/  /", "", $answerposter);
         return $answerposter;
     }
 
@@ -1492,7 +1505,7 @@ Class website {
                 $userinfo .= '
                     <tr>
                         <td>
-                            <a href="?userid=' . $id . '&edit=1">Edit your profile</a>
+                            <a href="?userid=' . $id . '&amp;edit=1">Edit your profile</a>
                         </td>
                     </tr>
                 ';
