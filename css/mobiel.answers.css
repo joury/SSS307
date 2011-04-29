@@ -354,6 +354,9 @@ body #hd #yan-banner #yan-banner-answer{
 
 /*Breadcrumbs (huidige locatie)*/
 
+#yan-breadcrumbs{
+visibility:hidden;
+}
 #yan-breadcrumbs li{
 	display:inline;
 	margin:0;
@@ -447,6 +450,11 @@ body #hd #yan-banner #yan-banner-answer{
 	font-size:93%;
 	zoom:1;
 }
+
+#toolbar{
+	visibility:hidden;
+}
+
 
 body.js #yan-question-tools .menu span{
 	background:url(../images/dropdown-arrow.gif) no-repeat right 10px;
@@ -552,6 +560,79 @@ yan-question-tools li{
     width:30px;
 }
 
+.cta *:hover span, .cta .hover span, .cta *:focus span {
+    background-image: url("../images/cta-darkblue-hover.gif");
+}
+
+.cta span {
+    background: url("../images/cta-darkblue.gif") no-repeat scroll 100% 100% transparent;
+}
+
+.cta button,.cta a,.cta input{
+	background:#069;
+	color:#fff;
+	border:0;
+	font-weight:bold;
+	padding:2px 4px;
+}
+
+.cta span{
+	float:left;
+	position:relative;
+	top:5px;
+	left:5px;
+}
+
+.cta span span{
+	background-position:0 100%;
+	top:0;
+	left:-10px;
+}
+
+.cta span span span{
+	background-position:0 0;
+	top:-10px;
+	left:0;
+	margin-bottom:-5px;
+}
+
+.cta span span span span{
+	padding:5px 13px 0 2px;
+}
+
+.cta span span span span{
+	background-position:100% 0;
+	top:0;
+	left:10px;
+	margin-bottom:0;
+	padding:5px 23px 0 -1px;
+}
+
+.js .cta button,.js .cta a,.js .cta input{
+	padding:0;
+}
 
 
 
+
+.js .cta button,.js .cta input,.js .cta a{
+	padding:0;
+	margin:5px;
+}
+
+
+.cta button,.cta input,.cta a{
+	border:0;
+	text-decoration:none;
+	text-align:left;
+	width:auto;
+	-moz-box-sizing:content-box;
+	font:100% arial,sans-serif;
+	overflow:visible;
+	display:-moz-inline-stack;
+	display:inline-block;
+	cursor:pointer;
+	*position:relative;
+	*white-space:nowrap;
+	vertical-align:middle;
+}
