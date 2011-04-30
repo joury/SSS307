@@ -18,196 +18,113 @@ function clear() {
 }
 
 function loadHome() {
-    return true;
     document.getElementById("yan-nav-home").className="current menu";
     document.getElementById("yan-nav-browse").className="menu";
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
     clear();
-    var content = ContentRequest("?homepage=1");
-    if (content) {
-        document.getElementById("yan-question").innerHTML = content;
-        return false;
-    } else {
-        return true;
-    }
+    $("#yan-question").load("checker.php?homepage=1");
+    return false;
 }
 
 function loadProfile(id) {
-    return true;
     document.getElementById("yan-nav-home").className="menu";
     document.getElementById("yan-nav-browse").className="menu";
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="current menu";
     }
     clear();
-    var content = ContentRequest("?profile="+id);
-    if (content) {
-        document.getElementById("yan-question").innerHTML = content;
-        return false;
-    } else {
-        return true;
-    }
+    $("#yan-question").load("checker.php?profile=" + id);
+    return false;
 }
 
 function loadCategories() {
-    return true;
     document.getElementById("yan-nav-home").className="menu";
     document.getElementById("yan-nav-browse").className="current menu";
     if (document.getElementById("yan-nav-about")) {
         document.getElementById("yan-nav-about").className="menu";
     }
     clear();
-    var content = ContentRequest("?categories=1");
-    if (content) {
-        document.getElementById("yan-question").innerHTML = content;
-        return false;
-    } else {
-        return true;
-    }
+    $("#yan-question").load("checker.php?categories=1");
+    return false;
 }
 
 function loadAnswerPoster(categoryid, questionid) {
-    return true;
-    var content = "";
-    if (!document.getElementById("answerposter")) {
+    var answerposter = document.getElementById("answerposter");
+    var empty = answerposter.innerHTML.replace(/^\s*|\s*$/g, '') == "";
+    if (empty) {
         if (categoryid == null || questionid == null) {
             if (categoryid == null && questionid == null) {
-                content = ContentRequest("?answer=1");
-                if (content) {
-                    document.getElementById("yan-content").innerHTML += content;
-                    return false;
-                }
+                $.get("checker.php?answer=1", function(data) {
+                    $('#yan-content').append(data);
+                });
             } else if (categoryid != null) {
-                content = ContentRequest("?categoryid="+categoryid+"&answer=1");
-                if (content) {
-                    document.getElementById("yan-content").innerHTML += content;
-                    return false;
-                }
+                $.get("checker.php?categoryid="+categoryid+"&answer=1", function(data) {
+                    $('#yan-content').append(data);
+                });
             }
         } else {
-            content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid+"&answer=1");
-            if (content) {
-                document.getElementById("answerposter").innerHTML = content;
-                return false;
-            }
+            $("#answerposter").load("checker.php?categoryid="+categoryid+"&questionid="+questionid+"&answer=1");
         }
-    } else {
-        return false;
     }
-    return true;
+    return false;
 }
 
 function loadQuestions(categoryid) {
-    return true;
-    var content = "";
-    content = ContentRequest("?categoryid="+categoryid);
-    if (content) {
-        clear();
-        document.getElementById("category_"+categoryid).className="current";
-        document.getElementById("yan-question").innerHTML = content;
-        content = ContentRequest("?categoryid="+categoryid+"&categoryname=1");
-        if (content) {
-            if (document.getElementById("categoryindex")) {
-                document.getElementById("categoryindex").innerHTML = content;
-            } else {
-                document.getElementById("yan-breadcrumbs").innerHTML += content;
-            }
-            return false;
-        }
+    clear();
+    document.getElementById("category_"+categoryid).className="current";
+    $("#yan-question").load("checker.php?categoryid="+categoryid);
+    if (document.getElementById("categoryindex")) {
+        $("#categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1");
+    } else {
+        $.get("checker.php?categoryid="+categoryid+"&categoryname=1", function(data) {
+            $('#categoryindex').append(data);
+        });
     }
-    return true;
+    return false;
 }
 
 function loadQuestion(categoryid, questionid) {
-    return true;
-    var content = "";
-    if (!document.getElementById("answerdiv")) {
-        content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid);
-        if (content) {
-            clear();
-            document.getElementById("category_"+categoryid).className="current";
-            document.getElementById("yan-question").innerHTML = content;
-            content = ContentRequest("?categoryid="+categoryid+"&categoryname=1");
-            if (content) {
-                if (document.getElementById("categoryindex")) {
-                    document.getElementById("categoryindex").innerHTML = content;
-                } else {
-                    document.getElementById("yan-breadcrumbs").innerHTML += content;
-                }
-                document.getElementById("yan-breadcrumbs").innerHTML += document.getElementById("subject").innerHTML;
-                return loadAnswers(categoryid, questionid);
-            }
+    var answerdiv = document.getElementById("answerdiv");
+    var empty = answerdiv.innerHTML.replace(/^\s*|\s*$/g, '') == "";
+    if (empty) {
+        clear();
+        document.getElementById("category_"+categoryid).className="current";
+        $("#yan-question").load("checker.php?categoryid="+categoryid+"&questionid="+questionid);
+        if (document.getElementById("categoryindex")) {
+            $("categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1");
+            $("#yan-breadcrumbs").append($("#subject"));
+        } else {
+            $.get("checker.php?categoryid="+categoryid+"&categoryname=1", function(data) {
+                $('#yan-breadcrumbs').append(data);
+                $("#yan-breadcrumbs").append(document.getElementById("subject").innerHTML);
+            });
         }
-    } else {
-        return false;
+        return loadAnswers(categoryid, questionid);
     }
-    return true;
+    return false;
 }
 
 function loadAnswers(categoryid, questionid) {
-    var content = "";
     if (document.getElementById("yan-anwers")) {
         document.getElementById("yan-content").removeChild(document.getElementById("yan-answers"));
     }
-    content = ContentRequest("?categoryid="+categoryid+"&questionid="+questionid+"&answers=1");
-    if (content) {
-        document.getElementById("yan-content").innerHTML += content;
-        return false;
-    }
-    return true;
-}
-
-function getXMLHttp() {
-    var xmlHttp;
-    try {
-        xmlHttp = new XMLHttpRequest();
-    } catch (e) {
-        try {
-            xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } catch (e) {
-            try {
-                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {
-                return false;
-            }
-        }
-    }
-    return xmlHttp;
-}
-
-function ContentRequest(GET) {
-    var url = "checker.php" + GET;
-    var xmlHttp = getXMLHttp();
-    if (xmlHttp) {
-        xmlHttp.open("GET", url, false);
-        xmlHttp.send(null);
-        return xmlHttp.responseText;
-    } else {
-        return false;
-    }
+    $.get("checker.php?categoryid="+categoryid+"&questionid="+questionid+"&answers=1", function(data) {
+        $('#yan-content').append(data);
+    });
+    return false;
 }
 
 function handleSearch(form) {
-    var content = "";
     if (form.query.value.length >= 3) {
-        content = ContentRequest("?search=" + form.query.value);
-        if (content) {
-            clear();
-            document.getElementById("yan-question").innerHTML = content;
-            return false;
-        }
-        return true;
+        clear();
+        $("yan-question").load("checker.php?search=" + form.query.value);
     } else {
-        content = ContentRequest("?homepage=1");
-        if (content) {
-            clear();
-            document.getElementById("yan-question").innerHTML = content;
-            return false;
-        }
-        return true;
+        clear();
+        $("yan-question").load("checker.php?homepage=1");
     }
+    return false;
 }
 
 function vote(form, vote) {
@@ -220,10 +137,12 @@ function vote(form, vote) {
     } else {
         positiveField.innerHTML = oldPositive + 1;
     }
+    /*
     var url = "checker.php?answerid=" + form.answerid.value + "&userid=" + form.userid.value + "&vote=" + vote;
     var xmlHttp = getXMLHttp();
     xmlHttp.open("GET", url, false);
-    xmlHttp.send(null);
+    xmlHttp.send(null);*/
+    $.get("checker.php?answerid=" + form.answerid.value + "&userid=" + form.userid.value + "&vote=" + vote);
     document.getElementById('votebuttons_' + form.answerid.value).style.visibility = 'hidden';
     loadAnswers(form.categoryid.value, form.questionid.value);
     return false;
@@ -231,9 +150,11 @@ function vote(form, vote) {
 
 function handleVoteButtons(id, out) {
     var div = document.getElementById("answercontrols_" + id)
-    if (out == true) {
-        div.style.visibility = "hidden";
-    } else {
-        div.style.visibility = "visible";
+    if (div) {
+        if (out == true) {
+            div.style.visibility = "hidden";
+        } else {
+            div.style.visibility = "visible";
+        }
     }
 }

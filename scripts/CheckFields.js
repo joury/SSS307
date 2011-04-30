@@ -23,29 +23,23 @@ function CheckAdditional(form, currentyear) {
     return CheckBirthdate(form, currentyear, true);
 }
 
-function AjaxRequest(GET) {
-    var url = "checker.php" + GET;
-    var xmlHttp = getXMLHttp();
-    if (xmlHttp) {
-        xmlHttp.open("GET", url, false);
-        xmlHttp.send(null);
-        return (xmlHttp.responseText == "true");
-    } else {
-        return false;
-    }
-}
-
 function CheckUsername(username, submit) {
-    if (username.value == "" || AjaxRequest("?" + username.id + "=" + username.value)) {
+    if (username.value == "") {
         if (submit) {
-            if (username.value == "") {
-                alert("Username field cannot be empty!");
-            } else {
-                alert("Username is already in use.");
-            }
+            alert("Username field cannot be empty!");
         }
         document.getElementById('usernameImage').src = "images/incorrect.gif";
         return false;
+    } else {
+        $.get("checker.php?" + username.id + "=" + username.value, function(data) {
+            if (data == "true") {
+                if (submit) {
+                    alert("Username is already in use!");
+                }
+                document.getElementById('usernameImage').src = "images/incorrect.gif";
+                return false;
+            }
+        });
     }
     document.getElementById('usernameImage').src = "images/correct.gif";
     return true;
@@ -53,18 +47,26 @@ function CheckUsername(username, submit) {
 
 function CheckEmail(email, submit, newone) {
     var filter = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-    if (email.value == "" || !filter.test(email.value) || (newone && AjaxRequest("?" + email.id + "=" + email.value))) {
+    if (email.value == "" || !filter.test(email.value)) {
         if (submit) {
             if (email.value == "") {
                 alert("Emailaddress field cannot be empty!");
-            } else if (!filter.test(email.value)) {
-                alert("Please provide a valid email address");                
             } else {
-                alert("There\'s already an account registered with that emailaddress.");
+                alert("Please provide a valid email address");                
             }
         }
         document.getElementById('emailImage').src = "images/incorrect.gif";
         return false;
+    } else if (newone) {
+        $.get("checker.php?" + email.id + "=" + email.value, function(data) {
+            if (data == "true") {
+                if (submit) {
+                    alert("There\'s already an account registered with that emailaddress.");
+                }
+                document.getElementById('emailImage').src = "images/incorrect.gif";
+                return false;
+            }
+        });
     }
     document.getElementById('emailImage').src = "images/correct.gif";
     return true;

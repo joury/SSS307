@@ -61,6 +61,7 @@
                 document.write('<link rel="stylesheet" type="text/css" media="screen" href="./css/answers.css">');
             }
         </script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script type="text/javascript" src="./scripts/navigation.js"></script>
         <script type="text/javascript" src="./scripts/checkfields.js"></script>
         <script type="text/javascript" src="./scripts/bbcode.js"></script>
