@@ -786,7 +786,16 @@ Class website {
                 $positive = $this->getPositiveVotes($user->id, "", $fields['id']);
                 $negative = $this->getNegativeVotes($user->id, "", $fields['id']);
                 $answers .= '
-                    <div class="answer" onMouseOver="handleVoteButtons(' . $fields['id'] . ', false);" onMouseOut="handleVoteButtons(' . $fields['id'] . ', true);">
+                    <div class="answer" id="answer_' . $fields['id'] . '">
+                        <script type="text/javascript">
+                        if (!isMobile) {
+                            $("#answer_' . $fields['id'] . '").hover(function(){
+                                $("#answercontrols_' . $fields['id'] . '").fadeTo(250, 1.0);
+                            },function(){
+                                $("#answercontrols_' . $fields['id'] . '").fadeTo(250, 0.5);
+                            });
+                        }
+                        </script>
                         <div class="profile vcard">
                             <a href="index.php?userid=' . $user->id . '" class="avatar">
                                 <img class="photo" src="' . $this->getImage($user->id) . '" width="50">
@@ -812,7 +821,7 @@ Class website {
                         <div class="answercontrols" id="answercontrols_' . $fields['id'] . '">
                             <a href="' . $this->getQueryString() . '&amp;edit=' . $fields['id'] . '"><img src="images/edit.gif"></a>
                             <a href="' . $this->getQueryString() . '&amp;remove=' . $fields['id'] . '"><img src="images/incorrect.gif"></a>
-                            <script type="text/javascript">if (!isMobile) {document.getElementById("answercontrols_' . $fields['id'] . '").style.visibility = "hidden";}</script>
+                            <script type="text/javascript">if (!isMobile) {$("#answercontrols_' . $fields['id'] . '").fadeTo(0, 0.5);}</script>
                         </div>
                     ';
                 }

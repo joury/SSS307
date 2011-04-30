@@ -147,14 +147,3 @@ function vote(form, vote) {
     loadAnswers(form.categoryid.value, form.questionid.value);
     return false;
 }
-
-function handleVoteButtons(id, out) {
-    var div = document.getElementById("answercontrols_" + id)
-    if (div) {
-        if (out == true) {
-            div.style.visibility = "hidden";
-        } else {
-            div.style.visibility = "visible";
-        }
-    }
-}

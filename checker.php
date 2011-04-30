@@ -47,7 +47,7 @@ if (isset($_GET['username']) || isset($_GET['email'])) {
         if (isset($_GET['categoryname'])) {
             echo $website->getCurrentCategory($_GET['categoryid']);
         } else {
-            echo $website->getQuestions($_GET['categoryid']);
+            echo $website->getQuestionsMenu($_GET['categoryid']);
         }
     }
 } else if (isset($_GET['search'])) {
