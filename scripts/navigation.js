@@ -24,7 +24,11 @@ function loadHome() {
         document.getElementById("yan-nav-about").className="menu";
     }
     clear();
-    $("#yan-question").load("checker.php?homepage=1");
+    if (!isMobile) {
+        $("#yan-question").load("checker.php?homepage=1").hide().fadeIn(1000);
+    } else {
+        $("#yan-question").load("checker.php?homepage=1");
+    }
     return false;
 }
 
@@ -35,7 +39,11 @@ function loadProfile(id) {
         document.getElementById("yan-nav-about").className="current menu";
     }
     clear();
-    $("#yan-question").load("checker.php?profile=" + id);
+    if (!isMobile) {
+        $("#yan-question").load("checker.php?profile=" + id).hide().fadeIn(1000);
+    } else {
+        $("#yan-question").load("checker.php?profile=" + id);
+    }
     return false;
 }
 
@@ -46,7 +54,11 @@ function loadCategories() {
         document.getElementById("yan-nav-about").className="menu";
     }
     clear();
-    $("#yan-question").load("checker.php?categories=1");
+    if (!isMobile) {
+        $("#yan-question").load("checker.php?categories=1").hide().fadeIn(1000);
+    } else {
+        $("#yan-question").load("checker.php?categories=1");
+    }
     return false;
 }
 
@@ -65,7 +77,11 @@ function loadAnswerPoster(categoryid, questionid) {
                 });
             }
         } else {
-            $("#answerposter").load("checker.php?categoryid="+categoryid+"&questionid="+questionid+"&answer=1");
+            if (!isMobile) {
+                $("#answerposter").load("checker.php?categoryid="+categoryid+"&questionid="+questionid+"&answer=1").hide().fadeIn(1000);
+            } else {
+                $("#answerposter").load("checker.php?categoryid="+categoryid+"&questionid="+questionid+"&answer=1");
+            }
         }
     }
     return false;
@@ -74,9 +90,13 @@ function loadAnswerPoster(categoryid, questionid) {
 function loadQuestions(categoryid) {
     clear();
     document.getElementById("category_"+categoryid).className="current";
-    $("#yan-question").load("checker.php?categoryid="+categoryid);
+    $("#yan-question").load("checker.php?categoryid="+categoryid).hide().fadeIn(1000);
     if (document.getElementById("categoryindex")) {
-        $("#categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1");
+        if (!isMobile) {
+            $("#categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1").hide().fadeIn(1000);
+        } else {
+            $("#categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1");
+        }
     } else {
         $.get("checker.php?categoryid="+categoryid+"&categoryname=1", function(data) {
             $('#categoryindex').append(data);
@@ -91,9 +111,17 @@ function loadQuestion(categoryid, questionid) {
     if (empty) {
         clear();
         document.getElementById("category_"+categoryid).className="current";
-        $("#yan-question").load("checker.php?categoryid="+categoryid+"&questionid="+questionid);
+        if (!isMobile) {
+            $("#yan-question").load("checker.php?categoryid="+categoryid+"&questionid="+questionid).hide().fadeIn(1000);
+        } else{
+            $("#yan-question").load("checker.php?categoryid="+categoryid+"&questionid="+questionid);
+        }
         if (document.getElementById("categoryindex")) {
-            $("categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1");
+            if (!isMobile) {
+                $("categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1").hide().fadeIn(1000);
+            } else {
+                $("categoryindex").load("checker.php?categoryid="+categoryid+"&categoryname=1");
+            }
             $("#yan-breadcrumbs").append($("#subject"));
         } else {
             $.get("checker.php?categoryid="+categoryid+"&categoryname=1", function(data) {
@@ -119,10 +147,18 @@ function loadAnswers(categoryid, questionid) {
 function handleSearch(form) {
     if (form.query.value.length >= 3) {
         clear();
-        $("yan-question").load("checker.php?search=" + form.query.value);
+        if (!isMobile) {
+            $("yan-question").load("checker.php?search=" + form.query.value).hide().fadeIn(1000);
+        } else {
+            $("yan-question").load("checker.php?search=" + form.query.value);
+        }
     } else {
         clear();
-        $("yan-question").load("checker.php?homepage=1");
+        if (!isMobile) {
+            $("yan-question").load("checker.php?homepage=1").hide().fadeIn(1000);
+        } else {
+            $("yan-question").load("checker.php?homepage=1");
+        }
     }
     return false;
 }
