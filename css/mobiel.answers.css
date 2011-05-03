@@ -31,7 +31,11 @@ a{
 	text-decoration:none;
 }
 
-/*invoerveld*/
+a:hover{
+	text-decoration:underline;
+}
+
+/*Invoerveld*/
 select,input,button,textarea{
 	font:99% arial,helvetica,clean,sans-serif;
 }
@@ -55,7 +59,6 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 }
 
 /*Inlogbalk*/
-
 #ygma .sp{
     background-image:url(../images/answers-1.0.4.png);
 }
@@ -244,9 +247,6 @@ yan-nav li a{
 	margin-bottom:-4px;
 	padding-bottom:10px;
 }
-
-
-
 
 /*Groene banner*/
 #yan-banner{
