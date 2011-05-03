@@ -131,7 +131,7 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 
 #yan-nav li.current{
 	margin-bottom:-2px;
-	padding-bottom:7px;
+	padding-bottom:2px;
 }
 
 #yan-nav li{
@@ -155,12 +155,20 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input
 	position:static;
 }
 
+#yan-nav li a{
+	padding-left:1em;
+	border:1px solid #f3f9eb;
+	border-bottom:0;
+	color:#333;
+}
+
+
 /*Tab kleur*/
+
 .tabs li.current,#yan-nav li.current a,#yan-nav li:hover,#yan-nav li.hover,#yan-nav li:hover a,#yan-nav li.hover a{
 	color:#fff;
 	background-color:#3BAE08;
 	background-position:0 0;
-
 }
 
 .tabs li,.tabs li a,.tabs li span,#yan-nav li.current a,#yan-nav li:hover a,#yan-nav li.hover a{
@@ -212,6 +220,12 @@ yan-nav li a{
 	color:#666;
 }
 
+.tabs{
+	margin-right:1em;
+	line-height:1;
+	zoom:1;
+}
+
 #yan-nav li a{
 	padding-left:1em;
 	border:1px solid #f3f9eb;
@@ -219,11 +233,20 @@ yan-nav li a{
 	color:#333;
 }
 
-.tabs{
-	margin-right:1em;
-	line-height:1;
-	zoom:1;
+#yan-nav li.current a,#yan-nav li:hover a,#yan-nav li.hover a{
+	border:1px solid #82C844;
+	border-bottom:0;
+	margin-bottom:-2px;
+	padding-bottom:6px;
 }
+
+#yan-nav li:hover a,#yan-nav li.hover a{
+	margin-bottom:-4px;
+	padding-bottom:10px;
+}
+
+
+
 
 /*Groene banner*/
 #yan-banner{
@@ -560,6 +583,8 @@ yan-question-tools li{
     width:30px;
 }
 
+/*Blauwe knoppen*/
+
 .cta *:hover span, .cta .hover span, .cta *:focus span {
     background-image: url("../images/cta-darkblue-hover.gif");
 }
@@ -612,14 +637,10 @@ yan-question-tools li{
 	padding:0;
 }
 
-
-
-
 .js .cta button,.js .cta input,.js .cta a{
 	padding:0;
 	margin:5px;
 }
-
 
 .cta button,.cta input,.cta a{
 	border:0;
@@ -636,3 +657,9 @@ yan-question-tools li{
 	*white-space:nowrap;
 	vertical-align:middle;
 }
+
+
+
+
+
+
