@@ -12,22 +12,7 @@
  */
 class user {
 
-    var $id;
-    var $username;
-    var $password;
-    var $firstname;
-    var $insertion;
-    var $lastname;
-    var $gender;
-    var $email;
-    var $language;
-    var $country;
-    var $state;
-    var $city;
-    var $birthdate;
-    var $msn;
-    var $skype;
-    var $job;
+    var $id, $username, $password, $firstname, $insertion, $lastname, $gender, $email, $language, $country, $state, $city, $birthdate, $msn, $skype, $job;
 
     function __construct($db, $id = "", $username = "", $password = "") {
         if ($id != "" || ($username != "" && $password != "")) {
